@@ -27,23 +27,17 @@ O **ProjetoPSI** é uma solução tecnológica abrangente que integra três comp
 ## 🛠️ Stack Tecnológica
 
 ### Mobile (Android)
-- Java/Kotlin
+- Java
 - Android SDK
 - Material Design
-- Retrofit para comunicação com API
 
 ### Backend (API)
-- Node.js / Python / Java (a definir)
-- Framework REST (Express.js / FastAPI / Spring Boot)
-- Banco de dados (PostgreSQL / MongoDB)
-- Autenticação JWT
-- Docker para containerização
+- YII2
+- PHP
 
 ### Frontend (Web)
-- React.js / Vue.js / Angular (a definir)
 - HTML5, CSS3, JavaScript ES6+
-- Framework CSS (Bootstrap / Tailwind CSS)
-- PWA capabilities
+- YII2
 
 ## 📁 Estrutura do Projeto
 
@@ -72,7 +66,6 @@ ProjetoPSI/
 
 ### Pré-requisitos
 
-- Node.js (v16 ou superior)
 - Android Studio
 - Git
 - Docker (opcional)
