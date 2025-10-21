@@ -1,5 +1,5 @@
 # setup.ps1
-Write-Host "=== Instalação automática Yii2 Advanced ===`n"
+Write-Host "=== Instalaçao automatica Yii2 Advanced ===`n"
 
 # 1. Instalar dependências
 composer install
@@ -13,6 +13,7 @@ $folders = @(
     "console/runtime"
 )
 
+# Verifica se as pastas necessárias existem e garante que as pastas de assets e runtime estão preparadas antes da execução do projeto.
 foreach ($folder in $folders) {
     if (-Not (Test-Path $folder)) {
         New-Item -ItemType Directory -Force -Path $folder | Out-Null
@@ -34,4 +35,4 @@ php yii migrate --interactive=0
 # 5. Instalar o SwiftMailer
 composer require yiisoft/yii2-swiftmailer
 
-Write-Host "`n=== Configuração concluída ==="
+Write-Host "`n=== Configuracao concluida ==="
