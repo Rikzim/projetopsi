@@ -1,9 +1,9 @@
 <?php
 return [
-    'adminEmail' => 'admin@example.com',
-    'supportEmail' => 'support@example.com',
-    'senderEmail' => 'noreply@example.com',
-    'senderName' => 'Example.com mailer',
+    'adminEmail' => 'pluslusitania@gmail.com',
+    'supportEmail' => 'pluslusitania@gmail.com',
+    'senderEmail' => 'pluslusitania@gmail.com',
+    'senderName' => 'Mais Lusitania',
     'user.passwordResetTokenExpire' => 3600,
     'user.passwordMinLength' => 8,
 ];
