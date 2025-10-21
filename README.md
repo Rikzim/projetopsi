@@ -87,3 +87,14 @@ cd web && npm test
 - [Guia do Desenvolvedor Android](./docs/android.md)
 - [Guia do Desenvolvedor Web](./docs/web.md)
 - [Arquitetura do Sistema](./docs/architecture.md)
+
+
+
+## Antes de aceder ao browser
+
+# Executar setup.ps1
+
+- Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+- .\setup.ps1
+
+
