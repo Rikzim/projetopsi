@@ -1,8 +1,5 @@
 # ProjetoPSI 🚀
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-
 > Um super projeto integrado que combina aplicação Android, API robusta e aplicação web moderna em um ecossistema completo.
 
 ## 📋 Sobre o Projeto
@@ -36,31 +33,8 @@ O **ProjetoPSI** é uma solução tecnológica abrangente que integra três comp
 - PHP
 
 ### Frontend (Web)
-- HTML5, CSS3, JavaScript ES6+
+- HTML5, CSS, JavaScript
 - YII2
-
-## 📁 Estrutura do Projeto
-
-```
-ProjetoPSI/
-├── android/              # Aplicação Android
-│   ├── app/
-│   ├── gradle/
-│   └── README.md
-├── api/                  # Backend API
-│   ├── src/
-│   ├── tests/
-│   ├── docs/
-│   └── README.md
-├── web/                  # Aplicação Web
-│   ├── src/
-│   ├── public/
-│   ├── tests/
-│   └── README.md
-├── docs/                 # Documentação do projeto
-├── docker-compose.yml    # Configuração Docker
-└── README.md
-```
 
 ## 🚀 Instalação e Configuração
 
@@ -68,53 +42,18 @@ ProjetoPSI/
 
 - Android Studio
 - Git
-- Docker (opcional)
 
 ### Configuração do Ambiente
 
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/Rikzim/ProjetoPSI.git
-   cd ProjetoPSI
-   ```
-
-2. **Configure a API**
-   ```bash
-   cd api
-   npm install
-   cp .env.example .env
-   # Configure as variáveis de ambiente
-   npm run dev
-   ```
-
-3. **Configure a aplicação Web**
-   ```bash
-   cd ../web
-   npm install
-   npm start
-   ```
-
-4. **Configure a aplicação Android**
-   - Abra o Android Studio
-   - Importe o projeto da pasta `android/`
-   - Sincronize o Gradle
-   - Execute no emulador ou device
-
-### 🐳 Usando Docker
-
-```bash
-# Execute todo o ambiente com Docker Compose
-docker-compose up -d
-
-# Para desenvolvimento
-docker-compose -f docker-compose.dev.yml up
-```
+//EXPLICAR COMO INSTALAR 
 
 ## 📖 Como Usar
 
 ### API Endpoints
 
 ```
+//DAR EXEMPLOS DA API
+
 GET    /api/v1/health      # Status da API
 POST   /api/v1/auth/login  # Autenticação
 GET    /api/v1/users       # Listar usuários
@@ -128,13 +67,6 @@ Acesse `http://localhost:3000` após iniciar o servidor de desenvolvimento.
 ### Aplicação Android
 
 Instale o APK gerado ou execute através do Android Studio.
-
-## 🔄 Fluxo de Desenvolvimento
-
-1. **Planejamento**: Definição de features e requisitos
-2. **Desenvolvimento**: Implementação em paralelo dos componentes
-3. **Integração**: Testes de integração entre componentes
-4. **Deploy**: Publicação em ambiente de produção
 
 ## 🧪 Testes
 
@@ -155,43 +87,3 @@ cd web && npm test
 - [Guia do Desenvolvedor Android](./docs/android.md)
 - [Guia do Desenvolvedor Web](./docs/web.md)
 - [Arquitetura do Sistema](./docs/architecture.md)
-
-## 🤝 Como Contribuir
-
-1. Faça um Fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-### 📋 Padrões de Código
-
-- Siga as convenções de código de cada linguagem
-- Escreva testes para novas funcionalidades
-- Mantenha a documentação atualizada
-- Use commits semânticos
-
-## 📜 Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-## 👥 Equipe
-
-- **Desenvolvedor Principal**: [Rikzim](https://github.com/Rikzim)
-
-## 📞 Contato
-
-- **GitHub**: [@Rikzim](https://github.com/Rikzim)
-- **Email**: [contato@projetopsi.com](mailto:contato@projetopsi.com)
-
-## 🙏 Agradecimentos
-
-- Comunidade open source
-- Contribuidores do projeto
-- Ferramentas e frameworks utilizados
-
----
-
-<div align="center">
-  <strong>ProjetoPSI</strong> - Unindo mobile, web e API em uma solução completa! ⭐
-</div>
