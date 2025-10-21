@@ -4,6 +4,22 @@ Write-Host "=== Instalação automática Yii2 Advanced ===`n"
 # 1. Instalar dependências
 composer install
 
+# Criar pastas necessárias  
+$folders = @(
+    "backend/web/assets",
+    "frontend/web/assets",
+    "backend/runtime",
+    "frontend/runtime",
+    "console/runtime"
+)
+
+foreach ($folder in $folders) {
+    if (-Not (Test-Path $folder)) {
+        New-Item -ItemType Directory -Force -Path $folder | Out-Null
+    }
+}
+
+
 # 2. Inicializar aplicação (Development)
 php init --env=Development --overwrite=All --delete=All --interactive=0
 
