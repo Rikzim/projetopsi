@@ -16,9 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= LeafletMap::widget([
         'mapId' => 'testMap',
-        'lat' => 38.7223,  // Lisbon
-        'lng' => -9.1393,
-        'zoom' => 13,
+        'lat' => 39.5,  // Center of Portugal
+        'lng' => -8.0,
+        'zoom' => 7,  // Shows whole Portugal
         'markers' => $markers,
     ]) ?>
 </div>
