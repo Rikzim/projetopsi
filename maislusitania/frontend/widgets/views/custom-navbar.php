@@ -7,8 +7,7 @@ use yii\helpers\Url;
     <div class="navbar-container">
         <!-- Logo e Brand -->
         <a href="<?= Url::to(['/site/index']) ?>" class="navbar-brand">
-            <img src="<?= $logoUrl ?>" alt="Logo">
-            <span><?= Html::encode($logoText) ?></span>
+            <img src="<?= Yii::getAlias($logoUrl) ?>" alt="Logo">
         </a>
         
         <!-- Menu Principal -->

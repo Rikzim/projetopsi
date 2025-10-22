@@ -11,7 +11,7 @@ class CustomNavBar extends Widget
     /**
      * @var string Logo URL
      */
-    public $logoUrl = 'https://ibb.co/ksBR1bgR';
+    public $logoUrl = '/images/logo/logo.svg';
     
     /**
      * @var string Logo text
@@ -48,6 +48,7 @@ class CustomNavBar extends Widget
                 ['label' => 'Monumentos', 'url' => ['/monumentos/index']],
                 ['label' => 'Notícias', 'url' => ['/noticias/index']],
                 ['label' => 'Eventos', 'url' => ['/eventos/index']],
+                ['label' => 'Mapa', 'url' => ['/testemapa/index']],
             ];
         }
     }
@@ -55,9 +56,12 @@ class CustomNavBar extends Widget
     public function run()
     {
         $this->registerAssets();
+        $logoUrl = $this->logoUrl;
+        if (strpos($logoUrl, '@web') === 0) {
+            $logoUrl = Yii::$app->request->baseUrl . str_replace('@web', '', $logoUrl);
+        }
         return $this->render('custom-navbar', [
-            'logoUrl' => $this->logoUrl,
-            'logoText' => $this->logoText,
+            'logoUrl' => $logoUrl,
             'menuItems' => $this->menuItems,
             'brandColor' => $this->brandColor,
             'showAuthButtons' => $this->showAuthButtons,
@@ -97,8 +101,8 @@ class CustomNavBar extends Widget
         }
         
         .custom-navbar .navbar-brand img {
-            width: 40px;
-            height: 40px;
+            width: 205px;
+            height: 54px;
         }
         
         .custom-navbar .navbar-menu {
