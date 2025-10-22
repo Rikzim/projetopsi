@@ -20,4 +20,5 @@ class AppAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap5\BootstrapAsset',
     ];
+    public $cssOptions = ['position' => \yii\web\View::POS_END]; // Carrega por último
 }

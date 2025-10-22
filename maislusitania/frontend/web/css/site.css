@@ -1,3 +1,19 @@
+* {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+p, span, div, a, button, input, textarea, select {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
 main > .container, main > .container-fluid
 {
     padding: 70px 15px 20px;
