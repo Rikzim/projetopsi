@@ -28,7 +28,7 @@ class LeafletMap extends Widget
         .leaflet-map-container {
             height: 600px;
             width: 100%;
-            margin: 20px 0;
+            display: block;
         }
         CSS;
         $this->view->registerCss($css);
