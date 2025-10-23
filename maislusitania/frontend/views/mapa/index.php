@@ -5,8 +5,8 @@ use yii\helpers\Html;
 $this->title = 'Mapa de Locais Culturais';
 ?>
 
-<div class="testemapa-index mt-5">
-    <h1 class="text-center mb-4" style="color: #2E5AAC;">
+<div class="testemapa-index">
+    <h1 class="text-center" style="color: #2E5AAC;">
         <?= Html::encode('Mapa de Locais Culturais em Portugal') ?>
     </h1>
     

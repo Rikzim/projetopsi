@@ -44,11 +44,11 @@ class CustomNavBar extends Widget
         if (empty($this->menuItems)) {
             $this->menuItems = [
                 ['label' => 'Sobre', 'url' => ['/site/about']],
-                ['label' => 'Museus', 'url' => ['/museus/index']],
-                ['label' => 'Monumentos', 'url' => ['/monumentos/index']],
-                ['label' => 'Notícias', 'url' => ['/noticias/index']],
-                ['label' => 'Eventos', 'url' => ['/eventos/index']],
-                ['label' => 'Mapa', 'url' => ['/testemapa/index']],
+                ['label' => 'Museus', 'url' => ['/local-cultural/index']],
+                ['label' => 'Monumentos', 'url' => ['/local-cultural/index']],
+                ['label' => 'Notícias', 'url' => ['/noticia/index']],
+                ['label' => 'Eventos', 'url' => ['/evento/index']],
+                ['label' => 'Mapa', 'url' => ['/mapa/index']],
             ];
         }
     }
