@@ -74,20 +74,24 @@ class CustomNavBar extends Widget
         
         $css = <<<CSS
         .custom-navbar {
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 0.8rem 2rem;
-            position: sticky;
-            top: 0;
+            background-color: transparent;
+            padding: 0.25rem 0;
+            position: fixed;
+            top: 1rem;
             z-index: 1000;
+            width: 100%;
         }
         
         .custom-navbar .navbar-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0.75rem 2.5rem;
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
         
         .custom-navbar .navbar-brand {
@@ -101,30 +105,30 @@ class CustomNavBar extends Widget
         }
         
         .custom-navbar .navbar-brand img {
-            width: 205px;
-            height: 54px;
+            width: 180px;
+            height: 48px;
         }
         
         .custom-navbar .navbar-menu {
             display: flex;
-            gap: 2rem;
+            gap: 1.75rem;
             list-style: none;
             margin: 0;
             padding: 0;
             align-items: center;
-
         }
         
         .custom-navbar .navbar-menu a {
             text-decoration: none;
             color: {$this->brandColor};
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             transition: color 0.3s ease;
         }
         
         .custom-navbar .navbar-menu a:hover {
             color: {$this->brandColor};
+            opacity: 0.8;
         }
         
         .custom-navbar .navbar-auth {
@@ -144,8 +148,7 @@ class CustomNavBar extends Widget
         }
         
         .custom-navbar .btn-signup:hover {
-            background-color: {$this->brandColor};
-            color: white;
+            color: darken({$this->brandColor}, 20%);
         }
         
         .custom-navbar .btn-login {
@@ -153,7 +156,7 @@ class CustomNavBar extends Widget
             background-color: {$this->brandColor};
             color: white;
             border: 2px solid {$this->brandColor};
-            border-radius: 5px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
@@ -182,16 +185,23 @@ class CustomNavBar extends Widget
         }
         
         @media (max-width: 992px) {
+            .custom-navbar .navbar-container {
+                padding: 0.75rem 1.5rem;
+                max-width: calc(100% - 2rem);
+                margin: 0 1rem;
+            }
+            
             .custom-navbar .navbar-menu {
                 display: none;
                 position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
+                top: calc(100% + 0.5rem);
+                left: 1rem;
+                right: 1rem;
                 background: white;
                 flex-direction: column;
                 padding: 1rem;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 12px;
             }
             
             .custom-navbar .navbar-menu.active {
