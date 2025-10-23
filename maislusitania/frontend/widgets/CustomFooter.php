@@ -66,8 +66,6 @@ class CustomFooter extends Widget
                 'links' => [
                     ['label' => 'Quem Somos', 'url' => ['/site/about']],
                     ['label' => 'Contactos', 'url' => ['/site/contact']],
-                    ['label' => 'Política de Privacidade', 'url' => ['/site/privacy']],
-                    ['label' => 'Termos de Uso', 'url' => ['/site/terms']],
                 ]
             ];
         }
@@ -77,8 +75,6 @@ class CustomFooter extends Widget
                 'title' => 'Suporte',
                 'links' => [
                     ['label' => 'FAQ', 'url' => ['/site/faq']],
-                    ['label' => 'Ajuda', 'url' => ['/site/help']],
-                    ['label' => 'Reportar Problema', 'url' => ['/site/report']],
                 ]
             ];
         }
@@ -117,7 +113,8 @@ class CustomFooter extends Widget
         
         $css = <<<CSS
         .custom-footer {
-            background-color: #f8f9fa;
+            background-color: #ffffffff;
+            border-top: 2px solid {$this->brandColor};
             padding: 4rem 0 2rem;
             margin-top: 4rem;
         }
