@@ -13,6 +13,11 @@ use frontend\widgets\CustomNavBar;
 use frontend\widgets\CustomFooter;
 
 AppAsset::register($this);
+
+// Definir ações que não devem mostrar header/footer
+$currentAction = Yii::$app->controller->action->id;
+$authActions = ['login', 'signup', 'request-password-reset', 'reset-password', 'resend-verification-email'];
+$showHeaderFooter = !in_array($currentAction, $authActions);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -23,32 +28,48 @@ AppAsset::register($this);
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <style>
+        body {
+            padding-top: 100px; /* Altura da navbar + margem */
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                padding-top: 90px; /* Ajuste para mobile */
+            }
+        }
+    </style>
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
+<?php if ($showHeaderFooter): ?>
 <header>
     <?= CustomNavBar::widget([
         'logoUrl' => '@web/images/logo/logo.svg',
     ]) ?>
 </header>
-
+<?php endif; ?>
 
 <main role="main" class="flex-shrink-0">
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+        <?php if ($showHeaderFooter): ?>
+            <?= Breadcrumbs::widget([
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
+        <?php endif; ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
 </main>
 
+<?php if ($showHeaderFooter): ?>
 <footer>
     <?= CustomFooter::widget([
         'logoUrl' => '@web/images/logo/logo.svg',
     ]) ?>
 </footer>
+<?php endif; ?>
 
 <?php $this->endBody() ?>
 </body>
