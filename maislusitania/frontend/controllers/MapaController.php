@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 use yii\web\Controller;
 
-class TestemapaController extends Controller
+class MapaController extends Controller
 {
     public function actionIndex()
     {
