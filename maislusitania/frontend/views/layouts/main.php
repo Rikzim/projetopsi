@@ -10,6 +10,7 @@ use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 use frontend\widgets\CustomNavBar;
+use frontend\widgets\CustomFooter;
 
 AppAsset::register($this);
 ?>
@@ -32,6 +33,7 @@ AppAsset::register($this);
     ]) ?>
 </header>
 
+
 <main role="main" class="flex-shrink-0">
     <div class="container">
         <?= Breadcrumbs::widget([
@@ -42,11 +44,10 @@ AppAsset::register($this);
     </div>
 </main>
 
-<footer class="footer mt-auto py-3 text-muted">
-    <div class="container">
-        <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-end"><?= Yii::powered() ?></p>
-    </div>
+<footer>
+    <?= CustomFooter::widget([
+        'logoUrl' => '@web/images/logo/logo.svg',
+    ]) ?>
 </footer>
 
 <?php $this->endBody() ?>
