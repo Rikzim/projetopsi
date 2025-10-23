@@ -90,6 +90,7 @@ class CustomNavBar extends Widget
             margin: 0 auto;
             padding: 0.75rem 2.5rem;
             background-color: #ffffff;
+            border: 2px solid {$this->brandColor};
             border-radius: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }

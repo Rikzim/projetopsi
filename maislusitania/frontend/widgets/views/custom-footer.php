@@ -60,11 +60,6 @@ use yii\helpers\Url;
             <div class="footer-copyright">
                 &copy; <?= date('Y') ?> <?= Html::encode($logoText) ?>. Todos os direitos reservados.
             </div>
-            <div class="footer-bottom-links">
-                <?= Html::a('Privacidade', ['/site/privacy']) ?>
-                <?= Html::a('Termos', ['/site/terms']) ?>
-                <?= Html::a('Cookies', ['/site/cookies']) ?>
-            </div>
         </div>
     </div>
 </footer>
