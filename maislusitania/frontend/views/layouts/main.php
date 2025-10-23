@@ -29,7 +29,6 @@ AppAsset::register($this);
 <header>
     <?= CustomNavBar::widget([
         'logoUrl' => '@web/images/logo/logo.svg',
-        'logoText' => '+Lusitânia',
     ]) ?>
 </header>
 

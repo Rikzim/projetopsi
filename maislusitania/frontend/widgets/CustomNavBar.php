@@ -11,7 +11,7 @@ class CustomNavBar extends Widget
     /**
      * @var string Logo URL
      */
-    public $logoUrl = '/images/logo/logo.svg';
+    public $logoUrl = '@web/images/logo/logo.svg';
     
     /**
      * @var string Logo text
@@ -75,7 +75,7 @@ class CustomNavBar extends Widget
         $css = <<<CSS
         .custom-navbar {
             background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 0.8rem 2rem;
             position: sticky;
             top: 0;
@@ -112,13 +112,14 @@ class CustomNavBar extends Widget
             margin: 0;
             padding: 0;
             align-items: center;
+
         }
         
         .custom-navbar .navbar-menu a {
             text-decoration: none;
-            color: #333;
+            color: {$this->brandColor};
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: color 0.3s ease;
         }
         
@@ -136,7 +137,6 @@ class CustomNavBar extends Widget
             padding: 0.5rem 1.5rem;
             background-color: transparent;
             color: {$this->brandColor};
-            border: 2px solid {$this->brandColor};
             border-radius: 5px;
             text-decoration: none;
             font-weight: 500;
