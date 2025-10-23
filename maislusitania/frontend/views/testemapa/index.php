@@ -6,8 +6,10 @@ use yii\helpers\Html;
 //TODO: Mostrar mapa de Portugal com marcadores de locais culturais relevantes.
 ?>
 
-<div class="testemapa-index mt-n5">
-    <div class="card shadow-lg">
+<div class="testemapa-index mt-5">
+    <h1 class="text-center"><?= Html::encode('Mapa de Locais Culturais em Portugal') ?></h1>
+    
+    <div class="card" style="border: 2px solid #2E5AAC;">
         <div class="card-body p-0" style="border-radius: 15px; overflow: hidden;">
             <?= LeafletMap::widget([
                 'mapId' => 'testMap',
@@ -36,7 +38,7 @@ $this->registerCss("
     
     .card {
         border-radius: 15px;
-        border: none;
+        border: 2px solid #2E5AAC;
     }
     
     .leaflet-map-container {
