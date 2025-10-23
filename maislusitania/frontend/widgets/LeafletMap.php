@@ -26,9 +26,15 @@ class LeafletMap extends Widget
         
         $css = <<<CSS
         .leaflet-map-container {
-            height: 600px;
+            height: 700px;
             width: 100%;
             display: block;
+            margin: 0;
+            border-radius: 15px;
+
+            /* Esconder o link "Leaflet"  se não ele sobrepõe*/
+            .leaflet-control-attribution {
+            display: none !important;
         }
         CSS;
         $this->view->registerCss($css);
@@ -48,7 +54,6 @@ class LeafletMap extends Widget
             
             // Usar CartoDB Voyager (ruas + menos POIs)
             L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 subdomains: 'abcd',
                 maxZoom: 20
             }).addTo(map);
@@ -97,6 +102,11 @@ class LeafletMap extends Widget
             var northEast = L.latLng(42.5, -6.0);
             var bounds = L.latLngBounds(southWest, northEast);
             map.setMaxBounds(bounds);
+            
+            // Force map to resize after load
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 100);
         })();
         JS;     
         

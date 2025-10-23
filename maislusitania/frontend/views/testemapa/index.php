@@ -2,14 +2,15 @@
 use frontend\widgets\LeafletMap;
 use yii\helpers\Html;
 
-//Isto é apenas um exemplo de como usar o widget LeafletMap para exibir um mapa com marcadores de locais culturais.
-//TODO: Mostrar mapa de Portugal com marcadores de locais culturais relevantes.
+$this->title = 'Mapa de Locais Culturais';
 ?>
 
 <div class="testemapa-index mt-5">
-    <h1 class="text-center"><?= Html::encode('Mapa de Locais Culturais em Portugal') ?></h1>
+    <h1 class="text-center mb-4" style="color: #2E5AAC;">
+        <?= Html::encode('Mapa de Locais Culturais em Portugal') ?>
+    </h1>
     
-    <div class="card" style="border: 2px solid #2E5AAC;">
+    <div class="card" style="border: 2px solid #2E5AAC; border-radius: 15px; max-width: 1200px; margin: 0 auto;">
         <div class="card-body p-0" style="border-radius: 15px; overflow: hidden;">
             <?= LeafletMap::widget([
                 'mapId' => 'testMap',
@@ -21,30 +22,3 @@ use yii\helpers\Html;
         </div>
     </div>
 </div>
-
-<?php
-$this->registerCss("
-    .testemapa-index {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1rem;
-    }
-    
-    .testemapa-index h1 {
-        margin-bottom: 2rem;
-        text-align: center;
-        color: #2E5AAC;
-    }
-    
-    .card {
-        border-radius: 15px;
-        border: 2px solid #2E5AAC;
-    }
-    
-    .leaflet-map-container {
-        height: 700px !important;
-        width: 100% !important;
-        border-radius: 15px;
-    }
-");
-?>
