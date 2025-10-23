@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">maislusitania_android</string>
+    <string name="app_logo">Logo</string>
+
 </resources>
