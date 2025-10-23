@@ -82,6 +82,17 @@ class InfiniteCarousel extends Widget
     protected function getCss()
     {
         return <<<CSS
+        
+        #{$this->carouselId} .carousel-card .card {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        #{$this->carouselId} .carousel-card a.card {
+            cursor: pointer;
+        }
+        
         #{$this->carouselId} {
             position: relative;
             width: 100vw;
@@ -132,17 +143,42 @@ class InfiniteCarousel extends Widget
             background: white;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            font-weight: bold;
-            color: #3498db;
         }
         
         #{$this->carouselId} .carousel-card .card:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        #{$this->carouselId} .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        #{$this->carouselId} .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+            padding: 20px;
+            color: white;
+        }
+        
+        #{$this->carouselId} .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        #{$this->carouselId} .card-subtitle {
+            font-size: 1rem;
+            margin: 0;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
         
         #{$this->carouselId} .carousel-nav {
@@ -192,13 +228,21 @@ class InfiniteCarousel extends Widget
                 width: 40px;
                 height: 40px;
             }
+            
+            #{$this->carouselId} .card-title {
+                font-size: 1.2rem;
+            }
+            
+            #{$this->carouselId} .card-subtitle {
+                font-size: 0.9rem;
+            }
         }
 CSS;
     }
 
     protected function getJs()
     {
-        $cardGapPx = $this->cardGap * 16; // Converter rem para px
+        $cardGapPx = $this->cardGap * 16;
         $cardWidthTotal = $this->cardWidth + $cardGapPx;
         
         return <<<JS
@@ -214,18 +258,15 @@ CSS;
             
             const totalOriginalCards = originalCards.length;
             const cardWidth = {$cardWidthTotal};
-            const cloneMultiplier = 3; // Número de vezes que clonamos (antes e depois)
+            const cloneMultiplier = 3;
             
             let currentIndex = totalOriginalCards * cloneMultiplier;
             let isAnimating = false;
             let wheelTimeout;
             
-            // Clone cards múltiplas vezes para loop infinito suave
             function initInfiniteCarousel() {
-                // Limpar track
                 track.innerHTML = '';
                 
-                // Clonar antes (múltiplas vezes)
                 for (let i = 0; i < cloneMultiplier; i++) {
                     originalCards.forEach(card => {
                         const clone = card.cloneNode(true);
@@ -233,12 +274,10 @@ CSS;
                     });
                 }
                 
-                // Adicionar originais
                 originalCards.forEach(card => {
                     track.appendChild(card);
                 });
                 
-                // Clonar depois (múltiplas vezes)
                 for (let i = 0; i < cloneMultiplier; i++) {
                     originalCards.forEach(card => {
                         const clone = card.cloneNode(true);
@@ -255,10 +294,7 @@ CSS;
                 if (!animate) {
                     track.classList.add('no-transition');
                     track.style.transform = 'translateX(' + offset + 'px)';
-                    
-                    // Force reflow
                     void track.offsetWidth;
-                    
                     requestAnimationFrame(() => {
                         track.classList.remove('no-transition');
                     });
@@ -285,7 +321,6 @@ CSS;
                 isAnimating = true;
                 currentIndex++;
                 updatePosition(true);
-                
                 setTimeout(() => {
                     checkLoop();
                     isAnimating = false;
@@ -297,17 +332,14 @@ CSS;
                 isAnimating = true;
                 currentIndex--;
                 updatePosition(true);
-                
                 setTimeout(() => {
                     checkLoop();
                     isAnimating = false;
                 }, 350);
             }
             
-            // Mouse wheel scroll (debounced)
             wrapper.addEventListener('wheel', function(e) {
                 e.preventDefault();
-                
                 clearTimeout(wheelTimeout);
                 wheelTimeout = setTimeout(() => {
                     if (e.deltaY > 0) {
@@ -318,11 +350,9 @@ CSS;
                 }, 50);
             }, { passive: false });
             
-            // Button navigation
             if (nextBtn) nextBtn.addEventListener('click', next);
             if (prevBtn) prevBtn.addEventListener('click', prev);
             
-            // Window resize
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
@@ -331,7 +361,6 @@ CSS;
                 }, 100);
             });
             
-            // Initialize
             initInfiniteCarousel();
         })();
 JS;

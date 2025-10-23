@@ -15,6 +15,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\LocalCultural;
 
 /**
  * Site controller
@@ -75,7 +76,50 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        // Buscar museus em destaque (tipo_id = 1) com relação distrito
+        $museus = LocalCultural::find()
+            ->with('distrito') // Eager loading da relação
+            ->where(['tipo_id' => 1])
+            ->andWhere(['ativo' => 1])
+            ->orderBy(['id' => SORT_DESC])
+            ->limit(6)
+            ->all();
+        
+        // Buscar monumentos em destaque (tipo_id = 2 ou 3) com relação distrito
+        $monumentos = LocalCultural::find()
+            ->with('distrito') // Eager loading da relação
+            ->where(['in', 'tipo_id', [2, 3]])
+            ->andWhere(['ativo' => 1])
+            ->orderBy(['id' => SORT_DESC])
+            ->limit(5)
+            ->all();
+        
+        // Formatar dados para o carrossel de museus
+        $museusItems = [];
+        foreach ($museus as $museu) {
+            $museusItems[] = [
+                'image' => $museu->imagem_principal,
+                'title' => $museu->nome,
+                'subtitle' => $museu->distrito ? $museu->distrito->nome : 'Portugal',
+                'url' => ['local-cultural/view', 'id' => $museu->id],
+            ];
+        }
+        
+        // Formatar dados para o carrossel de monumentos
+        $monumentosItems = [];
+        foreach ($monumentos as $monumento) {
+            $monumentosItems[] = [
+                'image' => $monumento->imagem_principal,
+                'title' => $monumento->nome,
+                'subtitle' => $monumento->distrito ? $monumento->distrito->nome : 'Portugal',
+                'url' => ['local-cultural/view', 'id' => $monumento->id],
+            ];
+        }
+        
+        return $this->render('index', [
+            'museusItems' => $museusItems,
+            'monumentosItems' => $monumentosItems,
+        ]);
     }
 
     /**

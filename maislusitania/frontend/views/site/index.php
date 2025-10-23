@@ -1,6 +1,9 @@
 <?php
 
 /** @var yii\web\View $this */
+/** @var array $museusItems */
+/** @var array $monumentosItems */
+
 use frontend\widgets\CustomNavBar;
 use frontend\widgets\InfiniteCarousel;
 use yii\helpers\Url;
@@ -18,6 +21,7 @@ $this->title = 'My Yii Application';
     </div>
 
     <!-- Carrossel de Museus em Destaque -->
+    <?php if (!empty($museusItems)): ?>
     <div class="mb-5">
         <h2 class="text-center mb-4" style="color: #2E5AAC;">Museus em Destaque</h2>
         <?= InfiniteCarousel::widget([
@@ -26,42 +30,13 @@ $this->title = 'My Yii Application';
             'cardHeight' => 300,
             'cardGap' => 2,
             'backgroundColor' => '#2E5AAC',
-            'items' => [
-                [
-                    'image' => 'https://picsum.photos/seed/museum1/500/300',
-                    'title' => 'Museu Nacional de Arte Antiga',
-                    'subtitle' => 'Lisboa'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/museum2/500/300',
-                    'title' => 'Museu Calouste Gulbenkian',
-                    'subtitle' => 'Lisboa'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/museum3/500/300',
-                    'title' => 'Museu do Azulejo',
-                    'subtitle' => 'Lisboa'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/museum4/500/300',
-                    'title' => 'Museu da Electricidade',
-                    'subtitle' => 'Lisboa'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/museum5/500/300',
-                    'title' => 'Museu Berardo',
-                    'subtitle' => 'Belém'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/museum6/500/300',
-                    'title' => 'Museu Nacional dos Coches',
-                    'subtitle' => 'Belém'
-                ],
-            ],
+            'items' => $museusItems,
         ]) ?>
     </div>
+    <?php endif; ?>
 
     <!-- Carrossel de Monumentos -->
+    <?php if (!empty($monumentosItems)): ?>
     <div class="mb-5">
         <h2 class="text-center mb-4" style="color: #2E5AAC;">Monumentos Históricos</h2>
         <?= InfiniteCarousel::widget([
@@ -70,35 +45,10 @@ $this->title = 'My Yii Application';
             'cardHeight' => 280,
             'cardGap' => 1.5,
             'backgroundColor' => '#3498db',
-            'items' => [
-                [
-                    'image' => 'https://picsum.photos/seed/monument1/450/280',
-                    'title' => 'Torre de Belém',
-                    'subtitle' => 'Lisboa'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/monument2/450/280',
-                    'title' => 'Mosteiro dos Jerónimos',
-                    'subtitle' => 'Belém'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/monument3/450/280',
-                    'title' => 'Castelo de São Jorge',
-                    'subtitle' => 'Lisboa'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/monument4/450/280',
-                    'title' => 'Palácio Nacional da Pena',
-                    'subtitle' => 'Sintra'
-                ],
-                [
-                    'image' => 'https://picsum.photos/seed/monument5/450/280',
-                    'title' => 'Convento de Cristo',
-                    'subtitle' => 'Tomar'
-                ],
-            ],
+            'items' => $monumentosItems,
         ]) ?>
     </div>
+    <?php endif; ?>
 
     <!-- Conteúdo Original -->
     <div class="body-content">

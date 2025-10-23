@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 ?>
 
 <div id="<?= $carouselId ?>" class="infinite-carousel">
@@ -16,12 +17,32 @@ use yii\helpers\Html;
             <div class="carousel-track">
                 <?php foreach ($items as $item): ?>
                     <div class="carousel-card">
-                        <div class="card">
-                            <?= isset($item['content']) ? Html::encode($item['content']) : '' ?>
-                            <?php if (isset($item['image'])): ?>
-                                <?= Html::img($item['image'], ['class' => 'card-img']) ?>
-                            <?php endif; ?>
-                        </div>
+                        <?php 
+                        $cardContent = '';
+                        
+                        if (isset($item['image'])) {
+                            $cardContent .= Html::img($item['image'], [
+                                'class' => 'card-img',
+                            ]);
+                            
+                            $cardContent .= '<div class="card-overlay">';
+                            if (isset($item['title'])) {
+                                $cardContent .= '<h3 class="card-title">' . Html::encode($item['title']) . '</h3>';
+                            }
+                            if (isset($item['subtitle'])) {
+                                $cardContent .= '<p class="card-subtitle">' . Html::encode($item['subtitle']) . '</p>';
+                            }
+                            $cardContent .= '</div>';
+                        } else {
+                            $cardContent = isset($item['content']) ? Html::encode($item['content']) : '';
+                        }
+                        
+                        if (isset($item['url'])) {
+                            echo Html::a($cardContent, $item['url'], ['class' => 'card']);
+                        } else {
+                            echo '<div class="card">' . $cardContent . '</div>';
+                        }
+                        ?>
                     </div>
                 <?php endforeach; ?>
             </div>
