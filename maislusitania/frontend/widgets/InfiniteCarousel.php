@@ -18,22 +18,27 @@ class InfiniteCarousel extends Widget
     /**
      * @var int Largura do card em pixels
      */
-    public $cardWidth = 300;
+    public $cardWidth = 400;
     
     /**
      * @var int Altura do card em pixels
      */
-    public $cardHeight = 500;
+    public $cardHeight = 250;
     
     /**
      * @var int Gap entre cards em rem
      */
-    public $cardGap = 1.5;
+    public $cardGap = 1;
     
     /**
      * @var string ID único do carrossel
      */
     public $carouselId;
+    
+    /**
+     * @var string Cor de fundo do carrossel
+     */
+    public $backgroundColor = '#3498db';
 
     public function init()
     {
@@ -57,6 +62,7 @@ class InfiniteCarousel extends Widget
             'cardHeight' => $this->cardHeight,
             'cardGap' => $this->cardGap,
             'carouselId' => $this->carouselId,
+            'backgroundColor' => $this->backgroundColor,
         ]);
     }
 
@@ -73,224 +79,291 @@ class InfiniteCarousel extends Widget
         $view->registerJs($js, \yii\web\View::POS_READY);
     }
 
-    protected function getCss()
-    {
-        return <<<CSS
-        #{$this->carouselId} .carousel-card .card {
-            border-radius: 15px;
-            overflow: hidden;
-            height: {$this->cardHeight}px;
-            width: {$this->cardWidth}px;
-            position: relative;
-            user-select: none;
+protected function getCss()
+{
+    return <<<CSS
+    
+    #{$this->carouselId} .carousel-card .card {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    #{$this->carouselId} .carousel-card a.card {
+        cursor: pointer;
+    }
+    
+    #{$this->carouselId} {
+        position: relative;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        background: {$this->backgroundColor};
+        padding: 80px 0;
+        overflow: hidden;
+    }
+    
+    #{$this->carouselId} .carousel-container {
+        position: relative;
+        width: 100%;
+        height: calc({$this->cardHeight}px + 40px);
+    }
+    
+    #{$this->carouselId} .carousel-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+    
+    #{$this->carouselId} .carousel-track {
+        display: flex;
+        gap: {$this->cardGap}rem;
+        position: absolute;
+        left: 0;
+        top: 20px;
+        transition: transform 0.3s ease-out;
+        will-change: transform;
+    }
+    
+    #{$this->carouselId} .carousel-track.no-transition {
+        transition: none !important;
+    }
+    
+    #{$this->carouselId} .carousel-card {
+        flex: 0 0 {$this->cardWidth}px;
+        min-width: {$this->cardWidth}px;
+        height: {$this->cardHeight}px;
+    }
+    
+    #{$this->carouselId} .carousel-card .card {
+        border-radius: 25px;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        position: relative;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        transform-origin: center center;
+    }
+    
+    #{$this->carouselId} .carousel-card .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        z-index: 5;
+    }
+    
+    #{$this->carouselId} .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    
+    #{$this->carouselId} .card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+        padding: 20px;
+        color: white;
+    }
+    
+    #{$this->carouselId} .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 0 5px 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+    
+    #{$this->carouselId} .card-subtitle {
+        font-size: 1rem;
+        margin: 0;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+    
+    #{$this->carouselId} .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        user-select: none;
+    }
+    
+    #{$this->carouselId} .carousel-nav:hover {
+        background: #f0f0f0;
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    #{$this->carouselId} .carousel-nav.prev {
+        left: 20px;
+    }
+    
+    #{$this->carouselId} .carousel-nav.next {
+        right: 20px;
+    }
+    
+    #{$this->carouselId} .carousel-nav svg {
+        width: 24px;
+        height: 24px;
+        fill: #3498db;
+    }
+    
+    @media (max-width: 768px) {
+        #{$this->carouselId} .carousel-card {
+            flex: 0 0 300px;
+            min-width: 300px;
         }
         
-        #{$this->carouselId} .card-img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            filter: brightness(0.7);
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-        
-        #{$this->carouselId} .carousel-card .card:hover .card-img {
-            transform: scale(1.05);
-            filter: brightness(0.5);
-        }
-        
-        #{$this->carouselId} .card-img-overlay {
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
-            padding: 2rem;
-            pointer-events: none;
+        #{$this->carouselId} .carousel-nav {
+            width: 40px;
+            height: 40px;
         }
         
         #{$this->carouselId} .card-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 1.2rem;
         }
         
-        #{$this->carouselId} .card-text {
-            font-size: 1rem;
-            font-weight: 300;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        #{$this->carouselId} .card-subtitle {
+            font-size: 0.9rem;
         }
-        
-        #{$this->carouselId} {
-            position: relative;
-            padding-top: 80px;
-            padding-bottom: 30px;
-            overflow: visible;
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
-            padding-left: 0;
-            padding-right: 0;
-        }
-        
-        #{$this->carouselId} .carousel-wrapper {
-            overflow: hidden;
-            width: 100%;
-            cursor: grab;
-        }
-        
-        #{$this->carouselId} .carousel-wrapper.grabbing {
-            cursor: grabbing;
-        }
-        
-        #{$this->carouselId} .carousel-track {
-            display: flex;
-            gap: {$this->cardGap}rem;
-            transition: transform 0.3s ease;
-            padding: 0 50px;
-            will-change: transform;
-        }
-        
-        #{$this->carouselId} .carousel-track.no-transition {
-            transition: none;
-        }
-        
-        #{$this->carouselId} .carousel-track .carousel-card {
-            flex: 0 0 {$this->cardWidth}px;
-            min-width: {$this->cardWidth}px;
-        }
-
-        @media (max-width: 768px) {
-            #{$this->carouselId} .carousel-track {
-                padding: 0 30px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            #{$this->carouselId} .carousel-track {
-                padding: 0 20px;
-            }
-        }
-CSS;
     }
+CSS;
+}
 
     protected function getJs()
     {
-        $cardGapPx = $this->cardGap * 16; // Converter rem para px (assumindo 1rem = 16px)
+        $cardGapPx = $this->cardGap * 16;
         $cardWidthTotal = $this->cardWidth + $cardGapPx;
         
         return <<<JS
         (function() {
-            const wrapper = document.getElementById('{$this->carouselId}').querySelector('.carousel-wrapper');
-            const track = document.getElementById('{$this->carouselId}').querySelector('.carousel-track');
-            const cards = Array.from(track.children);
-            const totalCards = cards.length;
+            const carousel = document.getElementById('{$this->carouselId}');
+            if (!carousel) return;
+            
+            const wrapper = carousel.querySelector('.carousel-wrapper');
+            const track = carousel.querySelector('.carousel-track');
+            const originalCards = Array.from(track.querySelectorAll('.carousel-card'));
+            const prevBtn = carousel.querySelector('.carousel-nav.prev');
+            const nextBtn = carousel.querySelector('.carousel-nav.next');
+            
+            const totalOriginalCards = originalCards.length;
             const cardWidth = {$cardWidthTotal};
-
-            let isDragging = false;
-            let startX = 0;
-            let currentTranslate = 0;
-            let prevTranslate = 0;
-            let animationID;
-
+            const cloneMultiplier = 3;
+            
+            let currentIndex = totalOriginalCards * cloneMultiplier;
+            let isAnimating = false;
+            let wheelTimeout;
+            
             function initInfiniteCarousel() {
-                cards.forEach(card => {
-                    const clone = card.cloneNode(true);
-                    track.appendChild(clone);
+                track.innerHTML = '';
+                
+                for (let i = 0; i < cloneMultiplier; i++) {
+                    originalCards.forEach(card => {
+                        const clone = card.cloneNode(true);
+                        track.appendChild(clone);
+                    });
+                }
+                
+                originalCards.forEach(card => {
+                    track.appendChild(card);
                 });
                 
-                cards.forEach(card => {
-                    const clone = card.cloneNode(true);
-                    track.insertBefore(clone, track.firstChild);
-                });
-                
-                currentTranslate = -(totalCards * cardWidth);
-                prevTranslate = currentTranslate;
-                setSliderPosition();
-            }
-
-            function setSliderPosition() {
-                track.style.transform = 'translateX(' + currentTranslate + 'px)';
-            }
-
-            function checkInfiniteLoop() {
-                const maxTranslate = -(totalCards * 2 * cardWidth);
-                const minTranslate = -(totalCards * cardWidth * 0.5);
-                
-                if (currentTranslate <= maxTranslate + cardWidth) {
-                    track.style.transition = 'none';
-                    currentTranslate = -(totalCards * cardWidth) + (currentTranslate - maxTranslate);
-                    prevTranslate = currentTranslate;
-                    setSliderPosition();
-                    setTimeout(function() {
-                        track.style.transition = 'transform 0.3s ease';
-                    }, 10);
+                for (let i = 0; i < cloneMultiplier; i++) {
+                    originalCards.forEach(card => {
+                        const clone = card.cloneNode(true);
+                        track.appendChild(clone);
+                    });
                 }
                 
-                if (currentTranslate >= minTranslate) {
-                    track.style.transition = 'none';
-                    currentTranslate = -(totalCards * cardWidth) - (minTranslate - currentTranslate);
-                    prevTranslate = currentTranslate;
-                    setSliderPosition();
-                    setTimeout(function() {
-                        track.style.transition = 'transform 0.3s ease';
-                    }, 10);
+                updatePosition(false);
+            }
+            
+            function updatePosition(animate = true) {
+                const offset = -(currentIndex * cardWidth) + (window.innerWidth / 2) - (cardWidth / 2);
+                
+                if (!animate) {
+                    track.classList.add('no-transition');
+                    track.style.transform = 'translateX(' + offset + 'px)';
+                    void track.offsetWidth;
+                    requestAnimationFrame(() => {
+                        track.classList.remove('no-transition');
+                    });
+                } else {
+                    track.style.transform = 'translateX(' + offset + 'px)';
                 }
             }
-
-            function touchStart(event) {
-                isDragging = true;
-                startX = event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-                wrapper.classList.add('grabbing');
-                track.classList.add('no-transition');
-                animationID = requestAnimationFrame(animation);
-            }
-
-            function touchMove(event) {
-                if (isDragging) {
-                    const currentX = event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-                    const diff = currentX - startX;
-                    currentTranslate = prevTranslate + diff;
+            
+            function checkLoop() {
+                const maxIndex = totalOriginalCards * (cloneMultiplier * 2 + 1);
+                const minIndex = totalOriginalCards * cloneMultiplier;
+                
+                if (currentIndex >= maxIndex - totalOriginalCards) {
+                    currentIndex = totalOriginalCards * cloneMultiplier + (currentIndex % totalOriginalCards);
+                    updatePosition(false);
+                } else if (currentIndex < minIndex) {
+                    currentIndex = totalOriginalCards * (cloneMultiplier + 1) - totalOriginalCards + (currentIndex % totalOriginalCards);
+                    updatePosition(false);
                 }
             }
-
-            function touchEnd() {
-                isDragging = false;
-                wrapper.classList.remove('grabbing');
-                track.classList.remove('no-transition');
-                cancelAnimationFrame(animationID);
-                
-                prevTranslate = currentTranslate;
-                checkInfiniteLoop();
+            
+            function next() {
+                if (isAnimating) return;
+                isAnimating = true;
+                currentIndex++;
+                updatePosition(true);
+                setTimeout(() => {
+                    checkLoop();
+                    isAnimating = false;
+                }, 350);
             }
-
-            function animation() {
-                setSliderPosition();
-                if (isDragging) requestAnimationFrame(animation);
+            
+            function prev() {
+                if (isAnimating) return;
+                isAnimating = true;
+                currentIndex--;
+                updatePosition(true);
+                setTimeout(() => {
+                    checkLoop();
+                    isAnimating = false;
+                }, 350);
             }
-
-            function handleWheel(event) {
-                event.preventDefault();
-                
-                const delta = event.deltaY || event.deltaX;
-                const scrollAmount = delta * 2;
-                
-                currentTranslate -= scrollAmount;
-                prevTranslate = currentTranslate;
-                
-                setSliderPosition();
-                checkInfiniteLoop();
-            }
-
-            wrapper.addEventListener('mousedown', touchStart);
-            wrapper.addEventListener('mousemove', touchMove);
-            wrapper.addEventListener('mouseup', touchEnd);
-            wrapper.addEventListener('mouseleave', touchEnd);
-
-            wrapper.addEventListener('touchstart', touchStart);
-            wrapper.addEventListener('touchmove', touchMove);
-            wrapper.addEventListener('touchend', touchEnd);
-
-            wrapper.addEventListener('wheel', handleWheel, { passive: false });
-
-            wrapper.addEventListener('dragstart', function(e) { e.preventDefault(); });
-
+            
+            wrapper.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                clearTimeout(wheelTimeout);
+                wheelTimeout = setTimeout(() => {
+                    if (e.deltaY > 0) {
+                        next();
+                    } else {
+                        prev();
+                    }
+                }, 50);
+            }, { passive: false });
+            
+            if (nextBtn) nextBtn.addEventListener('click', next);
+            if (prevBtn) prevBtn.addEventListener('click', prev);
+            
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    updatePosition(false);
+                }, 100);
+            });
+            
             initInfiniteCarousel();
         })();
 JS;
@@ -299,12 +372,12 @@ JS;
     protected function getDefaultItems()
     {
         return [
-            ['image' => 'https://picsum.photos/id/21/400/600.jpg', 'title' => 'Working Spaces', 'subtitle' => 'for Startups Freelancer'],
-            ['image' => 'https://picsum.photos/id/242/400/600.jpg', 'title' => 'Working Spaces', 'subtitle' => 'for Startups Freelancer'],
-            ['image' => 'https://picsum.photos/id/533/400/600.jpg', 'title' => 'Working Spaces', 'subtitle' => 'for Startups Freelancer'],
-            ['image' => 'https://picsum.photos/id/119/400/600.jpg', 'title' => 'Working Spaces', 'subtitle' => 'for Startups Freelancer'],
-            ['image' => 'https://picsum.photos/id/180/400/600.jpg', 'title' => 'Working Spaces', 'subtitle' => 'for Startups Freelancer'],
-            ['image' => 'https://picsum.photos/id/201/400/600.jpg', 'title' => 'Working Spaces', 'subtitle' => 'for Startups Freelancer'],
+            ['content' => '1'],
+            ['content' => '2'],
+            ['content' => '3'],
+            ['content' => '4'],
+            ['content' => '5'],
+            ['content' => '6'],
         ];
     }
 }

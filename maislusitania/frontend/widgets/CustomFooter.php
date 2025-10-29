@@ -192,18 +192,17 @@ class CustomFooter extends Widget
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            border: 2px solid {$this->brandColor};
             background-color: #ffffff;
             color: {$this->brandColor};
             text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .custom-footer .footer-social a:hover {
             background-color: {$this->brandColor};
             color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
         .custom-footer .footer-bottom {
