@@ -26,6 +26,13 @@ return [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',
         ],
+        'view' => [
+         'theme' => [
+             'pathMap' => [
+                '@app/views' => '@vendor/hail812/yii2-adminlte3/src/views'
+             ],
+         ],
+    ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
