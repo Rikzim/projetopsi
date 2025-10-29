@@ -41,8 +41,14 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    //Mterial Design
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+
+    // Navigation Component (opcional mas recomendado)
+    implementation("androidx.navigation:navigation-fragment:2.7.6")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.navigation:navigation-ui:2.7.6")
 
 
 }
