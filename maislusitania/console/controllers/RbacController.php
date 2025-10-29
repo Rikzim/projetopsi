@@ -14,30 +14,17 @@ class RbacController extends Controller
         // ============ CRIAR PERMISSÕES ============
         
         // Permissões de Museus
-        $addMuseum = $auth->createPermission('addMuseum');
-        $addMuseum->description = 'Adicionar museus';
-        $auth->add($addMuseum);
+        $addPlace = $auth->createPermission('addPlace');
+        $addPlace->description = 'Adicionar locais';
+        $auth->add($addPlace);
+
+        $editPlace = $auth->createPermission('editPlace');
+        $editPlace->description = 'Editar locais';
+        $auth->add($editPlace);
         
-        $editMuseum = $auth->createPermission('editMuseum');
-        $editMuseum->description = 'Editar museus';
-        $auth->add($editMuseum);
-        
-        $deleteMuseum = $auth->createPermission('deleteMuseum');
-        $deleteMuseum->description = 'Eliminar museus';
-        $auth->add($deleteMuseum);
-        
-        // Permissões de Monumentos
-        $addMonument = $auth->createPermission('addMonument');
-        $addMonument->description = 'Adicionar monumentos';
-        $auth->add($addMonument);
-        
-        $editMonument = $auth->createPermission('editMonument');
-        $editMonument->description = 'Editar monumentos';
-        $auth->add($editMonument);
-        
-        $deleteMonument = $auth->createPermission('deleteMonument');
-        $deleteMonument->description = 'Eliminar monumentos';
-        $auth->add($deleteMonument);
+        $deletePlace = $auth->createPermission('deletePlace');
+        $deletePlace->description = 'Eliminar locais';
+        $auth->add($deletePlace);
         
         // Permissões de Eventos
         $addEvent = $auth->createPermission('addEvent');
@@ -102,15 +89,11 @@ class RbacController extends Controller
         
         // Permissões de Visualização (todos têm acesso)
         $viewContent = $auth->createPermission('viewContent');
-        $viewContent->description = 'Visualizar museus, monumentos, eventos, notícias';
+        $viewContent->description = 'Visualizar locais, eventos, notícias';
         $auth->add($viewContent);
         
-        $viewMap = $auth->createPermission('viewMap');
-        $viewMap->description = 'Visualizar mapa interativo';
-        $auth->add($viewMap);
-        
         $searchContent = $auth->createPermission('searchContent');
-        $searchContent->description = 'Pesquisar museus e monumentos';
+        $searchContent->description = 'Pesquisar locais e eventos';
         $auth->add($searchContent);
         
         // Permissão de acesso ao Back-Office
@@ -136,12 +119,9 @@ class RbacController extends Controller
         $auth->add($gestor);
         $auth->addChild($gestor, $user); // Herda permissões de user
         $auth->addChild($gestor, $accessBackoffice);
-        $auth->addChild($gestor, $addMuseum);
-        $auth->addChild($gestor, $editMuseum);
-        $auth->addChild($gestor, $deleteMuseum);
-        $auth->addChild($gestor, $addMonument);
-        $auth->addChild($gestor, $editMonument);
-        $auth->addChild($gestor, $deleteMonument);
+        $auth->addChild($gestor, $addPlace);
+        $auth->addChild($gestor, $editPlace);
+        $auth->addChild($gestor, $deletePlace);
         $auth->addChild($gestor, $addEvent);
         $auth->addChild($gestor, $editEvent);
         $auth->addChild($gestor, $deleteEvent);
@@ -167,7 +147,7 @@ class RbacController extends Controller
         echo "   Roles e permissões criadas com sucesso!\n\n";
         echo "   Resumo:\n";
         echo "   - User: Comprar bilhetes, avaliar, gerir perfil\n";
-        echo "   - Gestor: Gerir museus, monumentos, eventos, notícias, bilheteira\n";
+        echo "   - Gestor: Gerir locais, eventos, notícias, bilheteira\n";
         echo "   - Admin: Controlo total + gestão de utilizadores\n";
     }
 }
