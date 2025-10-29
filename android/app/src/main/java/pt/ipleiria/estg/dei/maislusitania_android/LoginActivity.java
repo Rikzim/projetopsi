@@ -30,4 +30,11 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
     }
+
+    public void Login(View view) {
+        // Após o login ser bem-sucedido, adicione:
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish(); // Para não voltar ao login ao pressionar "voltar"
+    }
 }

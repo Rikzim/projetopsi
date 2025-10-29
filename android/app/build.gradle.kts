@@ -42,7 +42,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     //Mterial Design
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 
     // Navigation Component (opcional mas recomendado)
