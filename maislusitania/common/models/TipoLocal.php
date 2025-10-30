@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $nome
- * @property string|null $descricao
+ * @property string $descricao
  *
  * @property LocalCultural[] $localCulturals
  */
@@ -31,8 +31,7 @@ class TipoLocal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descricao'], 'default', 'value' => null],
-            [['nome'], 'required'],
+            [['nome', 'descricao'], 'required'],
             [['nome'], 'string', 'max' => 50],
             [['descricao'], 'string', 'max' => 255],
             [['nome'], 'unique'],

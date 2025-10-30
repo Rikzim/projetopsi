@@ -12,9 +12,10 @@ use Yii;
  * @property string $conteudo
  * @property string|null $resumo
  * @property string|null $imagem
- * @property string|null $data_publicacao
- * @property int|null $visivel
- * @property int|null $local_id
+ * @property string $data_publicacao
+ * @property int $ativo
+ * @property int $local_id
+ * @property int $destaque
  *
  * @property LocalCultural $local
  */
@@ -36,13 +37,13 @@ class Noticia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['resumo', 'imagem', 'local_id'], 'default', 'value' => null],
-            [['data_publicacao'], 'default', 'value' => 'now()'],
-            [['visivel'], 'default', 'value' => 0],
-            [['titulo', 'conteudo'], 'required'],
+            [['resumo', 'imagem'], 'default', 'value' => null],
+            [['ativo'], 'default', 'value' => 1],
+            [['destaque'], 'default', 'value' => 0],
+            [['titulo', 'conteudo', 'local_id'], 'required'],
             [['conteudo'], 'string'],
             [['data_publicacao'], 'safe'],
-            [['visivel', 'local_id'], 'integer'],
+            [['ativo', 'local_id', 'destaque'], 'integer'],
             [['titulo'], 'string', 'max' => 200],
             [['resumo'], 'string', 'max' => 500],
             [['imagem'], 'string', 'max' => 255],
@@ -62,8 +63,9 @@ class Noticia extends \yii\db\ActiveRecord
             'resumo' => 'Resumo',
             'imagem' => 'Imagem',
             'data_publicacao' => 'Data Publicacao',
-            'visivel' => 'Visivel',
+            'ativo' => 'Ativo',
             'local_id' => 'Local ID',
+            'destaque' => 'Destaque',
         ];
     }
 

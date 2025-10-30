@@ -10,9 +10,10 @@ use Yii;
  * @property int $id
  * @property int $local_id
  * @property int $utilizador_id
- * @property int|null $classificacao
+ * @property int $classificacao
  * @property string|null $comentario
- * @property string|null $data_avaliacao
+ * @property string $data_avaliacao
+ * @property int $ativo
  *
  * @property LocalCultural $local
  * @property User $utilizador
@@ -35,10 +36,10 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['classificacao', 'comentario'], 'default', 'value' => null],
-            [['data_avaliacao'], 'default', 'value' => 'now()'],
-            [['local_id', 'utilizador_id'], 'required'],
-            [['local_id', 'utilizador_id', 'classificacao'], 'integer'],
+            [['comentario'], 'default', 'value' => null],
+            [['ativo'], 'default', 'value' => 1],
+            [['local_id', 'utilizador_id', 'classificacao'], 'required'],
+            [['local_id', 'utilizador_id', 'classificacao', 'ativo'], 'integer'],
             [['comentario'], 'string'],
             [['data_avaliacao'], 'safe'],
             [['local_id', 'utilizador_id'], 'unique', 'targetAttribute' => ['local_id', 'utilizador_id']],
@@ -59,6 +60,7 @@ class Avaliacao extends \yii\db\ActiveRecord
             'classificacao' => 'Classificacao',
             'comentario' => 'Comentario',
             'data_avaliacao' => 'Data Avaliacao',
+            'ativo' => 'Ativo',
         ];
     }
 

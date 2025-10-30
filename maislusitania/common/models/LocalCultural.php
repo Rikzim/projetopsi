@@ -10,25 +10,25 @@ use Yii;
  * @property int $id
  * @property string $nome
  * @property int $tipo_id
- * @property string|null $morada
- * @property int|null $distrito_id
- * @property string|null $descricao
+ * @property string $morada
+ * @property int $distrito_id
+ * @property string $descricao
  * @property string|null $horario_funcionamento
  * @property string|null $contacto_telefone
  * @property string|null $contacto_email
  * @property string|null $website
  * @property string|null $imagem_principal
- * @property int|null $ativo
+ * @property int $ativo
  *
  * @property Avaliacao[] $avaliacaos
  * @property Distrito $distrito
  * @property Evento[] $eventos
  * @property Favorito[] $favoritos
- * @property TipoBilhete $id0
+ * @property Horario[] $horarios
  * @property Noticia[] $noticias
  * @property Reserva[] $reservas
  * @property TipoLocal $tipo
- * @property Traducao[] $traducaos
+ * @property TipoBilhete $tipoBilhete
  * @property User[] $utilizadors
  * @property User[] $utilizadors0
  */
@@ -50,9 +50,9 @@ class LocalCultural extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['morada', 'distrito_id', 'descricao', 'horario_funcionamento', 'contacto_telefone', 'contacto_email', 'website', 'imagem_principal'], 'default', 'value' => null],
-            [['ativo'], 'default', 'value' => 0],
-            [['nome', 'tipo_id'], 'required'],
+            [['horario_funcionamento', 'contacto_telefone', 'contacto_email', 'website', 'imagem_principal'], 'default', 'value' => null],
+            [['ativo'], 'default', 'value' => 1],
+            [['nome', 'tipo_id', 'morada', 'distrito_id', 'descricao'], 'required'],
             [['tipo_id', 'distrito_id', 'ativo'], 'integer'],
             [['descricao'], 'string'],
             [['nome'], 'string', 'max' => 200],
@@ -60,7 +60,6 @@ class LocalCultural extends \yii\db\ActiveRecord
             [['horario_funcionamento'], 'string', 'max' => 500],
             [['contacto_telefone'], 'string', 'max' => 20],
             [['contacto_email'], 'string', 'max' => 100],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoBilhete::class, 'targetAttribute' => ['id' => 'local_id']],
             [['tipo_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoLocal::class, 'targetAttribute' => ['tipo_id' => 'id']],
             [['distrito_id'], 'exist', 'skipOnError' => true, 'targetClass' => Distrito::class, 'targetAttribute' => ['distrito_id' => 'id']],
         ];
@@ -128,13 +127,13 @@ class LocalCultural extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Id0]].
+     * Gets query for [[Horarios]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getId0()
+    public function getHorarios()
     {
-        return $this->hasOne(TipoBilhete::class, ['local_id' => 'id']);
+        return $this->hasMany(Horario::class, ['local_id' => 'id']);
     }
 
     /**
@@ -168,13 +167,13 @@ class LocalCultural extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Traducaos]].
+     * Gets query for [[TipoBilhete]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTraducaos()
+    public function getTipoBilhete()
     {
-        return $this->hasMany(Traducao::class, ['local_id' => 'id']);
+        return $this->hasOne(TipoBilhete::class, ['local_id' => 'id']);
     }
 
     /**

@@ -37,6 +37,7 @@ class LinhaReserva extends \yii\db\ActiveRecord
             [['reserva_id', 'quantidade', 'tipo_bilhete_id'], 'integer'],
             [['tipo_bilhete_id'], 'unique'],
             [['reserva_id'], 'exist', 'skipOnError' => true, 'targetClass' => Reserva::class, 'targetAttribute' => ['reserva_id' => 'id']],
+            [['tipo_bilhete_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoBilhete::class, 'targetAttribute' => ['tipo_bilhete_id' => 'id']],
         ];
     }
 

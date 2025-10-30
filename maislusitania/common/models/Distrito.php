@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $nome
- * @property string|null $codigo
+ * @property string $codigo
  *
  * @property LocalCultural[] $localCulturals
  */
@@ -31,8 +31,7 @@ class Distrito extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['codigo'], 'default', 'value' => null],
-            [['nome'], 'required'],
+            [['nome', 'codigo'], 'required'],
             [['nome'], 'string', 'max' => 50],
             [['codigo'], 'string', 'max' => 10],
             [['nome'], 'unique'],

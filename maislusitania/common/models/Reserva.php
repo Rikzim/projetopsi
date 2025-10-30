@@ -13,7 +13,7 @@ use Yii;
  * @property string $data_visita
  * @property float $preco_total
  * @property string|null $estado
- * @property string|null $data_reserva
+ * @property string|null $data_criacao
  *
  * @property LinhaReserva[] $linhaReservas
  * @property LocalCultural $local
@@ -44,10 +44,9 @@ class Reserva extends \yii\db\ActiveRecord
     {
         return [
             [['estado'], 'default', 'value' => '_utf8mb4\'Pendente\''],
-            [['data_reserva'], 'default', 'value' => 'now()'],
             [['utilizador_id', 'local_id', 'data_visita', 'preco_total'], 'required'],
             [['utilizador_id', 'local_id'], 'integer'],
-            [['data_visita', 'data_reserva'], 'safe'],
+            [['data_visita', 'data_criacao'], 'safe'],
             [['preco_total'], 'number'],
             [['estado'], 'string'],
             ['estado', 'in', 'range' => array_keys(self::optsEstado())],
@@ -68,7 +67,7 @@ class Reserva extends \yii\db\ActiveRecord
             'data_visita' => 'Data Visita',
             'preco_total' => 'Preco Total',
             'estado' => 'Estado',
-            'data_reserva' => 'Data Reserva',
+            'data_criacao' => 'Data Criacao',
         ];
     }
 
