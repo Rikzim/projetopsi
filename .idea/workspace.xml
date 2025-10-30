@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1d40a0f0-71a7-432f-b644-6bb7a4c9118d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/pt/ipleiria/estg/dei/maislusitania_android/MapaFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/pt/ipleiria/estg/dei/maislusitania_android/MapaFragment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,6 +162,7 @@
       <workItem from="1761749388462" duration="2641000" />
       <workItem from="1761827005448" duration="53000" />
       <workItem from="1761832757775" duration="227000" />
+      <workItem from="1761842272163" duration="348000" />
     </task>
     <servers />
   </component>
