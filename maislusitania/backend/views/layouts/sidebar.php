@@ -27,9 +27,9 @@
                         'label' => 'Gestão de Conteúdo',
                         'icon' => 'folder',
                         'items' => [
-                            ['label' => 'Locais Culturais', 'icon' => 'user', 'iconStyle' => 'far'],
-                            ['label' => 'Eventos', 'icon' => 'user', 'iconStyle' => 'far'],
-                            ['label' => 'Notícias', 'icon' => 'user', 'iconStyle' => 'far'],
+                            ['label' => 'Locais Culturais', 'icon' => 'user', 'iconStyle' => 'far', 'url' => ['local-cultural/index']],
+                            ['label' => 'Eventos', 'icon' => 'user', 'iconStyle' => 'far', 'url' => ['evento/index']],
+                            ['label' => 'Notícias', 'icon' => 'user', 'iconStyle' => 'far', 'url' => ['noticia/index']],
                         ]
                     ],
                     [
