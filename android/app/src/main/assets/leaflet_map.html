@@ -4,28 +4,25 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Portugal</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-sA+e2x0pPq6kGf/7gkY6W5QYp2s6K0Zz0+GmZ8fW9S0=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         html, body, #map { height: 100%; margin: 0; padding: 0; }
-        .legend { background: white; padding: 6px; border-radius: 4px; font-size: 12px; }
     </style>
 </head>
 <body>
 <div id="map"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-o9N1j+vC2qkYq3p8KkAq4XChjGgqKXrq1p4Y9g3o3Gk=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    var map = L.map('map').setView([39.5, -8.0], 7);
+    // Disable zoom buttons and attribution
+    var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([39.5, -8.0], 7);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: ''
     }).addTo(map);
 
-    // Custom colored markers (simple external images)
     var blueIcon = new L.Icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
       shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -42,12 +39,11 @@
       iconSize: [25,41], iconAnchor: [12,41], popupAnchor: [1,-34], shadowSize: [41,41]
     });
 
-    // Example markers (name, category)
     var markers = [
       {pos:[38.716, -9.139], name:"Lisbon - Museu Nacional de Arte Antiga", icon:blueIcon},
       {pos:[38.707, -9.160], name:"Lisbon - Mosteiro dos Jerónimos", icon:blackIcon},
       {pos:[41.1579, -8.6291], name:"Porto - Museu de Serralves", icon:blueIcon},
-      {pos:[40.2033, -8.4103], name:"Coimbra - Universidade / Biblioteca Joanina", icon:greenIcon},
+      {pos:[40.2033, -8.4103], name:"Coimbra - Biblioteca Joanina", icon:greenIcon},
       {pos:[38.5719, -7.9135], name:"Évora - Templo Romano", icon:blackIcon},
       {pos:[37.0179, -7.9308], name:"Faro - Museu Municipal", icon:blueIcon},
       {pos:[41.5503, -8.4201], name:"Braga - Bom Jesus", icon:greenIcon},
@@ -60,7 +56,6 @@
       L.marker(m.pos, {icon: m.icon}).addTo(map).bindPopup('<b>'+m.name+'</b>');
     });
 
-    // Optional: fit bounds to markers
     var group = new L.featureGroup(markers.map(m => L.marker(m.pos)));
     map.fitBounds(group.getBounds().pad(0.2));
 </script>
