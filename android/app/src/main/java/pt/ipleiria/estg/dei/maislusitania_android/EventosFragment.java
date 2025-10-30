@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import pt.ipleiria.estg.dei.maislusitania_android.databinding.FragmentBilhetesBinding;
 import pt.ipleiria.estg.dei.maislusitania_android.databinding.FragmentEventosBinding;
 
 public class EventosFragment extends Fragment {
