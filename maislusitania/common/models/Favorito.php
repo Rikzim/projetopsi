@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property int $utilizador_id
  * @property int $local_id
- * @property string|null $data_adicao
+ * @property string $data_adicao
  *
  * @property LocalCultural $local
  * @property User $utilizador
@@ -33,7 +33,6 @@ class Favorito extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['data_adicao'], 'default', 'value' => 'now()'],
             [['utilizador_id', 'local_id'], 'required'],
             [['utilizador_id', 'local_id'], 'integer'],
             [['data_adicao'], 'safe'],
