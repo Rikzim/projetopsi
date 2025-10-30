@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1d40a0f0-71a7-432f-b644-6bb7a4c9118d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maislusitania/backend/views/layouts/navbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/maislusitania/backend/views/layouts/navbar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maislusitania/backend/views/layouts/sidebar.php" beforeDir="false" afterPath="$PROJECT_DIR$/maislusitania/backend/views/layouts/sidebar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maislusitania/console/controllers/RbacController.php" beforeDir="false" afterPath="$PROJECT_DIR$/maislusitania/console/controllers/RbacController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maislusitania/frontend/widgets/CustomNavBar.php" beforeDir="false" afterPath="$PROJECT_DIR$/maislusitania/frontend/widgets/CustomNavBar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maislusitania/frontend/widgets/views/custom-navbar.php" beforeDir="false" afterPath="$PROJECT_DIR$/maislusitania/frontend/widgets/views/custom-navbar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,29 +116,29 @@
       <path value="$PROJECT_DIR$/maislusitania/vendor/masterminds/html5" />
     </include_path>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="34kEtZ7Ido9wH0etzXq6iRW1jzE" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Martim",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Martim&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="CodeceptionConfigurationType" factoryName="Codeception">
       <PhpTestRunnerSettings configuration_file="$PROJECT_DIR$/maislusitania/codeception.yml" scope="ConfigurationFile" use_alternative_configuration_file="true" />
@@ -152,8 +148,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PS-252.26830.95" />
-        <option value="bundled-php-predefined-a98d8de5180a-9b563d34894c-com.jetbrains.php.sharedIndexes-PS-252.26830.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PS-252.27397.112" />
+        <option value="bundled-php-predefined-a98d8de5180a-b35feea871ed-com.jetbrains.php.sharedIndexes-PS-252.27397.112" />
       </set>
     </attachedChunks>
   </component>
@@ -164,7 +160,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1761749385845</updated>
-      <workItem from="1761749388462" duration="2099000" />
+      <workItem from="1761749388462" duration="2641000" />
+      <workItem from="1761827005448" duration="53000" />
+      <workItem from="1761832757775" duration="227000" />
     </task>
     <servers />
   </component>
