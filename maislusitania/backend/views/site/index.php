@@ -1,53 +1,218 @@
 <?php
 
-/** @var yii\web\View $this */
+use yii\helpers\Html;
 
-$this->title = 'My Yii Application';
+$this->title = 'Dashboard';
+$this->params['breadcrumbs'] = [['label' => $this->title]];
 ?>
-<div class="site-index">
-
-    <div class="jumbotron text-center bg-transparent">
-        <h1 class="display-4">Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
+<div class="container-fluid">
+    <!-- Info Boxes Row -->
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+            <?= \hail812\adminlte\widgets\InfoBox::widget([
+                'text' => 'Locais Culturais',
+                'number' => '25',
+                'icon' => 'fas fa-landmark',
+                'theme' => 'info',
+            ]) ?>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <?= \hail812\adminlte\widgets\InfoBox::widget([
+                'text' => 'Eventos Ativos',
+                'number' => '18',
+                'icon' => 'fas fa-calendar-alt',
+                'theme' => 'success',
+            ]) ?>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <?= \hail812\adminlte\widgets\InfoBox::widget([
+                'text' => 'Utilizadores',
+                'number' => '342',
+                'icon' => 'fas fa-users',
+                'theme' => 'warning',
+            ]) ?>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <?= \hail812\adminlte\widgets\InfoBox::widget([
+                'text' => 'Reservas (Mês)',
+                'number' => '127',
+                'icon' => 'fas fa-ticket-alt',
+                'theme' => 'danger',
+            ]) ?>
+        </div>
     </div>
 
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+    <!-- Tables Row -->
+    <div class="row">
+        <!-- Latest Reservations -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-calendar-check"></i> Últimas Reservas</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-eye"></i> Ver Todas
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">ID</th>
+                                <th>Evento</th>
+                                <th>Utilizador</th>
+                                <th>Data</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Exposição de Arte</td>
+                                <td>João Silva</td>
+                                <td>28/10/2025</td>
+                                <td><span class="badge badge-success">Confirmada</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Concerto de Fado</td>
+                                <td>Maria Santos</td>
+                                <td>27/10/2025</td>
+                                <td><span class="badge badge-warning">Pendente</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Peça de Teatro</td>
+                                <td>Pedro Costa</td>
+                                <td>26/10/2025</td>
+                                <td><span class="badge badge-success">Confirmada</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Workshop Digital</td>
+                                <td>Ana Ferreira</td>
+                                <td>25/10/2025</td>
+                                <td><span class="badge badge-danger">Cancelada</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
+        <!-- Latest Reviews -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-star"></i> Últimas Avaliações</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-eye"></i> Ver Todas
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">ID</th>
+                                <th>Local</th>
+                                <th>Utilizador</th>
+                                <th>Rating</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Museu Nacional</td>
+                                <td>Carlos M.</td>
+                                <td>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                </td>
+                                <td>28/10/2025</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Teatro Nacional</td>
+                                <td>Sofia L.</td>
+                                <td>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="far fa-star text-warning"></i>
+                                </td>
+                                <td>27/10/2025</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Casa da Música</td>
+                                <td>Rui P.</td>
+                                <td>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                </td>
+                                <td>26/10/2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-bar"></i> Vendas - Últimos 6 Meses</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<?php
+$this->registerJs("
+    var ctx = document.getElementById('salesChart').getContext('2d');
+    var salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro'],
+            datasets: [{
+                label: 'Lucro (€)',
+                data: [3200, 4500, 6000, 5200, 4800, 6500],
+                backgroundColor: '#5cb85c',
+                borderColor: '#4cae4c',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '€' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+");
