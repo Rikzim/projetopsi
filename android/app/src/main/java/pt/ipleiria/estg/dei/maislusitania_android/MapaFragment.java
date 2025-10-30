@@ -22,6 +22,7 @@ public class MapaFragment extends Fragment {
 
         // Listener para o ícone de perfil (ícone à direita)
         binding.tilPesquisa.setEndIconOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 // Abrir activity de perfil
