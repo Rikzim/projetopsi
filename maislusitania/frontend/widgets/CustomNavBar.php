@@ -12,12 +12,12 @@ class CustomNavBar extends Widget
      * @var string Logo URL
      */
     public $logoUrl = '@web/images/logo/logo.svg';
-    
+
     /**
      * @var string Logo text
      */
     public $logoText = '+Lusitânia';
-    
+
     /**
      * @var array Menu items
      * Formato: [
@@ -26,29 +26,39 @@ class CustomNavBar extends Widget
      * ]
      */
     public $menuItems = [];
-    
+
     /**
      * @var string Cor principal (azul)
      */
     public $brandColor = '#2E5AAC';
-    
+
     /**
      * @var bool Mostrar botões de login/signup
      */
     public $showAuthButtons = true;
 
+    /**
+     * @var string Label for signup button
+     */
+    public $signupLabel = 'Registar';
+
+    /**
+     * @var string Label for login button
+     */
+    public $loginLabel = 'Login';
+
     public function init()
     {
         parent::init();
-        
+
         if (empty($this->menuItems)) {
             $this->menuItems = [
                 ['label' => 'Sobre', 'url' => ['/site/about']],
-                ['label' => 'Museus', 'url' => ['/museus/index']],
-                ['label' => 'Monumentos', 'url' => ['/monumentos/index']],
-                ['label' => 'Notícias', 'url' => ['/noticias/index']],
-                ['label' => 'Eventos', 'url' => ['/eventos/index']],
-                ['label' => 'Mapa', 'url' => ['/testemapa/index']],
+                ['label' => 'Museus', 'url' => ['/local-cultural/index']],
+                ['label' => 'Monumentos', 'url' => ['/local-cultural/index']],
+                ['label' => 'Notícias', 'url' => ['/noticia/index']],
+                ['label' => 'Eventos', 'url' => ['/evento/index']],
+                ['label' => 'Mapa', 'url' => ['/mapa/index']],
             ];
         }
     }
@@ -67,13 +77,15 @@ class CustomNavBar extends Widget
             'showAuthButtons' => $this->showAuthButtons,
             'isGuest' => Yii::$app->user->isGuest,
             'username' => Yii::$app->user->isGuest ? '' : Yii::$app->user->identity->username,
+            'signupLabel' => $this->signupLabel,
+            'loginLabel' => $this->loginLabel,
         ]);
     }
 
     protected function registerAssets()
     {
         $view = $this->getView();
-        
+
         $css = <<<CSS
         .custom-navbar {
             background-color: transparent;
@@ -83,7 +95,7 @@ class CustomNavBar extends Widget
             z-index: 1000;
             width: 100%;
         }
-        
+
         .custom-navbar .navbar-container {
             display: flex;
             justify-content: space-between;
@@ -96,7 +108,7 @@ class CustomNavBar extends Widget
             border-radius: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
-        
+
         .custom-navbar .navbar-brand {
             display: flex;
             align-items: center;
@@ -106,12 +118,12 @@ class CustomNavBar extends Widget
             font-size: 1.5rem;
             font-weight: 600;
         }
-        
+
         .custom-navbar .navbar-brand img {
             width: 180px;
             height: 48px;
         }
-        
+
         .custom-navbar .navbar-menu {
             display: flex;
             gap: 0.5rem;
@@ -120,7 +132,7 @@ class CustomNavBar extends Widget
             padding: 0;
             align-items: center;
         }
-        
+
         .custom-navbar .navbar-menu a {
             text-decoration: none;
             color: {$this->brandColor};
@@ -130,18 +142,18 @@ class CustomNavBar extends Widget
             border-radius: 30px;
             transition: all 0.3s ease;
         }
-        
+
         .custom-navbar .navbar-menu a:hover {
             background-color: {$this->brandColor};
             color: white;
         }
-        
+
         .custom-navbar .navbar-auth {
             display: flex;
             gap: 0.1rem;
             align-items: center;
         }
-        
+
         .custom-navbar .btn-signup {
             padding: 0.5rem 1.5rem;
             background-color: transparent;
@@ -151,7 +163,7 @@ class CustomNavBar extends Widget
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .custom-navbar .btn-login {
             padding: 0.5rem 1.5rem;
             background-color: {$this->brandColor};
@@ -162,16 +174,16 @@ class CustomNavBar extends Widget
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .custom-navbar .btn-login:hover {
             background-color: #1e4a9c;
             border-color: #1e4a9c;
         }
-        
+
         .custom-navbar .user-info {
             position: relative;
         }
-        
+
         .custom-navbar .user-avatar {
             width: 45px;
             height: 45px;
@@ -187,12 +199,12 @@ class CustomNavBar extends Widget
             font-size: 1.1rem;
             transition: all 0.3s ease;
         }
-        
+
         .custom-navbar .user-avatar:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(46, 90, 172, 0.3);
         }
-        
+
         .custom-navbar .user-dropdown {
             position: absolute;
             top: calc(100% + 1rem);
@@ -207,13 +219,13 @@ class CustomNavBar extends Widget
             transition: all 0.3s ease;
             z-index: 1001;
         }
-        
+
         .custom-navbar .user-dropdown.show {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
-        
+
         .custom-navbar .user-dropdown-header {
             padding: 1.25rem;
             display: flex;
@@ -223,7 +235,7 @@ class CustomNavBar extends Widget
             border-radius: 12px 12px 0 0;
             color: white;
         }
-        
+
         .custom-navbar .user-dropdown-avatar {
             width: 50px;
             height: 50px;
@@ -236,35 +248,35 @@ class CustomNavBar extends Widget
             font-weight: 700;
             font-size: 1.3rem;
         }
-        
+
         .custom-navbar .user-dropdown-info {
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
         }
-        
+
         .custom-navbar .user-dropdown-info strong {
             font-size: 1rem;
             font-weight: 600;
         }
-        
+
         .custom-navbar .user-dropdown-info small {
             font-size: 0.85rem;
             opacity: 0.9;
         }
-        
+
         .custom-navbar .user-dropdown-divider {
             height: 1px;
             background: #e9ecef;
             margin: 0.5rem 0;
         }
-        
+
         .custom-navbar .user-dropdown-menu {
             list-style: none;
             padding: 0.5rem 0;
             margin: 0;
         }
-        
+
         .custom-navbar .user-dropdown-item {
             display: flex;
             align-items: center;
@@ -281,26 +293,26 @@ class CustomNavBar extends Widget
             text-align: left;
             cursor: pointer;
         }
-        
+
         .custom-navbar .user-dropdown-item:hover {
             background: #f8f9fa;
             color: {$this->brandColor};
         }
-        
+
         .custom-navbar .user-dropdown-item svg {
             width: 18px;
             height: 18px;
         }
-        
+
         .custom-navbar .logout-item {
             color: #dc3545;
         }
-        
+
         .custom-navbar .logout-item:hover {
             background: #fff5f5;
             color: #dc3545;
         }
-        
+
         .custom-navbar .mobile-toggle {
             display: none;
             background: none;
@@ -309,14 +321,18 @@ class CustomNavBar extends Widget
             cursor: pointer;
             color: {$this->brandColor};
         }
-        
+
+        .custom-navbar .mobile-auth {
+            display: none;
+        }
+
         @media (max-width: 992px) {
             .custom-navbar .navbar-container {
                 padding: 0.75rem 1.5rem;
                 max-width: calc(100% - 2rem);
                 margin: 0 1rem;
             }
-            
+
             .custom-navbar .navbar-menu {
                 display: none;
                 position: absolute;
@@ -328,45 +344,88 @@ class CustomNavBar extends Widget
                 padding: 1rem;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.1);
                 border-radius: 12px;
+                border: 2px solid {$this->brandColor};
             }
-            
+
             .custom-navbar .navbar-menu.active {
                 display: flex;
             }
-            
+
+            .custom-navbar .navbar-menu li {
+                width: 100%;
+            }
+
+            .custom-navbar .navbar-menu a {
+                display: block;
+                padding: 0.75rem 1rem;
+                text-align: center;
+                border-radius: 8px;
+            }
+
             .custom-navbar .mobile-toggle {
                 display: block;
             }
-            
+
+            .custom-navbar .navbar-auth {
+                display: none;
+            }
+
+            .custom-navbar .mobile-auth {
+                display: flex;
+                gap: 0.75rem;
+                flex-direction: column;
+                padding-top: 0.75rem;
+                border-top: 2px solid #e9ecef;
+                margin-top: 0.75rem;
+            }
+
+            .custom-navbar .mobile-auth .btn-signup,
+            .custom-navbar .mobile-auth .btn-login {
+                display: block;
+                text-align: center;
+                padding: 0.75rem 1.5rem;
+            }
+
+            .custom-navbar .mobile-auth .btn-signup {
+                background-color: transparent;
+                color: {$this->brandColor};
+                border: 2px solid {$this->brandColor};
+            }
+
+            .custom-navbar .mobile-auth .btn-login {
+                background-color: {$this->brandColor};
+                color: white;
+            }
+
             .custom-navbar .user-dropdown {
                 right: -1rem;
             }
         }
 CSS;
-        
+
         $view->registerCss($css);
-        
+
         $js = <<<JS
         document.addEventListener('DOMContentLoaded', function() {
             const toggle = document.querySelector('.mobile-toggle');
             const menu = document.querySelector('.navbar-menu');
-            
+
             if (toggle) {
                 toggle.addEventListener('click', function() {
                     menu.classList.toggle('active');
                 });
             }
-            
+
             // User dropdown toggle
             const userToggle = document.getElementById('user-dropdown-toggle');
             const userDropdown = document.getElementById('user-dropdown-menu');
-            
+
             if (userToggle && userDropdown) {
                 userToggle.addEventListener('click', function(e) {
                     e.stopPropagation();
                     userDropdown.classList.toggle('show');
                 });
-                
+
                 // Close dropdown when clicking outside
                 document.addEventListener('click', function(e) {
                     if (!userToggle.contains(e.target)) {
@@ -376,7 +435,7 @@ CSS;
             }
         });
 JS;
-        
+
         $view->registerJs($js);
     }
 }
