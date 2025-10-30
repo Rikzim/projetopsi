@@ -13,7 +13,7 @@ class LeafletMap extends Widget
     public $lat = 51.505;
     public $lng = -0.09;
     public $zoom = 13;
-    public $markers = []; // Array: [['lat' => X, 'lng' => Y, 'popup' => 'Text', 'type' => 'castle|museum|monument']]
+    public $markers = []; // Array: [['lat' => X, 'lng' => Y, 'popup' => 'Text', 'icone' => 'URL']]
 
     //TODO: Adicionar opções para camadas, controles e estilos personalizados
     //TODO: Ao clicar no marcador, exibir informações detalhadas sobre o local cultural
@@ -26,14 +26,15 @@ class LeafletMap extends Widget
         
         $css = <<<CSS
         .leaflet-map-container {
-            height: 700px;
+            height: 835px;
             width: 100%;
             display: block;
             margin: 0;
-            border-radius: 15px;
-
-            /* Esconder o link "Leaflet"  se não ele sobrepõe*/
-            .leaflet-control-attribution {
+            border-radius: 30px;
+        }
+        
+        /* Esconder o link "Leaflet"  se não ele sobrepõe*/
+        .leaflet-control-attribution {
             display: none !important;
         }
         CSS;
@@ -43,7 +44,6 @@ class LeafletMap extends Widget
     public function run()
     {
         $markersJson = json_encode($this->markers);
-        $baseUrl = Url::to('@web/images/markers/', true);
         
         $js = <<<JS
         (function() {
@@ -58,38 +58,20 @@ class LeafletMap extends Widget
                 maxZoom: 20
             }).addTo(map);
             
-            // Define custom icons
-            var castleIcon = L.icon({
-                iconUrl: '{$baseUrl}marker_castelo.svg',
-                iconSize: [48, 48],
-                iconAnchor: [24, 48],
-                popupAnchor: [0, -48]
-            });
-            
-            var museumIcon = L.icon({
-                iconUrl: '{$baseUrl}marker_museu.svg',
-                iconSize: [48, 48],
-                iconAnchor: [24, 48],
-                popupAnchor: [0, -48]
-            });
-            
-            var monumentIcon = L.icon({
-                iconUrl: '{$baseUrl}marker_monumento.svg',
-                iconSize: [48, 48],
-                iconAnchor: [24, 48],
-                popupAnchor: [0, -48]
-            });
-            
-            var iconMap = {
-                'castle': castleIcon,
-                'museum': museumIcon,
-                'monument': monumentIcon
-            };
-            
             var markers = {$markersJson};
             markers.forEach(function(markerData) {
-                var icon = iconMap[markerData.type] || null;
-                var markerOptions = icon ? { icon: icon } : {};
+                var markerOptions = {};
+                
+                // Se tiver URL do ícone, criar ícone personalizado
+                if (markerData.icone) {
+                    var customIcon = L.icon({
+                        iconUrl: markerData.icone,
+                        iconSize: [48, 48],
+                        iconAnchor: [24, 48],
+                        popupAnchor: [0, -48]
+                    });
+                    markerOptions.icon = customIcon;
+                }
                 
                 var marker = L.marker([markerData.lat, markerData.lng], markerOptions).addTo(map);
                 if (markerData.popup) {
