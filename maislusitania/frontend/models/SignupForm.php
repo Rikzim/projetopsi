@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\UserProfile;
 
 /**
  * Signup form
@@ -48,20 +49,27 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
+        $user->save();
 
         //Atribuir role "user" ao novo utilizador
         $auth = Yii::$app->authManager;
         $userRole = $auth->getRole('user');
         $auth->assign($userRole, $user->getId());
 
-        return $user->save() && $this->sendEmail($user);
+        //TODO: REFERENCIAR O USER AO USER PROFILE AQUI
+
+        $userprofile = new UserProfile();
+        $userprofile->user_id = $user->id;
+        $userprofile->save();
+
+        return  $this->sendEmail($user);
     }
 
     /**
