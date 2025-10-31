@@ -19,6 +19,8 @@ use Yii;
  * @property string|null $website
  * @property string|null $imagem_principal
  * @property int $ativo
+ * @property float $latitude
+ * @property float $longitude
  *
  * @property Avaliacao[] $avaliacaos
  * @property Distrito $distrito
@@ -52,9 +54,10 @@ class LocalCultural extends \yii\db\ActiveRecord
         return [
             [['horario_funcionamento', 'contacto_telefone', 'contacto_email', 'website', 'imagem_principal'], 'default', 'value' => null],
             [['ativo'], 'default', 'value' => 1],
-            [['nome', 'tipo_id', 'morada', 'distrito_id', 'descricao'], 'required'],
+            [['nome', 'tipo_id', 'morada', 'distrito_id', 'descricao', 'latitude', 'longitude'], 'required'],
             [['tipo_id', 'distrito_id', 'ativo'], 'integer'],
             [['descricao'], 'string'],
+            [['latitude', 'longitude'], 'number'],
             [['nome'], 'string', 'max' => 200],
             [['morada', 'website', 'imagem_principal'], 'string', 'max' => 255],
             [['horario_funcionamento'], 'string', 'max' => 500],
@@ -83,6 +86,8 @@ class LocalCultural extends \yii\db\ActiveRecord
             'website' => 'Website',
             'imagem_principal' => 'Imagem Principal',
             'ativo' => 'Ativo',
+            'latitude' => 'Latitude',
+            'longitude' => 'Longitude',
         ];
     }
 

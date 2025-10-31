@@ -1,0 +1,16 @@
+<svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="8" y="8" width="34" height="34" rx="17" fill="#FFC107"/>
+<mask id="mask0_128_277" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="13" width="24" height="24">
+<rect x="13" y="13" width="24" height="24" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_128_277)">
+<path d="M18 30V23H20V30H18ZM24 30V23H26V30H24ZM15 34V32H35V34H15ZM30 30V23H32V30H30ZM15 21V19L25 14L35 19V21H15ZM19.45 19H30.55L25 16.25L19.45 19Z" fill="white"/>
+<rect x="8" y="8" width="34" height="34" rx="17" fill="#FFC107"/>
+<mask id="mask1_128_277" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="13" width="24" height="24">
+<rect x="13" y="13" width="24" height="24" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask1_128_277)">
+<path d="M18 30V23H20V30H18ZM24 30V23H26V30H24ZM15 34V32H35V34H15ZM30 30V23H32V30H30ZM15 21V19L25 14L35 19V21H15ZM19.45 19H30.55L25 16.25L19.45 19Z" fill="white"/>
+</g>
+</g>
+</svg>
