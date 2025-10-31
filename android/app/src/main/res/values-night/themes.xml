@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Maislusitania_android" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
         <!-- Cores primárias - Azul #2E5AAC -->
         <item name="colorPrimary">@color/blue_primary</item>
         <item name="colorPrimaryVariant">@color/blue_primary_dark</item>
