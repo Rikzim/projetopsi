@@ -15,6 +15,8 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $primeiro_nome;
+    public $ultimo_nome;
 
 
     /**
@@ -23,6 +25,14 @@ class SignupForm extends Model
     public function rules()
     {
         return [
+            ['primeiro_nome', 'trim'],
+            ['primeiro_nome', 'required'],
+            ['primeiro_nome', 'string', 'max' => 255],
+
+            ['ultimo_nome', 'trim'],
+            ['ultimo_nome', 'required'],
+            ['ultimo_nome', 'string', 'max' => 255],
+
             ['username', 'trim'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
@@ -67,6 +77,9 @@ class SignupForm extends Model
 
         $userprofile = new UserProfile();
         $userprofile->user_id = $user->id;
+        $userprofile->primeiro_nome = $this->primeiro_nome;
+        $userprofile->ultimo_nome = $this->ultimo_nome;
+
         $userprofile->save();
 
         return  $this->sendEmail($user);

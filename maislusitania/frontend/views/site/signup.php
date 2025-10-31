@@ -160,6 +160,17 @@ CSS
                 'labelOptions' => ['class' => 'form-label'],
             ],
         ]); ?>
+            <?= $form->field($model, 'primeiro_nome')->textInput([
+                    'autofocus' => true,
+                    'placeholder' => 'Insira o seu primeiro nome',
+                    'class' => 'form-control'
+            ]) ?>
+
+            <?= $form->field($model, 'ultimo_nome')->textInput([
+                    'autofocus' => true,
+                    'placeholder' => 'Insira o seu apelido',
+                    'class' => 'form-control'
+            ]) ?>
 
             <?= $form->field($model, 'username')->textInput([
                 'autofocus' => true,
