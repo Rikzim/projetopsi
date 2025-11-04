@@ -1,6 +1,7 @@
 <?php
 use frontend\widgets\LeafletMap;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 $this->title = 'Mapa de Locais Culturais';
 ?>
@@ -45,29 +46,31 @@ $this->title = 'Mapa de Locais Culturais';
     }
     
     .sidebar-left {
-        background: #2E5AAC;
-        border-radius: 20px;
+        background: #ffffffff;
+        border: 2px solid #2E5AAC;
+        border-radius: 30px;
         padding: 25px;
         color: white;
     }
     
-    .search-box {
+    .search-box{
         margin-bottom: 25px;
     }
     
     .search-box h3 {
-        color: white;
-        font-size: 16px;
+        font-size: 18px;
+        color: #2E5AAC;
         margin-bottom: 10px;
         font-weight: 600;
     }
     
-    .search-box input {
+    .search-input{
         width: 100%;
         padding: 10px 15px;
-        border-radius: 20px;
+        border-radius: 30px;
         border: none;
         font-size: 14px;
+        border: 2px solid #2E5AAC;
     }
     
     .filter-section {
@@ -75,8 +78,8 @@ $this->title = 'Mapa de Locais Culturais';
     }
     
     .filter-section h3 {
-        color: white;
-        font-size: 16px;
+        color: #2E5AAC;
+        font-size: 18px;
         margin-bottom: 15px;
         font-weight: 600;
     }
@@ -92,6 +95,11 @@ $this->title = 'Mapa de Locais Culturais';
     .filter-option input[type="checkbox"] {
         width: 18px;
         height: 18px;
+        cursor: pointer;
+    }
+    .filter-option label {
+        color: #2E5AAC;
+        cursor: pointer;
     }
     
     .legendas-section {
@@ -99,8 +107,8 @@ $this->title = 'Mapa de Locais Culturais';
     }
     
     .legendas-section h3 {
-        color: white;
-        font-size: 16px;
+        color: #2E5AAC;
+        font-size: 18px;
         margin-bottom: 15px;
         font-weight: 600;
     }
@@ -108,9 +116,17 @@ $this->title = 'Mapa de Locais Culturais';
     .legenda-item {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 0px;
         margin-bottom: 8px;
         font-size: 14px;
+    }
+    .legenda-icon {
+        width: 42px;
+        height: 42px;
+    }
+    .legenda-nome{
+        margin-left: 10px;
+        color: #2E5AAC;
     }
     
     .legenda-color {
@@ -119,20 +135,6 @@ $this->title = 'Mapa de Locais Culturais';
         border-radius: 50%;
     }
     
-    .btn-criar-rota {
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 30px;
-        width: 100%;
-        cursor: pointer;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        justify-content: center;
-    }
     
     .map-wrapper {
         flex: 1;
@@ -142,15 +144,19 @@ $this->title = 'Mapa de Locais Culturais';
         position: relative;
         overflow: hidden;
     }
+
+    /* Instructions box */
     
     .instructions-box {
-        background: #2E5AAC;
+        background: #ffffffff;
         border-radius: 30px;
+        border: 2px solid #2E5AAC; 
         padding: 25px;
         color: white;
     }
     
     .instructions-box h3 {
+        color: #2E5AAC;
         font-size: 18px;
         margin-bottom: 15px;
         font-weight: 600;
@@ -163,6 +169,7 @@ $this->title = 'Mapa de Locais Culturais';
     }
     
     .instructions-box li {
+        color: #2E5AAC;
         font-size: 14px;
         line-height: 1.6;
         margin-bottom: 15px;
@@ -171,6 +178,7 @@ $this->title = 'Mapa de Locais Culturais';
     }
     
     .instructions-box li:before {
+        color: #2E5AAC;
         content: "•";
         position: absolute;
         left: 0;
@@ -191,44 +199,34 @@ $this->title = 'Mapa de Locais Culturais';
             <div class="sidebar-left">
                 <div class="search-box">
                     <h3>Pesquisar Locais</h3>
-                    <input type="text" placeholder="🔍 Inserir localidade...">
+                    <input class="search-input" id="searchInput" type="text" placeholder="Inserir localidade...">
                 </div>
                 
                 <div class="filter-section">
                     <h3>Filtrar por Tipo</h3>
-                    <div class="filter-option">
-                        <input type="checkbox" id="museus" checked>
-                        <label for="museus">Museus</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="checkbox" id="monumentos" checked>
-                        <label for="monumentos">Monumentos</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="checkbox" id="patrimonio" checked>
-                        <label for="patrimonio">Património</label>
-                    </div>
+                    <!-- TODO: Ao ter mais de 4 tipos, por um dropdown -->
+                    <?php foreach ($types as $type): ?>
+                        <div class="filter-option">
+                            <input type="checkbox" class="type-filter" id="filter-<?= Html::encode(strtolower(str_replace(' ', '-', $type['nome']))) ?>" data-type="<?= Html::encode($type['nome']) ?>" checked>
+                            <label for="filter-<?= Html::encode(strtolower(str_replace(' ', '-', $type['nome']))) ?>"><?= Html::encode($type['nome']) ?></label>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
                 
                 <div class="legendas-section">
                     <h3>Legendas</h3>
-                    <div class="legenda-item">
-                        <span class="legenda-color" style="background: #FFC107;"></span>
-                        <span>Museu</span>
-                    </div>
-                    <div class="legenda-item">
-                        <span class="legenda-color" style="background: #4CAF50;"></span>
-                        <span>Monumento</span>
-                    </div>
-                    <div class="legenda-item">
-                        <span class="legenda-color" style="background: #2196F3;"></span>
-                        <span>Património</span>
-                    </div>
+                    <?php foreach ($types as $type): ?>
+                        <div class="legenda-item">
+                            <img class="legenda-icon" src="<?= Html::encode($type['icone']) ?>" alt="">
+                            <span class="legenda-nome"><?= Html::encode($type['nome']) ?></span>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
             
             <!-- Instruções -->
             <div class="instructions-box">
+                <i class="fas fa-info-circle"></i>
                 <h3>Como Usar</h3>
                 <ul>
                     <li>Clique nos marcadores para ver detalhes sobre cada local</li>
@@ -251,3 +249,51 @@ $this->title = 'Mapa de Locais Culturais';
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Esperar o mapa carregar
+        setTimeout(function() {
+            if (!window.leafletMaps || !window.leafletMaps['testMap']) {
+                console.error('Mapa não encontrado');
+                return;
+            }
+            
+            const mapObj = window.leafletMaps['testMap'];
+            const map = mapObj.map;
+            const allMarkers = mapObj.markers;
+           
+            // Filtragem por Tipo
+            const typeCheckboxes = document.querySelectorAll('.type-filter');
+            
+            function filterMarkers() {
+                const selectedTypes = Array.from(typeCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.getAttribute('data-type'));
+                
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                
+                allMarkers.forEach(marker => {
+                    const typeMatch = selectedTypes.includes(marker.options.type);
+                    const popupContent = marker.getPopup() ? marker.getPopup().getContent().toLowerCase() : '';
+                    const searchMatch = query === '' || popupContent.includes(query);
+                    
+                    if (typeMatch && searchMatch) {
+                        map.addLayer(marker);
+                    } else {
+                        map.removeLayer(marker);
+                    }
+                });
+            }
+            
+            typeCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', filterMarkers);
+            });
+            
+            // Pesquisa por Localidade
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', filterMarkers);
+            
+        }, 1000); // Esperar 1 segundo para garantir que o mapa carregou
+    });
+</script>
