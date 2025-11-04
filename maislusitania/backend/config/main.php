@@ -12,10 +12,19 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        // ADICIONA ISTO ↓
+        'api' => [
+            'class' => 'backend\modules\api\ModuleAPI',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            // ADICIONA ISTO ↓ (para aceitar JSON)
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -42,6 +51,25 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => [
+                    'api/avaliacao',
+                    'api/distrito',
+                    'api/evento',
+                    'api/favorito',
+                    'api/linha-reserva',
+                    'api/local-cultural',
+                    'api/login-form',
+                    'api/noticia',
+                    'api/reserva',
+                    'api/tipo-bilhete',
+                    'api/tipo-local',
+                    'api/user',
+                    'api/user-profile',
+                    ],
+                    'pluralize' => true,
+                ],
             ],
         ],
     ],

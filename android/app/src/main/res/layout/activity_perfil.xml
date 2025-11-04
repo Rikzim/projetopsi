@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E6F0F2">
+    android:background="@color/white_blue">
 
     <!-- Header com gradiente azul -->
     <View
@@ -23,7 +23,6 @@
         android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:tint="#FFFFFF"
         android:contentDescription="Voltar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -45,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/logo"
+            android:src="@drawable/ic_perfil"
             android:contentDescription="Foto de perfil" />
 
     </androidx.cardview.widget.CardView>
@@ -97,7 +96,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_dialog_email"
-                    android:tint="#204080"
+                    android:tint="@color/blue_primary"
                     android:contentDescription="Email" />
 
                 <LinearLayout
@@ -148,7 +147,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/stat_sys_phone_call"
-                    android:tint="#204080"
+                    android:tint="@color/blue_primary"
                     android:contentDescription="Telefone" />
 
                 <LinearLayout
@@ -199,7 +198,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/btn_star_big_on"
-                    android:tint="#204080"
+                    android:tint="@color/blue_primary"
                     android:contentDescription="Favoritos" />
 
                 <TextView
