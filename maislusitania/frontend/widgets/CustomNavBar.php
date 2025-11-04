@@ -106,6 +106,7 @@ class CustomNavBar extends Widget
             border: 2px solid {$this->brandColor};
             border-radius: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            min-height: 65px;
         }
 
         .custom-navbar .navbar-brand {
@@ -116,11 +117,14 @@ class CustomNavBar extends Widget
             color: {$this->brandColor};
             font-size: 1.5rem;
             font-weight: 600;
+            flex-shrink: 0;
+            width: 250px;
         }
 
         .custom-navbar .navbar-brand img {
             width: 180px;
-            height: 48px;
+            height: 45px;
+            object-fit: contain;
         }
 
         .custom-navbar .navbar-menu {
@@ -130,6 +134,8 @@ class CustomNavBar extends Widget
             margin: 0;
             padding: 0;
             align-items: center;
+            flex: 1;
+            justify-content: center;
         }
 
         .custom-navbar .navbar-menu a {
@@ -137,9 +143,11 @@ class CustomNavBar extends Widget
             color: {$this->brandColor};
             font-size: 0.95rem;
             font-weight: 600;
-            padding: 0.55rem 0.75rem;
+            padding: 0.6rem 0.75rem;
             border-radius: 30px;
             transition: all 0.3s ease;
+            display: inline-block;
+            line-height: 1.5;
         }
 
         .custom-navbar .navbar-menu a:hover {
@@ -149,22 +157,25 @@ class CustomNavBar extends Widget
 
         .custom-navbar .navbar-auth {
             display: flex;
-            gap: 0.1rem;
+            gap: 0.5rem;
             align-items: center;
+            width: 250px;
+            justify-content: flex-end;
         }
 
         .custom-navbar .btn-signup {
-            padding: 0.5rem 1.5rem;
+            padding: 0.6rem 1.5rem;
             background-color: transparent;
             color: {$this->brandColor};
             border-radius: 30px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
+            line-height: 1.5;
         }
 
         .custom-navbar .btn-login {
-            padding: 0.5rem 1.5rem;
+            padding: 0.6rem 1.5rem;
             background-color: {$this->brandColor};
             color: white;
             border: 2px solid {$this->brandColor};
@@ -172,6 +183,7 @@ class CustomNavBar extends Widget
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
+            line-height: 1.5;
         }
 
         .custom-navbar .btn-login:hover {
@@ -181,6 +193,8 @@ class CustomNavBar extends Widget
 
         .custom-navbar .user-info {
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .custom-navbar .user-avatar {
@@ -197,6 +211,7 @@ class CustomNavBar extends Widget
             font-weight: 600;
             font-size: 1.1rem;
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
         .custom-navbar .user-avatar:hover {
