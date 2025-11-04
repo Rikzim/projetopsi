@@ -3,7 +3,6 @@ namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
-use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
 
 class TipoBilheteController extends ActiveController
@@ -42,10 +41,6 @@ class TipoBilheteController extends ActiveController
     {
         $behaviors = parent::behaviors();
 
-        if (!is_array($behaviors)) {
-            $behaviors = [];
-        }
-
         // CORS para todos os controllers
         $behaviors['corsFilter'] = [
             'class' => Cors::class,
@@ -56,13 +51,6 @@ class TipoBilheteController extends ActiveController
             ],
         ];
         
-        $behaviors['authenticator'] = [
-           
-            'class' => QueryParamAuth::class,
-            //only=> ['index'],  //Apenas para o GET
-            
-        ];
-
         return $behaviors;
     } 
 }

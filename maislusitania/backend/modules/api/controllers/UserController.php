@@ -59,7 +59,6 @@ class UserController extends ActiveController
         $behaviors['authenticator'] = [
            
             'class' => QueryParamAuth::class,
-            //only=> ['index'],  //Apenas para o GET
             
         ];
 

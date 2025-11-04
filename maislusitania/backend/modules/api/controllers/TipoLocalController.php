@@ -43,10 +43,6 @@ class TipoLocalController extends ActiveController
     {
         $behaviors = parent::behaviors();
 
-        if (!is_array($behaviors)) {
-            $behaviors = [];
-        }
-
         // CORS para todos os controllers
         $behaviors['corsFilter'] = [
             'class' => Cors::class,
@@ -57,13 +53,6 @@ class TipoLocalController extends ActiveController
             ],
         ];
         
-        $behaviors['authenticator'] = [
-           
-            'class' => QueryParamAuth::class,
-            //only=> ['index'],  //Apenas para o GET
-            
-        ];
-
         return $behaviors;
     } 
 }

@@ -30,7 +30,6 @@ class DefaultController extends Controller
                 '/api/user-profile' => 'Gestão de perfis de utilizador',
                 //RESTANTAS ENDPOINTS AQUI
             ],
-            'authentication' => 'HTTP Basic Auth',
         ];
     }
 
