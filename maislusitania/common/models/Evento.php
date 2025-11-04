@@ -20,7 +20,7 @@ use Yii;
  */
 class Evento extends \yii\db\ActiveRecord
 {
-
+    const STATUS_ACTIVE = 10;
 
     /**
      * {@inheritdoc}
@@ -73,6 +73,11 @@ class Evento extends \yii\db\ActiveRecord
     public function getLocal()
     {
         return $this->hasOne(LocalCultural::class, ['id' => 'local_id']);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
 }

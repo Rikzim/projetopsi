@@ -21,6 +21,7 @@ use Yii;
  */
 class Reserva extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 10;
 
     /**
      * ENUM field values
@@ -160,5 +161,9 @@ class Reserva extends \yii\db\ActiveRecord
     public function setEstadoToCancelada()
     {
         $this->estado = self::ESTADO_CANCELADA;
+    }
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 }
