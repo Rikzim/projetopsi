@@ -42,6 +42,7 @@ class UserController extends ActiveController
             'id',
             'nome',
             // ← ADICIONAR campos a retornar
+            
         ];
     }
 
