@@ -3,6 +3,8 @@ namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
+use yii\filters\auth\QueryParamAuth;
+use yii\filters\Cors;
 
 class DistritoController extends ActiveController
 {
@@ -34,28 +36,33 @@ class DistritoController extends ActiveController
     }
 
     // ========================================
-    // Define campos a retornar
-    // ========================================
-    public function fields()
-    {
-        return [
-            'id',
-            // ← ADICIONAR campos a retornar
-        ];
-    }
-
-    // ========================================
     // Controle de permissões
     // ========================================
-    public function checkAccess($action, $model = null, $params = [])
+    public function behaviors()
     {
-        $user = $this->module->user;
+        $behaviors = parent::behaviors();
 
-        // Apenas admins podem criar/editar/apagar
-        if (in_array($action, ['create', 'update', 'delete'])) {
-            if (!$user || $user->role !== 'admin') {
-                throw new \yii\web\ForbiddenHttpException('Apenas administradores');
-            }
+        if (!is_array($behaviors)) {
+            $behaviors = [];
         }
-    }
+
+        // CORS para todos os controllers
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET','POST','PUT','DELETE','OPTIONS'],
+                'Access-Control-Allow-Credentials' => true,
+            ],
+        ];
+        
+        $behaviors['authenticator'] = [
+           
+            'class' => QueryParamAuth::class,
+            //only=> ['index'],  //Apenas para o GET
+            
+        ];
+
+        return $behaviors;
+    } 
 }
