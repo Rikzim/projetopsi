@@ -17,7 +17,7 @@ use Yii;
  */
 class Favorito extends \yii\db\ActiveRecord
 {
-
+    const STATUS_ACTIVE = 10;
 
     /**
      * {@inheritdoc}
@@ -73,6 +73,11 @@ class Favorito extends \yii\db\ActiveRecord
     public function getUtilizador()
     {
         return $this->hasOne(User::class, ['id' => 'utilizador_id']);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
 }
