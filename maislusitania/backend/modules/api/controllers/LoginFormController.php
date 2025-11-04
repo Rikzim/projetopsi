@@ -1,68 +1,64 @@
 <?php
 namespace backend\modules\api\controllers;
 
-use yii\rest\ActiveController;
-use yii\data\ActiveDataProvider;
-use yii\filters\auth\QueryParamAuth;
+use yii\rest\Controller;
+use Yii;
+use common\models\LoginForm;
 use yii\filters\Cors;
 
-class LoginFormController extends ActiveController
+class LoginController extends Controller
 {
-    // ========================================
-    // Define o modelo
-    // ========================================
-    public $modelClass = 'common\models\LoginForm';
+    public $enableCsrfValidation = false; // necessário para aceitar POST externo (Android)
 
-    // ========================================
-    // Configura data provider
-    // ========================================
-    public function actions()
-    {
-        $actions = parent::actions();
-        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
-        return $actions;
-    }
-
-    public function prepareDataProvider()
-    {
-        $modelClass = $this->modelClass;
-        
-        return new ActiveDataProvider([
-            'query' => $modelClass::find()->orderBy(['id' => SORT_DESC]), 
-            'pagination' => [
-                'pageSize' => 20, 
-            ],
-        ]);
-    }
-
-    // ========================================
-    // Controle de permissões
-    // ========================================
     public function behaviors()
     {
         $behaviors = parent::behaviors();
 
-        if (!is_array($behaviors)) {
-            $behaviors = [];
-        }
-
-        // CORS para todos os controllers
+        // Permitir CORS (Android pode chamar)
         $behaviors['corsFilter'] = [
             'class' => Cors::class,
             'cors' => [
                 'Origin' => ['*'],
-                'Access-Control-Request-Method' => ['GET','POST','PUT','DELETE','OPTIONS'],
+                'Access-Control-Request-Method' => ['GET','POST','OPTIONS'],
                 'Access-Control-Allow-Credentials' => true,
             ],
         ];
-        
-        $behaviors['authenticator'] = [
-           
-            'class' => QueryParamAuth::class,
-            //only=> ['index'],  //Apenas para o GET
-            
-        ];
 
         return $behaviors;
-    } 
+    }
+
+    public function actionIndex()
+    {
+        $model = new LoginForm();
+        $model->load(Yii::$app->request->post(), '');
+
+        if (!$model->validate()) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Campos inválidos'];
+        }
+
+        $user = $model->getUser();
+
+        if (!$user) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'Utilizador não encontrado'];
+        }
+
+        if (!$user->validatePassword($model->password)) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Palavra-passe incorreta'];
+        }
+
+        if (empty($user->access_token)) {
+            $user->generateAccessToken();
+            $user->save(false);
+        }
+
+        return [
+            'status' => 'success',
+            'access_token' => $user->access_token,
+            'user_id' => $user->id,
+            'username' => $user->username,
+        ];
+    }
 }
