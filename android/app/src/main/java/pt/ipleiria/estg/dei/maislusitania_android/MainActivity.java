@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new MapaFragment();
                 } else if (item.getItemId() == R.id.navigation_eventos) {
                     selectedFragment = new EventosFragment();
+                } else if (item.getItemId() == R.id.navigation_noticias) {
+                    selectedFragment = new NoticiasFragment();
                 }
 
                 if (selectedFragment != null) {
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
                             .replace(R.id.fragment_container, selectedFragment)
                             .commit();
                 }
-
                 return true;
             }
         });
