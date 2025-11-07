@@ -3,23 +3,22 @@ namespace backend\modules\api\controllers;
 
 use yii\rest\Controller;
 use Yii;
-use common\models\LoginForm;
+use common\models\User;
 use yii\filters\Cors;
 
-class LoginController extends Controller
+class LoginFormController extends Controller
 {
-    public $enableCsrfValidation = false; // necessário para aceitar POST externo (Android)
+    public $enableCsrfValidation = false;
 
     public function behaviors()
     {
         $behaviors = parent::behaviors();
 
-        // Permitir CORS (Android pode chamar)
         $behaviors['corsFilter'] = [
             'class' => Cors::class,
             'cors' => [
                 'Origin' => ['*'],
-                'Access-Control-Request-Method' => ['GET','POST','OPTIONS'],
+                'Access-Control-Request-Method' => ['POST','OPTIONS'],
                 'Access-Control-Allow-Credentials' => true,
             ],
         ];
@@ -29,26 +28,30 @@ class LoginController extends Controller
 
     public function actionIndex()
     {
-        $model = new LoginForm();
-        $model->load(Yii::$app->request->post(), '');
+        $username = Yii::$app->request->post('username');
+        $passwordHash = Yii::$app->request->post('password_hash');
 
-        if (!$model->validate()) {
+        // Valida se campos estão vazios
+        if (empty($username) || empty($passwordHash)) {
             Yii::$app->response->statusCode = 400;
-            return ['status' => 'error', 'message' => 'Campos inválidos'];
+            return ['status' => 'error', 'message' => 'Username ou password vazios'];
         }
 
-        $user = $model->getUser();
+        // Procura o utilizador
+        $user = User::findOne(['username' => $username]);
 
         if (!$user) {
             Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'Utilizador não encontrado'];
         }
 
-        if (!$user->validatePassword($model->password)) {
+        // ✅ Compara os hashes diretamente
+        if ($user->password_hash !== $passwordHash) {
             Yii::$app->response->statusCode = 401;
             return ['status' => 'error', 'message' => 'Palavra-passe incorreta'];
         }
 
+        // Retorna o token
         if (empty($user->access_token)) {
             $user->generateAccessToken();
             $user->save(false);

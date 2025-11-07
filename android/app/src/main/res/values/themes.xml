@@ -1,6 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Maislusitania_android" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+
+
+
         <!-- Cores primárias - Azul #2E5AAC -->
         <item name="colorPrimary">@color/blue_primary</item>
         <item name="colorPrimaryVariant">@color/blue_primary_dark</item>
@@ -21,8 +25,9 @@
         <item name="colorOnError">@color/white</item>
 
         <!-- Status bar -->
-        <item name="android:statusBarColor">@color/blue_primary_dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
