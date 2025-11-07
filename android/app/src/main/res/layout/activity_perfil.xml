@@ -25,7 +25,8 @@
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:contentDescription="Voltar"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:fitsSystemWindows="true"/>
 
     <!-- Foto de Perfil -->
     <androidx.cardview.widget.CardView
