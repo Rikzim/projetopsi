@@ -116,7 +116,7 @@ class CustomFooter extends Widget
             background-color: #ffffffff;
             border-top: 2px solid {$this->brandColor};
             padding: 4rem 0 2rem;
-            margin-top: 4rem;
+            margin-top: 0rem;
         }
         
         .custom-footer .footer-container {
