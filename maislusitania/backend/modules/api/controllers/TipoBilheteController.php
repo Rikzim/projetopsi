@@ -3,6 +3,7 @@ namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
+use yii\filters\Cors;
 
 class TipoBilheteController extends ActiveController
 {
@@ -34,28 +35,22 @@ class TipoBilheteController extends ActiveController
     }
 
     // ========================================
-    // Define campos a retornar
-    // ========================================
-    public function fields()
-    {
-        return [
-            'id',
-            // ← ADICIONAR campos a retornar
-        ];
-    }
-
-    // ========================================
     // Controle de permissões
     // ========================================
-    public function checkAccess($action, $model = null, $params = [])
+    public function behaviors()
     {
-        $user = $this->module->user;
+        $behaviors = parent::behaviors();
 
-        // Apenas admins podem criar/editar/apagar
-        if (in_array($action, ['create', 'update', 'delete'])) {
-            if (!$user || $user->role !== 'admin') {
-                throw new \yii\web\ForbiddenHttpException('Apenas administradores');
-            }
-        }
-    }
+        // CORS para todos os controllers
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET','POST','PUT','DELETE','OPTIONS'],
+                'Access-Control-Allow-Credentials' => true,
+            ],
+        ];
+        
+        return $behaviors;
+    } 
 }

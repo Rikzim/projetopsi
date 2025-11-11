@@ -1,61 +1,64 @@
 <?php
 namespace backend\modules\api\controllers;
 
-use yii\rest\ActiveController;
-use yii\data\ActiveDataProvider;
+use yii\rest\Controller;
+use Yii;
+use common\models\LoginForm;
+use yii\filters\Cors;
 
-class LoginFormController extends ActiveController
+class LoginController extends Controller
 {
-    // ========================================
-    // Define o modelo
-    // ========================================
-    public $modelClass = 'common\models\LoginForm';
+    public $enableCsrfValidation = false; // necessário para aceitar POST externo (Android)
 
-    // ========================================
-    // Configura data provider
-    // ========================================
-    public function actions()
+    public function behaviors()
     {
-        $actions = parent::actions();
-        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
-        return $actions;
-    }
+        $behaviors = parent::behaviors();
 
-    public function prepareDataProvider()
-    {
-        $modelClass = $this->modelClass;
-        
-        return new ActiveDataProvider([
-            'query' => $modelClass::find()->orderBy(['id' => SORT_DESC]), 
-            'pagination' => [
-                'pageSize' => 20, 
+        // Permitir CORS (Android pode chamar)
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET','POST','OPTIONS'],
+                'Access-Control-Allow-Credentials' => true,
             ],
-        ]);
-    }
-
-    // ========================================
-    // Define campos a retornar
-    // ========================================
-    public function fields()
-    {
-        return [
-            'id',
-            // ← ADICIONAR campos a retornar
         ];
+
+        return $behaviors;
     }
 
-    // ========================================
-    // Controle de permissões
-    // ========================================
-    public function checkAccess($action, $model = null, $params = [])
+    public function actionIndex()
     {
-        $user = $this->module->user;
+        $model = new LoginForm();
+        $model->load(Yii::$app->request->post(), '');
 
-        // Apenas admins podem criar/editar/apagar
-        if (in_array($action, ['create', 'update', 'delete'])) {
-            if (!$user || $user->role !== 'admin') {
-                throw new \yii\web\ForbiddenHttpException('Apenas administradores');
-            }
+        if (!$model->validate()) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Campos inválidos'];
         }
+
+        $user = $model->getUser();
+
+        if (!$user) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'Utilizador não encontrado'];
+        }
+
+        if (!$user->validatePassword($model->password)) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Palavra-passe incorreta'];
+        }
+
+        if (empty($user->access_token)) {
+            $user->generateAccessToken();
+            $user->save(false);
+        }
+
+        return [
+            'status' => 'success',
+            'access_token' => $user->access_token,
+            'user_id' => $user->id,
+            'username' => $user->username,
+        ];
     }
 }

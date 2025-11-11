@@ -2,7 +2,8 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-use yii\data\ActiveDataProvider;
+use yii\filters\auth\QueryParamAuth;
+use yii\filters\Cors;
 
 class UserController extends ActiveController
 {
@@ -12,18 +13,11 @@ class UserController extends ActiveController
     public $modelClass = 'common\models\User';
 
     // ========================================
-    // Configura data provider
+    // Desabilita ações desnecessárias
     // ========================================
     public function actions()
     {
         $actions = parent::actions();
-        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
-        return $actions;
-    }
-
-    public function prepareDataProvider()
-    {
-        $modelClass = $this->modelClass;
         
         return new ActiveDataProvider([
             'query' => $modelClass::find()->orderBy(['id' => SORT_DESC]), 
@@ -49,15 +43,29 @@ class UserController extends ActiveController
     // ========================================
     // Controle de permissões
     // ========================================
-    public function checkAccess($action, $model = null, $params = [])
+    public function behaviors()
     {
-        $user = $this->module->user;
+        $behaviors = parent::behaviors();
 
-        // Apenas admins podem criar/editar/apagar
-        if (in_array($action, ['create', 'update', 'delete'])) {
-            if (!$user || $user->role !== 'admin') {
-                throw new \yii\web\ForbiddenHttpException('Apenas administradores');
-            }
+        if (!is_array($behaviors)) {
+            $behaviors = [];
         }
-    }
+
+        // CORS para todos os controllers
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET'],
+                'Access-Control-Allow-Credentials' => true,
+            ],
+        ];
+        
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'only' => ['view'],  // Apenas para o GET com ID específico
+        ];
+
+        return $behaviors;
+    } 
 }

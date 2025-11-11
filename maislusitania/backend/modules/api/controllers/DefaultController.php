@@ -23,9 +23,13 @@ class DefaultController extends Controller
                 '/api/eventos' => 'Gestão de eventos',
                 '/api/noticias' => 'Gestão de notícias',
                 '/api/favoritos' => 'Gestão de favoritos',
+                '/api/linhas-reserva' => 'Gestão de linhas de reserva',
+                '/api/local-culturals' => 'Gestão de locais culturais',
+                '/api/tipo-bilhetes' => 'Gestão de tipos de bilhete',
+                '/api/tipo-locals' => 'Gestão de tipos de local',
+                '/api/user-profile' => 'Gestão de perfis de utilizador',
                 //RESTANTAS ENDPOINTS AQUI
             ],
-            'authentication' => 'HTTP Basic Auth',
         ];
     }
 
