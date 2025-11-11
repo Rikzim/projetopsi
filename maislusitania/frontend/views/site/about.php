@@ -4,12 +4,18 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use frontend\widgets\HeroSection;
 
 // Remove o container para esta página
 $this->params['no-container'] = true;
 ?>
 
 <style>
+
+body.sobre-page {
+    padding: 0 !important;
+}
+
 /* Remove padding do main apenas para a página sobre */
 body.sobre-page main {
     padding: 0 !important;
@@ -25,9 +31,15 @@ body.sobre-page main > .container {
     margin: 0 !important;
 }
 
+.site-index {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 .sobre-section {
-    padding: 60px 0;
+    padding: 0 !important;
     background: white;
+    margin: 0 !important;
 }
 
 .nossa-historia {
@@ -36,8 +48,8 @@ body.sobre-page main > .container {
     justify-content: space-between;
     gap: 50px;
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
+    margin: 0 auto !important;
+    padding: 60px 15px !important;
 }
 
 .historia-content {
@@ -61,16 +73,17 @@ body.sobre-page main > .container {
     flex-shrink: 0;
 }
 
+.historia-text {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 .historia-text p {
     font-size: 18px;
     line-height: 1.8;
     color: #333;
-    margin-bottom: 20px;
+    margin: 0 !important;
     text-align: justify;
-}
-
-.historia-text p:last-child {
-    margin-bottom: 0;
 }
 
 .historia-text strong {
@@ -81,7 +94,7 @@ body.sobre-page main > .container {
 .valores-section {
     background: #2E5AAC;
     padding: 100px 0;
-    margin: 0;
+    margin: 0 !important;
 }
 
 .valores-container {
@@ -133,6 +146,7 @@ body.sobre-page main > .container {
 @media (max-width: 768px) {
     .nossa-historia {
         flex-direction: column;
+        padding: 40px 15px !important;
     }
     
     .nossa-historia img {
@@ -161,49 +175,60 @@ body.sobre-page main > .container {
 $this->registerJs("document.body.classList.add('sobre-page');", \yii\web\View::POS_READY);
 ?>
 
-<div class="site-about">
-    <div class="sobre-section">
-        <div class="nossa-historia">
-            <div class="historia-content">
-                <h1>Nossa História</h1>
-                <div class="historia-text">
-                    <p>
-                    O <strong>+Lusitânia</strong> surgiu da iniciativa de três estudantes do 
-                    CTeSP de Programação de Sistemas de Informação do Politécnico de Leiria, 
-                    motivados pela valorização do património cultural português. Durante o desenvolvimento do projeto final, 
-                    identificou-se a necessidade de uma plataforma que facilitasse o acesso a museus, 
-                    monumentos e eventos culturais em Portugal
-                    </p>
-                </div>
-            </div>
-            <img src="<?= Url::to('@web/images/markers/torre-belem.jpg') ?>" alt="Torre de Belém">
-        </div>
-    </div>
+<div class="site-index">
+    <?= HeroSection::widget([
+        'backgroundImage' => '@web/images/hero-background.jpg',
+        'title' => 'Descubra o Património Histórico de Portugal',
+        'subtitle' => 'Explore museus, monumentos e experiências culturais inesquecíveis.',
+        'buttons' => [
+            ['text' => 'Ver mapa Interativo', 'url' => ['/mapa/index']]
+        ]
+    ]) ?>
 
-    <div class="valores-section">
-        <div class="valores-container">
-            <div class="valor-card">
-                <div class="valor-icon">
-                    <img src="<?= Url::to('@web/images/icons/visao.png') ?>" alt="Visão">
+    <div class="site-about">
+        <div class="sobre-section">
+            <div class="nossa-historia">
+                <div class="historia-content">
+                    <h1>Nossa História</h1>
+                    <div class="historia-text">
+                        <p>
+                            O <strong>+Lusitânia</strong> surgiu da iniciativa de três estudantes do 
+                            CTeSP de Programação de Sistemas de Informação do Politécnico de Leiria, 
+                            motivados pela valorização do património cultural português. Durante o desenvolvimento do projeto final, 
+                            identificou-se a necessidade de uma plataforma que facilitasse o acesso a museus, 
+                            monumentos e eventos culturais em Portugal.
+                        </p>
+                    </div>
                 </div>
-                <h3>Visão</h3>
-                <p>Ser a principal referência digital de museus e monumentos portugueses.</p>
+                <img src="<?= Url::to('@web/images/markers/torre-belem.jpg') ?>" alt="Torre de Belém">
             </div>
-            
-            <div class="valor-card">
-                <div class="valor-icon">
-                    <img src="<?= Url::to('@web/images/icons/valores.png') ?>" alt="Valores">
+        </div>
+
+        <div class="valores-section">
+            <div class="valores-container">
+                <div class="valor-card">
+                    <div class="valor-icon">
+                        <img src="<?= Url::to('@web/images/icons/visao.png') ?>" alt="Visão">
+                    </div>
+                    <h3>Visão</h3>
+                    <p>Ser a principal referência digital de museus e monumentos portugueses.</p>
                 </div>
-                <h3>Valores</h3>
-                <p>Preservação, educação, inovação e acessibilidade cultural.</p>
-            </div>
-            
-            <div class="valor-card">
-                <div class="valor-icon">
-                    <img src="<?= Url::to('@web/images/icons/missao.png') ?>" alt="Missão">
+                
+                <div class="valor-card">
+                    <div class="valor-icon">
+                        <img src="<?= Url::to('@web/images/icons/valores.png') ?>" alt="Valores">
+                    </div>
+                    <h3>Valores</h3>
+                    <p>Preservação, educação, inovação e acessibilidade cultural.</p>
                 </div>
-                <h3>Missão</h3>
-                <p>Tornar o património acessível a todos, promovendo a cultura e o turismo educativo.</p>
+                
+                <div class="valor-card">
+                    <div class="valor-icon">
+                        <img src="<?= Url::to('@web/images/icons/missao.png') ?>" alt="Missão">
+                    </div>
+                    <h3>Missão</h3>
+                    <p>Tornar o património acessível a todos, promovendo a cultura e o turismo educativo.</p>
+                    </div>
             </div>
         </div>
     </div>
