@@ -20,7 +20,7 @@ $this->title = 'My Yii Application';
                     ['text' => 'Ver mapa Interativo', 'url' => ['/mapa/index']]
             ]
     ]) ?>
-    
+
     <!-- Carrossel de Museus em Destaque -->
     <?php if (!empty($museusItems)): ?>
         <div class="mb-5">
@@ -72,15 +72,6 @@ $this->title = 'My Yii Application';
         </div>
     </div>
 </div>
-
-<?php
-$this->registerCss("
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-");
-?>
 
 
 
