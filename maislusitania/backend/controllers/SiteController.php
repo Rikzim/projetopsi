@@ -31,6 +31,15 @@ class SiteController extends Controller
                         'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            // Verifica se o utilizador tem permissão para aceder ao backoffice
+                            return Yii::$app->user->can('accessBackoffice');
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            // Redireciona para o frontend se não tiver permissão
+                            Yii::$app->session->setFlash('error', 'Não tem permissão para aceder ao back-office.');
+                            return Yii::$app->response->redirect(['/site/login']);
+                        },
                     ],
                 ],
             ],
@@ -62,6 +71,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if (!Yii::$app->user->can('accessBackoffice')) {
+            return $this->redirect(['site/login']);
+        }
         return $this->render('index');
     }
 
@@ -73,6 +85,12 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
+            // Verifica se tem permissão para estar no backend
+            if (!Yii::$app->user->can('accessBackoffice')) {
+                Yii::$app->session->setFlash('error', 'Não tem permissão para aceder ao back-office.');
+                Yii::$app->user->logout();
+                return $this->refresh();
+            }
             return $this->goHome();
         }
 
@@ -80,6 +98,13 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            // Após login, verifica se tem permissão
+            if (!Yii::$app->user->can('accessBackoffice')) {
+                Yii::$app->session->setFlash('error', 'Não tem permissão para aceder ao back-office. Apenas gestores e administradores.');
+                Yii::$app->user->logout();
+                $model->password = '';
+                return $this->render('login', ['model' => $model]);
+            }
             return $this->goBack();
         }
 
