@@ -1,18 +1,42 @@
 <?php
 use yii\helpers\Url;
 use yii\helpers\Html;
+
+$this->registerCss("
+.hero-btn {
+    background: white;
+    color: #2E5AAC;
+    padding: 15px 50px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.hero-btn:hover {
+    background: #f0f0f0;
+    color: #2E5AAC;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+");
 ?>
 
 <div class="hero-section-widget position-relative text-white text-center d-flex align-items-center justify-content-center" style="
-    min-height: <?= $minHeight ?>;
-    background: linear-gradient(rgba(46, 90, 172, 0.7), rgba(46, 90, 172, 0.7)), url('<?= $backgroundImage ?>');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin: 0;
-    padding: 60px 0;
-    width: 100%;
-    ">
+        min-height: <?= $minHeight ?>;
+        background: linear-gradient(rgba(46, 90, 172, 0.7), rgba(46, 90, 172, 0.7)), url('<?= $backgroundImage ?>');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 60px 0;
+        width: 100%;
+        ">
     <div class="hero-section-content">
         <?php if ($title): ?>
             <h1><?= Html::encode($title) ?></h1>
@@ -25,9 +49,7 @@ use yii\helpers\Html;
         <?php if (!empty($buttons)): ?>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
                 <?php foreach ($buttons as $button): ?>
-                    <a class="btn btn-light btn-lg px-5 py-3 rounded-pill"
-                       href="<?= Url::to($button['url']) ?>"
-                       style="font-weight: 500; font-size: 1.1rem;">
+                    <a class="hero-btn" href="<?= Url::to($button['url']) ?>">
                         <?= Html::encode($button['text']) ?>
                     </a>
                 <?php endforeach; ?>

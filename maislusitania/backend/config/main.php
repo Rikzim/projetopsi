@@ -69,6 +69,9 @@ return [
                     'api/user-profile',
                     ],
                     'pluralize' => true,
+                    'extraPatterns' => [
+                        //'GET locais-culturais' => 'actionLocaisCulturais',
+                    ],
                 ],
             ],
         ],

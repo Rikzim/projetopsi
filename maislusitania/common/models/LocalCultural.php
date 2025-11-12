@@ -30,7 +30,7 @@ use Yii;
  * @property Noticia[] $noticias
  * @property Reserva[] $reservas
  * @property TipoLocal $tipo
- * @property TipoBilhete $tipoBilhete
+ * @property TipoBilhete[] $tipoBilhetes
  * @property User[] $utilizadors
  * @property User[] $utilizadors0
  */
@@ -172,13 +172,13 @@ class LocalCultural extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TipoBilhete]].
+     * Gets query for [[TipoBilhetes]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTipoBilhete()
+    public function getTipoBilhetes()
     {
-        return $this->hasOne(TipoBilhete::class, ['local_id' => 'id']);
+        return $this->hasMany(TipoBilhete::class, ['local_id' => 'id']);
     }
 
     /**

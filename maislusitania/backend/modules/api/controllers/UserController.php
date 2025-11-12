@@ -19,10 +19,25 @@ class UserController extends ActiveController
     {
         $actions = parent::actions();
         
-        // Remove a ação index (listar todos)
-        unset($actions['index']);
-        
-        return $actions;
+        return new ActiveDataProvider([
+            'query' => $modelClass::find()->orderBy(['id' => SORT_DESC]), 
+            'pagination' => [
+                'pageSize' => 20, 
+            ],
+        ]);
+    }
+
+    // ========================================
+    // Define campos a retornar
+    // ========================================
+    public function fields()
+    {
+        return [
+            'id',
+            'nome',
+            // ← ADICIONAR campos a retornar
+            
+        ];
     }
 
     // ========================================

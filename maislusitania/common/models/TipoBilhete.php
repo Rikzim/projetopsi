@@ -5,13 +5,17 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "tipo_local".
+ * This is the model class for table "tipo_bilhete".
  *
  * @property int $id
  * @property string $nome
  * @property string $descricao
+ * @property float $preco
+ * @property int $ativo
+ * @property int $local_id
  *
- * @property LocalCultural[] $localCulturals
+ * @property LinhaReserva $linhaReserva
+ * @property LocalCultural $local
  */
 class TipoBilhete extends \yii\db\ActiveRecord
 {
@@ -22,7 +26,7 @@ class TipoBilhete extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'tipo_local';
+        return 'tipo_bilhete';
     }
 
     /**
@@ -31,10 +35,12 @@ class TipoBilhete extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nome', 'descricao'], 'required'],
-            [['nome'], 'string', 'max' => 50],
+            [['nome', 'descricao', 'preco', 'ativo', 'local_id'], 'required'],
+            [['preco'], 'number'],
+            [['ativo', 'local_id'], 'integer'],
+            [['nome'], 'string', 'max' => 100],
             [['descricao'], 'string', 'max' => 255],
-            [['nome'], 'unique'],
+            [['local_id'], 'exist', 'skipOnError' => true, 'targetClass' => LocalCultural::class, 'targetAttribute' => ['local_id' => 'id']],
         ];
     }
 
@@ -47,17 +53,30 @@ class TipoBilhete extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nome' => 'Nome',
             'descricao' => 'Descricao',
+            'preco' => 'Preco',
+            'ativo' => 'Ativo',
+            'local_id' => 'Local ID',
         ];
     }
 
     /**
-     * Gets query for [[LocalCulturals]].
+     * Gets query for [[LinhaReserva]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLocalCulturals()
+    public function getLinhaReserva()
     {
-        return $this->hasMany(LocalCultural::class, ['tipo_id' => 'id']);
+        return $this->hasOne(LinhaReserva::class, ['tipo_bilhete_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Local]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLocal()
+    {
+        return $this->hasOne(LocalCultural::class, ['id' => 'local_id']);
     }
 
 }

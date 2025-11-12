@@ -31,6 +31,10 @@ class HeroSection extends Widget
     protected function registerCss()
     {
         $this->view->registerCss("
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
         .hero-section-widget {
             width: 100vw !important;
             margin-left: calc(-50vw + 50%) !important;
