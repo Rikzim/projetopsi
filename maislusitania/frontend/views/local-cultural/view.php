@@ -1,47 +1,96 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use yii\helpers\Url;
+use frontend\widgets\LocalCulturalHeaderWidget;
+use frontend\widgets\HorarioFuncionamentoWidget;
+use frontend\widgets\InformacoesUteisWidget;
+use frontend\widgets\BilhetesWidget;
+use frontend\widgets\EventosRelacionadosWidget;
+use frontend\widgets\NoticiasRelacionadasWidget;
 
-/** @var yii\web\View $this */
-/** @var common\models\LocalCultural $model */
+/* @var $this yii\web\View */
+/* @var $model common\models\LocalCultural */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
+
+<style>
+    .local-cultural-view {
+        padding-bottom: 40px;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 0 0 20px 20px;
+        margin-bottom: -80px;
+    }
+
+    .info-cards-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        max-width: 900px;
+        margin: 0 auto 30px;
+    }
+
+    @media (max-width: 768px) {
+        .hero-image {
+            height: 250px;
+            margin-bottom: -50px;
+        }
+
+        .info-cards-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
 <div class="local-cultural-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <img src="<?= Url::to('@web/images/locais/arte-antiga.jpg') ?>" class="hero-image" alt="<?= Html::encode($model->nome) ?>">
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
+    <!-- Widget: Header do Local Cultural -->
+    <?= LocalCulturalHeaderWidget::widget([
         'model' => $model,
-        'attributes' => [
-            'id',
-            'nome',
-            'tipo_id',
-            'morada',
-            'distrito_id',
-            'descricao:ntext',
-            'horario_funcionamento',
-            'contacto_telefone',
-            'contacto_email:email',
-            'website',
-            'imagem_principal',
-            'ativo',
-        ],
+        'showBadge' => true,
+        'showRating' => true,
+    ]) ?>
+
+    <!-- Cards de Informação -->
+    <div class="info-cards-container">
+        
+        <!-- Widget: Horário de Funcionamento -->
+        <?= HorarioFuncionamentoWidget::widget([
+            'model' => $model,
+        ]) ?>
+
+        <!-- Widget: Informações Úteis -->
+        <?= InformacoesUteisWidget::widget([
+            'model' => $model,
+            'showPreco' => true,
+            'precoText' => 'Consultar Bilhetes',
+        ]) ?>
+
+    </div>
+
+    <!-- Widget: Bilhetes -->
+    <?= BilhetesWidget::widget([
+        'model' => $model,
+    ]) ?>
+
+    <!-- Widget: Eventos Relacionados -->
+    <?= EventosRelacionadosWidget::widget([
+        'localCulturalId' => $model->id,
+        'limit' => 3,
+    ]) ?>
+
+    <!-- Widget: Notícias Relacionadas -->
+    <?= NoticiasRelacionadasWidget::widget([
+        'localCulturalId' => $model->id,
+        'limit' => 3,
     ]) ?>
 
 </div>
