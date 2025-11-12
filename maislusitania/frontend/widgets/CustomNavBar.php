@@ -45,7 +45,7 @@ class CustomNavBar extends Widget
     /**
      * @var string Label for login button
      */
-    public $loginLabel = 'Login';
+    public $loginLabel = 'Entrar';
 
     public function init()
     {
