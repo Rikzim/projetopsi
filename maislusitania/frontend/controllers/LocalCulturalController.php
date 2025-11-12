@@ -3,7 +3,10 @@
 namespace frontend\controllers;
 
 use common\models\LocalCultural;
+use common\models\Distrito;
+use common\models\TipoLocal;   
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -52,8 +55,13 @@ class LocalCulturalController extends Controller
             */
         ]);
 
+        $tiposLocal = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
+        $distritos = ArrayHelper::map(Distrito::find()->orderBy(['nome' => SORT_ASC])->all(), 'id', 'nome');
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'tiposLocal' => $tiposLocal,
+            'distritos' => $distritos,
         ]);
     }
 
