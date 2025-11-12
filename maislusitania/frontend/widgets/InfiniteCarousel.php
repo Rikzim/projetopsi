@@ -3,51 +3,27 @@ namespace frontend\widgets;
 
 use yii\base\Widget;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 class InfiniteCarousel extends Widget
 {
-    /**
-     * @var array Lista de items do carrossel
-     * Formato: [
-     *     ['image' => 'url', 'title' => 'Título', 'subtitle' => 'Subtítulo'],
-     *     ...
-     * ]
-     */
     public $items = [];
-    
-    /**
-     * @var int Largura do card em pixels
-     */
     public $cardWidth = 400;
-    
-    /**
-     * @var int Altura do card em pixels
-     */
     public $cardHeight = 250;
-    
-    /**
-     * @var int Gap entre cards em rem
-     */
     public $cardGap = 1;
-    
-    /**
-     * @var string ID único do carrossel
-     */
     public $carouselId;
-    
-    /**
-     * @var string Cor de fundo do carrossel
-     */
-    public $backgroundColor = '#3498db';
+    public $backgroundColor = 'transparent';
+    public $prevArrow = '@web/images/ui/seta-esquerda.svg';
+    public $nextArrow = '@web/images/ui/seta-direita.svg';
 
     public function init()
     {
         parent::init();
-        
+
         if ($this->carouselId === null) {
             $this->carouselId = $this->getId();
         }
-        
+
         if (empty($this->items)) {
             $this->items = $this->getDefaultItems();
         }
@@ -56,6 +32,11 @@ class InfiniteCarousel extends Widget
     public function run()
     {
         $this->registerAssets();
+
+        // resolve arrow URLs
+        $prevUrl = Url::to($this->prevArrow);
+        $nextUrl = Url::to($this->nextArrow);
+
         return $this->render('infinite-carousel', [
             'items' => $this->items,
             'cardWidth' => $this->cardWidth,
@@ -63,58 +44,42 @@ class InfiniteCarousel extends Widget
             'cardGap' => $this->cardGap,
             'carouselId' => $this->carouselId,
             'backgroundColor' => $this->backgroundColor,
+            'prevArrow' => $prevUrl,
+            'nextArrow' => $nextUrl,
         ]);
     }
 
     protected function registerAssets()
     {
         $view = $this->getView();
-        
-        // CSS
-        $css = $this->getCss();
-        $view->registerCss($css);
-        
-        // JavaScript
-        $js = $this->getJs();
-        $view->registerJs($js, \yii\web\View::POS_READY);
+        $view->registerCss($this->getCss());
+        $view->registerJs($this->getJs(), \yii\web\View::POS_READY);
     }
 
-protected function getCss()
-{
-    return <<<CSS
-    
-    #{$this->carouselId} .carousel-card .card {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
+    protected function getCss()
+    {
+        return <<<CSS
 
-    #{$this->carouselId} .carousel-card a.card {
-        cursor: pointer;
-    }
-    
     #{$this->carouselId} {
         position: relative;
         width: 100vw;
         margin-left: calc(-50vw + 50%);
-        background: {$this->backgroundColor};
-        padding: 80px 0;
         overflow: hidden;
     }
-    
+
     #{$this->carouselId} .carousel-container {
         position: relative;
         width: 100%;
-        height: calc({$this->cardHeight}px + 40px);
+        height: calc({$this->cardHeight}px + 70px);
     }
-    
+
     #{$this->carouselId} .carousel-wrapper {
         position: relative;
         width: 100%;
         height: 100%;
         overflow: visible;
     }
-    
+
     #{$this->carouselId} .carousel-track {
         display: flex;
         gap: {$this->cardGap}rem;
@@ -124,176 +89,164 @@ protected function getCss()
         transition: transform 0.3s ease-out;
         will-change: transform;
     }
-    
+
     #{$this->carouselId} .carousel-track.no-transition {
         transition: none !important;
     }
-    
+
     #{$this->carouselId} .carousel-card {
         flex: 0 0 {$this->cardWidth}px;
         min-width: {$this->cardWidth}px;
         height: {$this->cardHeight}px;
     }
-    
+
     #{$this->carouselId} .carousel-card .card {
-        border-radius: 25px;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        border-radius: 0;
         overflow: hidden;
         height: 100%;
         width: 100%;
         position: relative;
         background: white;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: 1px solid #e0e0e0;
         transition: all 0.3s ease;
         transform-origin: center center;
     }
-    
-    #{$this->carouselId} .carousel-card .card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        z-index: 5;
-    }
-    
+
     #{$this->carouselId} .card-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
     }
-    
-    #{$this->carouselId} .card-overlay {
+
+    /* caption overlay */
+    #{$this->carouselId} .card-caption {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
-        padding: 20px;
-        color: white;
+        left: 12px;
+        bottom: 10px;
+        right: 12px;
+        color: #ffffff;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        pointer-events: none;
     }
-    
-    #{$this->carouselId} .card-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin: 0 0 5px 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    }
-    
-    #{$this->carouselId} .card-subtitle {
-        font-size: 1rem;
+
+    #{$this->carouselId} .card-caption .title {
+        font-size: 1.05rem;
+        font-weight: 700;
         margin: 0;
-        opacity: 0.9;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
-    
+
+    #{$this->carouselId} .card-caption .sub {
+        font-size: 0.9rem;
+        margin: 2px 0 0;
+        opacity: 0.95;
+    }
+
+    #{$this->carouselId} .carousel-card .card:hover {
+        transform: scale(1.03);
+        border-color: #2E5AAC;
+        box-shadow: 0 2px 8px rgba(46, 90, 172, 0.2);
+        z-index: 5;
+    }
+
     #{$this->carouselId} .carousel-nav {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        width: 50px;
-        height: 50px;
-        background: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: transparent;
+        border: none;
         cursor: pointer;
         z-index: 10;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         transition: all 0.3s ease;
         user-select: none;
+        padding: 0;
     }
-    
-    #{$this->carouselId} .carousel-nav:hover {
-        background: #f0f0f0;
-        transform: translateY(-50%) scale(1.1);
+
+    #{$this->carouselId} .carousel-nav img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: none;
     }
-    
+
     #{$this->carouselId} .carousel-nav.prev {
-        left: 20px;
+        left: 12px;
     }
-    
+
     #{$this->carouselId} .carousel-nav.next {
-        right: 20px;
+        right: 12px;
     }
-    
-    #{$this->carouselId} .carousel-nav svg {
-        width: 24px;
-        height: 24px;
-        fill: #3498db;
-    }
-    
+
     @media (max-width: 768px) {
         #{$this->carouselId} .carousel-card {
             flex: 0 0 300px;
             min-width: 300px;
         }
-        
+
         #{$this->carouselId} .carousel-nav {
-            width: 40px;
-            height: 40px;
-        }
-        
-        #{$this->carouselId} .card-title {
-            font-size: 1.2rem;
-        }
-        
-        #{$this->carouselId} .card-subtitle {
-            font-size: 0.9rem;
+            width: 50px;
+            height: 50px;
         }
     }
 CSS;
-}
+    }
 
     protected function getJs()
     {
         $cardGapPx = $this->cardGap * 16;
         $cardWidthTotal = $this->cardWidth + $cardGapPx;
-        
+
         return <<<JS
         (function() {
             const carousel = document.getElementById('{$this->carouselId}');
             if (!carousel) return;
-            
+
             const wrapper = carousel.querySelector('.carousel-wrapper');
             const track = carousel.querySelector('.carousel-track');
             const originalCards = Array.from(track.querySelectorAll('.carousel-card'));
             const prevBtn = carousel.querySelector('.carousel-nav.prev');
             const nextBtn = carousel.querySelector('.carousel-nav.next');
-            
+
             const totalOriginalCards = originalCards.length;
             const cardWidth = {$cardWidthTotal};
             const cloneMultiplier = 3;
-            
+
             let currentIndex = totalOriginalCards * cloneMultiplier;
             let isAnimating = false;
             let wheelTimeout;
-            
+
             function initInfiniteCarousel() {
                 track.innerHTML = '';
-                
+
                 for (let i = 0; i < cloneMultiplier; i++) {
                     originalCards.forEach(card => {
                         const clone = card.cloneNode(true);
                         track.appendChild(clone);
                     });
                 }
-                
+
                 originalCards.forEach(card => {
                     track.appendChild(card);
                 });
-                
+
                 for (let i = 0; i < cloneMultiplier; i++) {
                     originalCards.forEach(card => {
                         const clone = card.cloneNode(true);
                         track.appendChild(clone);
                     });
                 }
-                
+
                 updatePosition(false);
             }
-            
+
             function updatePosition(animate = true) {
                 const offset = -(currentIndex * cardWidth) + (window.innerWidth / 2) - (cardWidth / 2);
-                
+
                 if (!animate) {
                     track.classList.add('no-transition');
                     track.style.transform = 'translateX(' + offset + 'px)';
@@ -305,11 +258,11 @@ CSS;
                     track.style.transform = 'translateX(' + offset + 'px)';
                 }
             }
-            
+
             function checkLoop() {
                 const maxIndex = totalOriginalCards * (cloneMultiplier * 2 + 1);
                 const minIndex = totalOriginalCards * cloneMultiplier;
-                
+
                 if (currentIndex >= maxIndex - totalOriginalCards) {
                     currentIndex = totalOriginalCards * cloneMultiplier + (currentIndex % totalOriginalCards);
                     updatePosition(false);
@@ -318,7 +271,7 @@ CSS;
                     updatePosition(false);
                 }
             }
-            
+
             function next() {
                 if (isAnimating) return;
                 isAnimating = true;
@@ -329,7 +282,7 @@ CSS;
                     isAnimating = false;
                 }, 350);
             }
-            
+
             function prev() {
                 if (isAnimating) return;
                 isAnimating = true;
@@ -340,7 +293,7 @@ CSS;
                     isAnimating = false;
                 }, 350);
             }
-            
+
             wrapper.addEventListener('wheel', function(e) {
                 e.preventDefault();
                 clearTimeout(wheelTimeout);
@@ -352,10 +305,10 @@ CSS;
                     }
                 }, 50);
             }, { passive: false });
-            
+
             if (nextBtn) nextBtn.addEventListener('click', next);
             if (prevBtn) prevBtn.addEventListener('click', prev);
-            
+
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
@@ -363,7 +316,7 @@ CSS;
                     updatePosition(false);
                 }, 100);
             });
-            
+
             initInfiniteCarousel();
         })();
 JS;
@@ -372,12 +325,12 @@ JS;
     protected function getDefaultItems()
     {
         return [
-            ['content' => '1'],
-            ['content' => '2'],
-            ['content' => '3'],
-            ['content' => '4'],
-            ['content' => '5'],
-            ['content' => '6'],
+            ['image' => "@web/images/hero-background.jpg", 'title' => '1', 'distrito' => 'A'],
+            ['image' => "@web/images/hero-background.jpg", 'title' => '2', 'distrito' => 'B'],
+            ['image' => "@web/images/hero-background.jpg", 'title' => '3', 'distrito' => 'C'],
+            ['image' => "@web/images/hero-background.jpg", 'title' => '4', 'distrito' => 'D'],
+            ['image' => "@web/images/hero-background.jpg", 'title' => '5', 'distrito' => 'E'],
+            ['image' => "@web/images/hero-background.jpg", 'title' => '6', 'distrito' => 'F'],
         ];
     }
 }
