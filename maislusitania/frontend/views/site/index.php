@@ -6,6 +6,7 @@
 
 use frontend\widgets\HeroSection;
 use frontend\widgets\InfiniteCarousel;
+use frontend\widgets\CuriosidadesSection;
 use yii\helpers\Url;
 
 $this->title = 'My Yii Application';
@@ -23,56 +24,76 @@ $this->title = 'My Yii Application';
 
     <!-- Carrossel de Museus em Destaque -->
     <?php if (!empty($museusItems)): ?>
-        <div class="mb-5">
-            <h2 class="text-center mb-4" style="color: #2E5AAC;">Museus em Destaque</h2>
+        <div style="background: white; padding: 60px 0 80px 0;">
+            <div style="text-align: center; margin-bottom: 60px; padding: 0 20px;">
+                <h2 style="color: #2E5AAC; font-size: 2.8rem; font-weight: bold; margin: 0 0 15px 0; font-family: Georgia, serif;">
+                    Museus em Destaque
+                </h2>
+                <p style="color: #2E5AAC; font-size: 1.2rem; margin: 0; font-weight: normal;">
+                    Conheça os espaços culturais mais visitados do país.
+                </p>
+            </div>
             <?= InfiniteCarousel::widget([
                     'carouselId' => 'museus-carousel',
                     'cardWidth' => 500,
                     'cardHeight' => 300,
                     'cardGap' => 2,
-                    'backgroundColor' => '#2E5AAC',
                     'items' => $museusItems,
             ]) ?>
         </div>
     <?php endif; ?>
 
+    <!-- Secção de Curiosidades -->
+    <?= CuriosidadesSection::widget([
+            'title' => 'Curiosidades do Nosso Património',
+            'backgroundColor' => '#2E5AAC',
+            'cards' => [
+                    [
+                            'image' => '@web/images/hero-background.jpg',
+                            'title' => 'O Mosteiro dos Jerónimos levou um século para ser concluído.',
+                            'buttonText' => 'Ver mais',
+                            'url' => '#'
+                    ],
+                    [
+                            'image' => '@web/images/hero-background.jpg',
+                            'title' => 'A Torre de Belém foi construída para defender Lisboa.',
+                            'buttonText' => 'Ver mais',
+                            'url' => '#'
+                    ],
+                    [
+                            'image' => '@web/images/hero-background.jpg',
+                            'title' => 'O Palácio da Pena é um dos 7 monumentos mais emblemáticos de Portugal.',
+                            'buttonText' => 'Ver mais',
+                            'url' => '#'
+                    ],
+                    [
+                            'image' => '@web/images/hero-background.jpg',
+                            'title' => 'O Convento de Cristo é Património Mundial da UNESCO.',
+                            'buttonText' => 'Ver mais',
+                            'url' => '#'
+                    ]
+            ]
+    ]) ?>
+
+
     <!-- Carrossel de Monumentos -->
     <?php if (!empty($monumentosItems)): ?>
-        <div class="mb-5">
-            <h2 class="text-center mb-4" style="color: #2E5AAC;">Monumentos Históricos</h2>
+        <div style="background: white; padding: 60px 0 80px 0;">
+            <div style="text-align: center; margin-bottom: 60px; padding: 0 20px;">
+                <h2 style="color: #2E5AAC; font-size: 2.8rem; font-weight: bold; margin: 0 0 15px 0; font-family: Georgia, serif;">
+                    Monumentos Históricos
+                </h2>
+                <p style="color: #2E5AAC; font-size: 1.2rem; margin: 0; font-weight: normal;">
+                    Descubra os monumentos mais emblemáticos do nosso património.
+                </p>
+            </div>
             <?= InfiniteCarousel::widget([
                     'carouselId' => 'monumentos-carousel',
                     'cardWidth' => 450,
                     'cardHeight' => 280,
                     'cardGap' => 1.5,
-                    'backgroundColor' => '#3498db',
                     'items' => $monumentosItems,
             ]) ?>
         </div>
     <?php endif; ?>
-
-    <!-- Conteúdo Original -->
-    <div class="body-content">
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Museus</h2>
-                <p>Explore a rica história e cultura de Portugal através dos nossos museus.</p>
-                <p><a class="btn btn-outline-secondary" href="<?= Url::to(['/local-cultural/index', 'tipo' => 'museu']) ?>">Ver Museus &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Monumentos</h2>
-                <p>Descubra os monumentos mais emblemáticos do nosso património.</p>
-                <p><a class="btn btn-outline-secondary" href="<?= Url::to(['/local-cultural/index', 'tipo' => 'monumento']) ?>">Ver Monumentos &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Eventos</h2>
-                <p>Fique a par dos próximos eventos culturais e exposições.</p>
-                <p><a class="btn btn-outline-secondary" href="<?= Url::to(['/evento/index']) ?>">Ver Eventos &raquo;</a></p>
-            </div>
-        </div>
-    </div>
 </div>
-
-
-
-
