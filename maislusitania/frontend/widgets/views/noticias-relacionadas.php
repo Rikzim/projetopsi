@@ -135,7 +135,7 @@ use yii\helpers\Url;
 </style>
 
 <div class="section-title-noticias">
-    <span class="section-icon-noticias">📰</span>
+    <span class="section-icon-noticias"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-noticias.svg') ?>"></span>
     Notícias Relacionadas
 </div>
 
@@ -147,16 +147,16 @@ use yii\helpers\Url;
                      alt="<?= Html::encode($noticia['titulo']) ?>" 
                      class="noticia-card-image">
             <?php else: ?>
-                <div class="noticia-card-image">📰</div>
+                <div class="noticia-card-image"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-noticias.svg') ?>"></div>
             <?php endif; ?>
             
             <div class="noticia-card-content">
                 <h3><?= Html::encode($noticia['titulo']) ?></h3>
                 
                 <div class="noticia-card-meta">
-                    <span>📅 <?= Html::encode($noticia['data']) ?></span>
-                    <span>👤 <?= Html::encode($noticia['local']) ?></span>
-                    <span>⏱️ <?= Html::encode($noticia['tempo_leitura']) ?></span>
+                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($noticia['data']) ?></span>
+                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-local.svg') ?>"> <?= Html::encode($noticia['local']) ?></span>
+                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-time-evento.svg') ?>"> <?= Html::encode($noticia['tempo_leitura']) ?></span>
                 </div>
                 
                 <p class="noticia-card-description">

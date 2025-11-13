@@ -106,6 +106,7 @@ use yii\helpers\Html;
             <?= Html::encode($model->tipo->nome ?? 'Local Cultural') ?>
         </span>
     <?php endif; ?>
+ 
 
     <h1><?= Html::encode($model->nome) ?></h1>
     
@@ -154,5 +155,7 @@ use yii\helpers\Html;
             <?= nl2br(Html::encode($model->descricao)) ?>
         </div>
     <?php endif; ?>
+
+       
     
 </div>
