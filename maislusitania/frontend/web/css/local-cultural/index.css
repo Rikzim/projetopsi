@@ -193,7 +193,7 @@ body > .wrap > .container {
 
 /* Content Section */
 .content-section {
-    background: #f9fafb;
+    background: #ffffff;
     padding-top: 120px;
     width: 100%;
 }
@@ -227,7 +227,7 @@ body > .wrap > .container {
     display: flex;
     gap: 0;
     height: 250px;
-    border: 1px solid #e5e7eb;
+    border: 2px solid #2E5AAC;
 }
 
 .local-card:hover {
