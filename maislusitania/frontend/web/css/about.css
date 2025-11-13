@@ -1,0 +1,126 @@
+/* About page sections */
+.site-about {
+    background: white;
+    padding: 60px 0 80px 0;
+    margin: 0;
+}
+
+.about-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.about-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.about-title {
+    font-size: 48px;
+    color: #2E5AAC;
+    font-weight: bold;
+    margin: 0;
+}
+
+.about-description {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #333;
+    margin: 0;
+    text-align: justify;
+}
+
+.about-description strong {
+    color: #2E5AAC;
+    font-weight: 600;
+}
+
+.about-image {
+    width: 450px;
+    height: auto;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+/* Valores section */
+.valores-section {
+    background: #2E5AAC;
+    padding: 100px 0;
+    margin: 0;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.valores-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+.valor-card {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 35px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.valor-icon {
+    margin-bottom: 25px;
+}
+
+.valor-icon img {
+    width: 80px;
+    height: 80px;
+}
+
+.valor-title {
+    font-size: 26px;
+    color: #2E5AAC;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.valor-description {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .about-title {
+        font-size: 32px;
+    }
+
+    .about-image {
+        width: 100%;
+    }
+
+    .valor-card {
+        width: 100%;
+        max-width: 320px;
+    }
+}
