@@ -8,6 +8,7 @@ use frontend\widgets\InformacoesUteisWidget;
 use frontend\widgets\BilhetesWidget;
 use frontend\widgets\EventosRelacionadosWidget;
 use frontend\widgets\NoticiasRelacionadasWidget;
+use frontend\widgets\HeroSection;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\LocalCultural */
@@ -20,11 +21,14 @@ $this->registerCssFile('@web/css/localview.css', ['depends' => [\yii\web\JqueryA
 
 <div class="local-cultural-view">
     
-    <div class="hero-image-container">
-        <img src="<?= Url::to('@web/images/locais/arte-antiga.jpg') ?>" 
-             class="hero-image" 
-             alt="<?= Html::encode($model->nome) ?>">
-    </div>
+
+    <div class="site-index">
+    <?= HeroSection::widget([
+            'backgroundImage' => $model->imagem_principal,
+            'title' => $model->nome,
+            'subtitle' => $model->descricao,
+         
+    ]) ?>
 
     <div class="content-wrapper">
         

@@ -21,7 +21,7 @@ use yii\helpers\Url;
     .section-icon-eventos {
         width: 32px;
         height: 32px;
-        background: #4169E1;
+        background: #2E5AAC;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -41,7 +41,7 @@ use yii\helpers\Url;
 
     .evento-card {
         background: white;
-        border: 2px solid #4169E1;
+        border: 2px solid #2E5AAC;
         border-radius: 20px;
         overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
@@ -56,7 +56,7 @@ use yii\helpers\Url;
         width: 100%;
         height: 180px;
         object-fit: cover;
-        background: linear-gradient(135deg, #4169E1 0%, #6B8EF5 100%);
+        background: linear-gradient(135deg, #2E5AAC 0%, #6B8EF5 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -103,7 +103,7 @@ use yii\helpers\Url;
     }
 
     .btn-ver-mais-evento {
-        background: #4169E1;
+        background: #2E5AAC;
         color: white;
         padding: 8px 20px;
         border-radius: 20px;
