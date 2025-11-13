@@ -85,7 +85,7 @@
 
 <div class="bilhetes-card">
     <div class="bilhetes-card-title">
-        <span class="bilhetes-card-icon">🎫</span>
+        <span class="bilhetes-card-icon"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-bilhete.svg') ?>"></span>
         Bilhetes
     </div>
 

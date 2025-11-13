@@ -64,10 +64,17 @@
         color: #999;
     }
 
+
     .no-schedule-icon {
         font-size: 60px;
         margin-bottom: 15px;
         opacity: 0.5;
+    }
+
+    .no-schedule-icon img {
+        width: 80px;
+        height: 80px;
+        filter: brightness(0);
     }
 
     .no-schedule-text {
@@ -79,14 +86,14 @@
 
 <div class="horario-card">
     <div class="horario-card-title">
-        <span class="horario-card-icon">🕐</span>
+        <span class="horario-card-icon"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-horario.svg') ?>"></span>
         Horário de Funcionamento
     </div>
     
     <?php if (count($horarios) === 1 && isset($horarios['Mensagem'])): ?>
         <!-- Mensagem quando não há horários -->
         <div class="no-schedule-message">
-            <div class="no-schedule-icon">📅</div>
+            <div class="no-schedule-icon"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-horario.svg') ?>"></div>
             <div class="no-schedule-text"><?= $horarios['Mensagem'] ?></div>
         </div>
     <?php else: ?>

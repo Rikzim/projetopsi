@@ -135,7 +135,7 @@ use yii\helpers\Url;
 </style>
 
 <div class="section-title-eventos">
-    <span class="section-icon-eventos">📅</span>
+    <span class="section-icon-eventos"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-event.svg') ?>"></span>
     Eventos Relacionados
 </div>
 
@@ -147,15 +147,15 @@ use yii\helpers\Url;
                      alt="<?= Html::encode($evento['titulo']) ?>" 
                      class="evento-card-image">
             <?php else: ?>
-                <div class="evento-card-image">📅</div>
+                <div class="evento-card-image"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-event.svg') ?>"></div>
             <?php endif; ?>
             
             <div class="evento-card-content">
                 <h3><?= Html::encode($evento['titulo']) ?></h3>
                 
                 <div class="evento-card-meta">
-                    <span>📅 <?= Html::encode($evento['data']) ?></span>
-                    <span>👥 Limite: <?= Html::encode($evento['limite']) ?></span>
+                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($evento['data']) ?></span>
+                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-person.svg') ?>"> <?= Html::encode($evento['limite']) ?></span>
                 </div>
                 
                 <p class="evento-card-description">
