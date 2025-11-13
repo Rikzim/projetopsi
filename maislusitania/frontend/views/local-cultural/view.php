@@ -17,15 +17,32 @@ use frontend\widgets\NoticiasRelacionadasWidget;
 
 <style>
     .local-cultural-view {
-        padding-bottom: 40px;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .hero-image-container {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
     }
 
     .hero-image {
         width: 100%;
         height: 400px;
         object-fit: cover;
+        display: block;
         border-radius: 0 0 20px 20px;
-        margin-bottom: -80px;
+    }
+
+    .content-wrapper {
+        margin-top: -80px;
+        position: relative;
+        z-index: 10;
     }
 
     .info-cards-container {
@@ -39,7 +56,10 @@ use frontend\widgets\NoticiasRelacionadasWidget;
     @media (max-width: 768px) {
         .hero-image {
             height: 250px;
-            margin-bottom: -50px;
+        }
+
+        .content-wrapper {
+            margin-top: -50px;
         }
 
         .info-cards-container {
@@ -49,48 +69,49 @@ use frontend\widgets\NoticiasRelacionadasWidget;
 </style>
 
 <div class="local-cultural-view">
+    
+    <div class="hero-image-container">
+        <img src="<?= Url::to('@web/images/locais/arte-antiga.jpg') ?>" 
+             class="hero-image" 
+             alt="<?= Html::encode($model->nome) ?>">
+    </div>
 
-    <img src="<?= Url::to('@web/images/locais/arte-antiga.jpg') ?>" class="hero-image" alt="<?= Html::encode($model->nome) ?>">
-
-    <!-- Widget: Header do Local Cultural -->
-    <?= LocalCulturalHeaderWidget::widget([
-        'model' => $model,
-        'showBadge' => true,
-        'showRating' => true,
-    ]) ?>
-
-    <!-- Cards de Informação -->
-    <div class="info-cards-container">
+    <div class="content-wrapper">
         
-        <!-- Widget: Horário de Funcionamento -->
-        <?= HorarioFuncionamentoWidget::widget([
+        <?= LocalCulturalHeaderWidget::widget([
+            'model' => $model,
+            'showBadge' => true,
+            'showRating' => true,
+        ]) ?>
+
+        <div class="info-cards-container">
+            
+            <?= HorarioFuncionamentoWidget::widget([
+                'model' => $model,
+            ]) ?>
+
+            <?= InformacoesUteisWidget::widget([
+                'model' => $model,
+                'showPreco' => true,
+                'precoText' => 'Consultar Bilhetes',
+            ]) ?>
+
+        </div>
+
+        <?= BilhetesWidget::widget([
             'model' => $model,
         ]) ?>
 
-        <!-- Widget: Informações Úteis -->
-        <?= InformacoesUteisWidget::widget([
-            'model' => $model,
-            'showPreco' => true,
-            'precoText' => 'Consultar Bilhetes',
+        <?= EventosRelacionadosWidget::widget([
+            'localCulturalId' => $model->id,
+            'limit' => 3,
+        ]) ?>
+
+        <?= NoticiasRelacionadasWidget::widget([
+            'localCulturalId' => $model->id,
+            'limit' => 3,
         ]) ?>
 
     </div>
-
-    <!-- Widget: Bilhetes -->
-    <?= BilhetesWidget::widget([
-        'model' => $model,
-    ]) ?>
-
-    <!-- Widget: Eventos Relacionados -->
-    <?= EventosRelacionadosWidget::widget([
-        'localCulturalId' => $model->id,
-        'limit' => 3,
-    ]) ?>
-
-    <!-- Widget: Notícias Relacionadas -->
-    <?= NoticiasRelacionadasWidget::widget([
-        'localCulturalId' => $model->id,
-        'limit' => 3,
-    ]) ?>
 
 </div>

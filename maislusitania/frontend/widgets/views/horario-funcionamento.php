@@ -57,6 +57,24 @@
         color: #999;
         font-style: italic;
     }
+
+    .no-schedule-message {
+        text-align: center;
+        padding: 60px 50px;
+        color: #999;
+    }
+
+    .no-schedule-icon {
+        font-size: 60px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    .no-schedule-text {
+        font-size: 20px;
+        color: #666;
+        line-height: 1.5;
+    }
 </style>
 
 <div class="horario-card">
@@ -65,12 +83,21 @@
         Horário de Funcionamento
     </div>
     
-    <?php foreach ($horarios as $dia => $horario): ?>
-        <div class="schedule-row">
-            <span class="schedule-day"><?= $dia ?></span>
-            <span class="schedule-hours <?= strtolower($horario) === 'fechado' ? 'fechado' : '' ?>">
-                <?= $horario ?>
-            </span>
+    <?php if (count($horarios) === 1 && isset($horarios['Mensagem'])): ?>
+        <!-- Mensagem quando não há horários -->
+        <div class="no-schedule-message">
+            <div class="no-schedule-icon">📅</div>
+            <div class="no-schedule-text"><?= $horarios['Mensagem'] ?></div>
         </div>
-    <?php endforeach; ?>
+    <?php else: ?>
+        <!-- Horários normais -->
+        <?php foreach ($horarios as $dia => $horario): ?>
+            <div class="schedule-row">
+                <span class="schedule-day"><?= $dia ?></span>
+                <span class="schedule-hours <?= strtolower($horario) === 'fechado' ? 'fechado' : '' ?>">
+                    <?= $horario ?>
+                </span>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
