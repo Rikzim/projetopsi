@@ -1,44 +1,47 @@
 <?php
 
+use frontend\widgets\HeroSection;
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var common\models\Evento $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Eventos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+$this->title = $model->titulo;
+$this->registerCssFile('@web/css/noticia/noticia-view.css');
 ?>
-<div class="evento-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'local_id',
-            'titulo',
-            'descricao:ntext',
-            'data_inicio',
-            'data_fim',
-            'preco',
-            'imagem',
-            'ativo',
-        ],
+<div class="site-index">
+    <?= HeroSection::widget([
+            'backgroundImage' => $model->imagem,
+            'title' => $model->titulo,
+            'subtitle' => $model->data_fim
+                    ? Yii::$app->formatter->asDatetime($model->data_inicio, "dd MMM 'de' yyyy 'às' HH:mm") . ' - ' . Yii::$app->formatter->asDatetime($model->data_fim, "dd MMM 'de' yyyy 'às' HH:mm")
+                    : Yii::$app->formatter->asDatetime($model->data_inicio, "dd MMM 'de' yyyy 'às' HH:mm"),
+            'showOverlay' => false,
     ]) ?>
 
+    <div class="news-content-wrapper">
+        <div class="news-content-card">
+            <div class="news-header">
+                <div class="news-meta">
+                    <span class="meta-item">
+                        <i class="fa fa-calendar"></i>
+                        <?= Yii::$app->formatter->asDatetime($model->data_inicio, "dd MMM 'de' yyyy 'às' HH:mm") ?>
+                        <?php if ($model->data_fim): ?>
+                            - <?= Yii::$app->formatter->asDatetime($model->data_fim, "dd MMM 'de' yyyy 'às' HH:mm") ?>
+                        <?php endif; ?>
+                    </span>
+                    <?php if ($model->local): ?>
+                        <span class="meta-item">
+                            <i class="fa fa-map-marker"></i>
+                            <?= Html::encode($model->local->nome) ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="news-body">
+                <?= $model->descricao ?>
+            </div>
+        </div>
+    </div>
 </div>
