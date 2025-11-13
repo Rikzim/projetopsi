@@ -72,7 +72,7 @@ use yii\helpers\Html;
 
 <div class="info-uteis-card">
     <div class="info-uteis-card-title">
-        <span class="info-uteis-card-icon">ℹ️</span>
+        <span class="info-uteis-card-icon"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-info.svg') ?>"></span>
         Informações Úteis
     </div>
 
