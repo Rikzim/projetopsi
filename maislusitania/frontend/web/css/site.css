@@ -2,7 +2,13 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
+html{
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+}
+
 body {
+    overscroll-behavior: none;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 

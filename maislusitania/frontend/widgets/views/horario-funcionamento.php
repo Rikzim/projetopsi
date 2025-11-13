@@ -57,20 +57,54 @@
         color: #999;
         font-style: italic;
     }
+
+    .no-schedule-message {
+        text-align: center;
+        padding: 60px 50px;
+        color: #999;
+    }
+
+
+    .no-schedule-icon {
+        font-size: 60px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    .no-schedule-icon img {
+        width: 80px;
+        height: 80px;
+        filter: brightness(0);
+    }
+
+    .no-schedule-text {
+        font-size: 20px;
+        color: #666;
+        line-height: 1.5;
+    }
 </style>
 
 <div class="horario-card">
     <div class="horario-card-title">
-        <span class="horario-card-icon">🕐</span>
+        <span class="horario-card-icon"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-horario.svg') ?>"></span>
         Horário de Funcionamento
     </div>
     
-    <?php foreach ($horarios as $dia => $horario): ?>
-        <div class="schedule-row">
-            <span class="schedule-day"><?= $dia ?></span>
-            <span class="schedule-hours <?= strtolower($horario) === 'fechado' ? 'fechado' : '' ?>">
-                <?= $horario ?>
-            </span>
+    <?php if (count($horarios) === 1 && isset($horarios['Mensagem'])): ?>
+        <!-- Mensagem quando não há horários -->
+        <div class="no-schedule-message">
+            <div class="no-schedule-icon"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-horario.svg') ?>"></div>
+            <div class="no-schedule-text"><?= $horarios['Mensagem'] ?></div>
         </div>
-    <?php endforeach; ?>
+    <?php else: ?>
+        <!-- Horários normais -->
+        <?php foreach ($horarios as $dia => $horario): ?>
+            <div class="schedule-row">
+                <span class="schedule-day"><?= $dia ?></span>
+                <span class="schedule-hours <?= strtolower($horario) === 'fechado' ? 'fechado' : '' ?>">
+                    <?= $horario ?>
+                </span>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>

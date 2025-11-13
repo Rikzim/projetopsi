@@ -1,0 +1,36 @@
+/* Homepage sections */
+.site-index .homepage-section {
+    background: white;
+    padding: 60px 0 80px 0;
+}
+
+.site-index .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 0 20px;
+}
+
+.site-index .section-title {
+    color: #2E5AAC;
+    font-size: 2.8rem;
+    font-weight: bold;
+    margin: 0 0 15px 0;
+    font-family: Georgia, serif;
+}
+
+.site-index .section-subtitle {
+    color: #2E5AAC;
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: normal;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .site-index .section-title {
+        font-size: 2rem;
+    }
+    .site-index .section-subtitle {
+        font-size: 1rem;
+    }
+}

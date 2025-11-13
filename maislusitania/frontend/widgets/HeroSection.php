@@ -11,7 +11,6 @@ class HeroSection extends Widget
     public $subtitle;
     public $buttons = [];
     public $backgroundImage = '/images/hero-background.jpg';
-    public $minHeight = '90vh';
 
     public function run()
     {
@@ -24,7 +23,6 @@ class HeroSection extends Widget
             'subtitle' => $this->subtitle,
             'buttons' => $this->buttons,
             'backgroundImage' => $imageUrl,
-            'minHeight' => $this->minHeight,
         ]);
     }
 
@@ -37,13 +35,13 @@ class HeroSection extends Widget
         }
         .hero-section-widget {
             width: 100vw !important;
+            height: 100vh !important;
             margin-left: calc(-50vw + 50%) !important;
             margin-right: calc(-50vw + 50%) !important;
             margin-top: 0 !important;
-            padding: 0 !important;
             position: relative;
-            top: -70px; /* Ajuste este valor baseado na altura do navbar */
-            padding-top: 70px !important; /* Compensa o espaço do navbar */
+            top: -70px;
+            padding-top: 70px;
         }
 
         .hero-section-content {
@@ -75,5 +73,4 @@ class HeroSection extends Widget
         }
     ");
     }
-
 }

@@ -4,6 +4,7 @@ namespace frontend\widgets;
 
 use yii\base\Widget;
 use yii\helpers\Html;
+use common\models\Horario;
 
 class HorarioFuncionamentoWidget extends Widget
 {
@@ -18,30 +19,56 @@ class HorarioFuncionamentoWidget extends Widget
             throw new \yii\base\InvalidConfigException('Defina "model" ou "horarios".');
         }
 
-        // Se não foi passado horários customizados, tentar parsear do modelo
+        // Buscar horários da base de dados
         if (empty($this->horarios) && $this->model !== null) {
-            $this->horarios = $this->parseHorario($this->model->horario_funcionamento);
+            $this->horarios = $this->buscarHorarios();
         }
     }
 
     /**
-     * Parse do campo horario_funcionamento
-     * Formato esperado: "Seg-Sex: 10:00-18:00, Sab: 10:00-14:00, Dom: Fechado"
+     * Busca os horários da base de dados pela relação
      */
-    private function parseHorario($horarioString)
+    private function buscarHorarios()
     {
-        // Por enquanto, retornar horários padrão
-        // TODO: Implementar parse inteligente do string
-        return [
-            'Segunda-Feira' => '10:00 - 18:00',
-            'Terça-Feira' => '10:00 - 18:00',
-            'Quarta-Feira' => '10:00 - 18:00',
-            'Quinta-Feira' => '10:00 - 18:00',
-            'Sexta-Feira' => '10:00 - 18:00',
-            'Sábado' => '10:00 - 18:00',
-            'Domingo' => 'Fechado'
-        ];
+        $horariosArray = [];
+        
+        // Busca os horários relacionados ao local
+        $horarios = $this->model->horarios;
+        
+        if (empty($horarios)) {
+            // Se não houver horários na BD, retorna mensagem
+            return ['Mensagem' => 'Este local ainda não tem horários cadastrados'];
+        }
+        
+        foreach ($horarios as $horario) {
+            
+            // Verifica qual dia da semana tem valor
+            if (!empty($horario->segunda)) {
+                $horariosArray['Segunda-Feira'] = $horario->segunda;
+            }
+            if (!empty($horario->terca)) {
+                $horariosArray['Terça-Feira'] = $horario->terca;
+            }
+            if (!empty($horario->quarta)) {
+                $horariosArray['Quarta-Feira'] = $horario->quarta;
+            }
+            if (!empty($horario->quinta)) {
+                $horariosArray['Quinta-Feira'] = $horario->quinta;
+            }
+            if (!empty($horario->sexta)) {
+                $horariosArray['Sexta-Feira'] = $horario->sexta;
+            }
+            if (!empty($horario->sabado)) {
+                $horariosArray['Sábado'] = $horario->sabado;
+            }
+            if (!empty($horario->domingo)) {
+                $horariosArray['Domingo'] = $horario->domingo;
+            }
+        }
+        
+        return $horariosArray;
     }
+
 
     public function run()
     {
