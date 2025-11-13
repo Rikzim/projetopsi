@@ -11,6 +11,7 @@ class HeroSection extends Widget
     public $subtitle;
     public $buttons = [];
     public $backgroundImage = '/images/hero-background.jpg';
+    public $showOverlay = true; // Add this property
 
     public function run()
     {
@@ -23,6 +24,7 @@ class HeroSection extends Widget
             'subtitle' => $this->subtitle,
             'buttons' => $this->buttons,
             'backgroundImage' => $imageUrl,
+            'showOverlay' => $this->showOverlay, // Pass to view
         ]);
     }
 

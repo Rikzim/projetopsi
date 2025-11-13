@@ -18,11 +18,12 @@ use yii\helpers\Url;
         <div class="carousel-wrapper">
             <div class="carousel-track">
                 <?php foreach ($items as $item):
-                    // Safely extract and validate each field
                     $image = isset($item['image']) && is_string($item['image']) ? Url::to($item['image']) : null;
                     $title = isset($item['title']) && is_string($item['title']) ? $item['title'] : '';
                     $distrito = isset($item['distrito']) && is_string($item['distrito']) ? $item['distrito'] : (isset($item['subtitle']) && is_string($item['subtitle']) ? $item['subtitle'] : '');
-                    $url = isset($item['url']) && is_string($item['url']) ? $item['url'] : 'javascript:void(0);';
+
+                    // Handle both array and string URLs
+                    $url = isset($item['url']) ? (is_array($item['url']) ? Url::to($item['url']) : $item['url']) : 'javascript:void(0);';
                     ?>
                     <div class="carousel-card">
                         <a class="card" href="<?= Html::encode($url) ?>">
