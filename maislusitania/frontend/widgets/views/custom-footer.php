@@ -23,6 +23,8 @@ use yii\helpers\Url;
                         ) ?>
                     <?php endforeach; ?>
                 </div>
+
+                <?= Html::a("pluslusitania@gmail.com", "mailto:pluslusitania@gmail.com") ?>
             </div>
             
             <!-- Coluna 1 -->

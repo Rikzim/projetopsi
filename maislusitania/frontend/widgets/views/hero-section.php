@@ -30,10 +30,15 @@ $this->registerCss("
     height: 100vh !important;
 }
 ");
+
+// Build background style based on showOverlay
+$backgroundStyle = $showOverlay
+        ? "background: linear-gradient(rgba(46, 90, 172, 0.7), rgba(46, 90, 172, 0.7)), url('{$backgroundImage}');"
+        : "background: url('{$backgroundImage}');";
 ?>
 
 <div class="hero-section-widget position-relative text-white text-center d-flex align-items-center justify-content-center" style="
-        background: linear-gradient(rgba(46, 90, 172, 0.7), rgba(46, 90, 172, 0.7)), url('<?= $backgroundImage ?>');
+<?= $backgroundStyle ?>
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

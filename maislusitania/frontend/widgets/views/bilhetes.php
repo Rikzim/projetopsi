@@ -6,7 +6,7 @@
 <style>
     .bilhetes-card {
         background: white;
-        border: 2px solid #4169E1;
+        border: 2px solid #2E5AAC;
         border-radius: 20px;
         padding: 25px;
         max-width: 900px;
@@ -25,7 +25,7 @@
     .bilhetes-card-icon {
         width: 32px;
         height: 32px;
-        background: #4169E1;
+        background: #2E5AAC;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -48,7 +48,7 @@
     }
 
     .ticket-info h4 {
-        color: #4169E1;
+        color: #2E5AAC;
         font-weight: bold;
         margin: 0 0 5px 0;
         font-size: 16px;
@@ -64,7 +64,7 @@
     .ticket-price {
         font-size: 24px;
         font-weight: bold;
-        color: #4169E1;
+        color: #2E5AAC;
         white-space: nowrap;
         margin-left: 20px;
     }
