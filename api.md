@@ -831,23 +831,5 @@ DELETE /locais-culturais/61/avaliacoes/2?access-token=123456
 
 ---
 
-## 📝 Notas Importantes
-
-- **Datas e Horas:** Formato ISO 8601 (`YYYY-MM-DDTHH:MM:SS`)
-- **Encoding:** UTF-8
-- **Content-Type:** `application/json`
-- **Token de Acesso:** Válido por 30 dias após login
-- **Rate Limiting:** 1000 requests por hora por IP
-
----
-
-## 📧 Suporte
-
-Para questões ou problemas com a API, contacte:
-- **Email:** api@maislusitania.pt
-- **Documentação:** https://docs.maislusitania.pt
-
----
-
 **Versão:** 1.0.0  
-**Última Atualização:** Novembro 2024
+**Última Atualização:** Outubro 2025
