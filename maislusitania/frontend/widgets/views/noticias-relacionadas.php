@@ -21,7 +21,7 @@ use yii\helpers\Url;
     .section-icon-noticias {
         width: 32px;
         height: 32px;
-        background: #4169E1;
+        background: #2E5AAC;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -41,7 +41,7 @@ use yii\helpers\Url;
 
     .noticia-card {
         background: white;
-        border: 2px solid #4169E1;
+        border: 2px solid #2E5AAC;
         border-radius: 20px;
         overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
@@ -56,7 +56,7 @@ use yii\helpers\Url;
         width: 100%;
         height: 180px;
         object-fit: cover;
-        background: linear-gradient(135deg, #2952cc 0%, #4169E1 100%);
+        background: linear-gradient(135deg, #2952cc 0%, #2E5AAC 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -103,7 +103,7 @@ use yii\helpers\Url;
     }
 
     .btn-ver-mais-noticia {
-        background: #4169E1;
+        background: #2E5AAC;
         color: white;
         padding: 8px 20px;
         border-radius: 20px;
@@ -116,7 +116,7 @@ use yii\helpers\Url;
     }
 
     .btn-ver-mais-noticia:hover {
-        background: #2952cc;
+        background: #2E5AAC;
         color: white;
         text-decoration: none;
     }

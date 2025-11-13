@@ -11,13 +11,14 @@ use yii\helpers\Html;
     .lc-header-card {
         background: white;
         border-radius: 20px;
-        padding: 30px;
+        padding: 30px 30px 30px 30px;
         margin: 0 auto 30px;
         max-width: 900px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 10;
-        border: 2px solid #4169E1;
+        border: 2px solid #2E5AAC;
+        margin-top: 40px;
     }
 
     .lc-header-card h1 {
@@ -49,7 +50,7 @@ use yii\helpers\Html;
     }
 
     .lc-stars {
-        color: #4169E1;
+        color: #2E5AAC;
         font-size: 20px;
     }
 
@@ -66,18 +67,12 @@ use yii\helpers\Html;
         position: absolute;
         top: 30px;
         right: 30px;
-        background: #4169E1;
+        background: #2E5AAC;
         color: white;
         padding: 8px 20px;
         border-radius: 20px;
         font-size: 14px;
         font-weight: 500;
-    }
-
-    .lc-description-text {
-        color: #333;
-        line-height: 1.8;
-        text-align: justify;
     }
 
     @media (max-width: 768px) {
@@ -107,8 +102,6 @@ use yii\helpers\Html;
         </span>
     <?php endif; ?>
  
-
-    <h1><?= Html::encode($model->nome) ?></h1>
     
     <div class="lc-location-info">
         <svg class="lc-location-icon" fill="currentColor" viewBox="0 0 20 20">
@@ -148,14 +141,6 @@ use yii\helpers\Html;
                 <?= number_format($rating, 1) ?> (2.000 Avaliações)
             </span>
         </div>
-    <?php endif; ?>
-
-    <?php if ($model->descricao): ?>
-        <div class="lc-description-text">
-            <?= nl2br(Html::encode($model->descricao)) ?>
-        </div>
-    <?php endif; ?>
-
-       
+    <?php endif; ?>       
     
 </div>
