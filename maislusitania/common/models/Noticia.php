@@ -74,6 +74,10 @@ class Noticia extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
+    public function getLocalCultural()
+    {
+        return $this->hasOne(LocalCultural::class, ['id' => 'local_id']);
+    }
     public function getLocal()
     {
         return $this->hasOne(LocalCultural::class, ['id' => 'local_id']);

@@ -1,4 +1,25 @@
-/* Reset COMPLETO - Remove TODO padding/margin do body e containers do Yii2 */
+/* ===== VARIÁVEIS CSS ===== */
+:root {
+    --lusiazul: #2E5AAC;
+    --lusiazul-hover: #1e3a8a;
+    --lusiazul-light: #4361ee;
+    --lusiazul-lighter: #EEF2F9;
+    --lusiazul-shadow: rgba(46, 90, 172, 0.15);
+    --lusiazul-shadow-hover: rgba(46, 90, 172, 0.25);
+    
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+}
+
+/* ===== RESET COMPLETO ===== */
 html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -6,7 +27,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Remove padding do container principal do Yii2 */
 .container,
 .container-fluid,
 body > .wrap,
@@ -17,7 +37,7 @@ body > .wrap > .container {
     max-width: 100% !important;
 }
 
-/* Hero Section - 100% width sem margens */
+/* ===== HERO SECTION ===== */
 .hero-section {
     background-size: 100% auto !important;
     background-repeat: no-repeat !important;
@@ -47,7 +67,7 @@ body > .wrap > .container {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-/* Search Container - Metade sobrepõe o hero */
+/* ===== SEARCH CONTAINER ===== */
 .search-wrapper {
     position: relative;
     width: 100%;
@@ -56,37 +76,57 @@ body > .wrap > .container {
 }
 
 .search-container {
-    max-width: 700px;
+    max-width: 850px;
     width: 90%;
     background: white;
     border-radius: 30px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    border: 2px solid #2E5AAC;
+    padding: 40px 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    border: 3px solid var(--lusiazul);
     margin: 0 auto;
 }
 
+/* ===== SEARCH BOX ===== */
 .search-box {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     margin-bottom: 20px;
+    align-items: stretch;
+}
+
+.search-box .form-group {
+    flex: 1;
+    margin: 0;
 }
 
 .search-box input {
-    flex: 1;
-    padding: 15px 20px;
-    border-radius: 30px;
+    width: 100%;
+    padding: 16px 24px;
+    border: 2px solid var(--lusiazul);
+    border-radius: 50px;
     font-size: 16px;
     outline: none;
-    border: 2px solid #2E5AAC;
+    background: white;
+    color: var(--gray-400);
+    transition: all 0.3s;
+}
+
+.search-box input:focus {
+    border-color: var(--lusiazul-hover);
+    box-shadow: 0 0 0 3px var(--lusiazul-shadow);
+    color: var(--gray-700);
+}
+
+.search-box input::placeholder {
+    color: var(--gray-400);
 }
 
 .search-box button {
-    padding: 15px 60px;
-    background: #2E5AAC;
+    padding: 16px 50px;
+    background: var(--lusiazul);
     color: white;
     border: none;
-    border-radius: 30px;
+    border-radius: 50px;
     font-weight: 600;
     font-size: 16px;
     cursor: pointer;
@@ -95,119 +135,94 @@ body > .wrap > .container {
 }
 
 .search-box button:hover {
-    background: #3651a3;
+    background: var(--lusiazul-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--lusiazul-shadow-hover);
 }
 
-/* Filter Buttons - Dropdown Style */
+/* ===== FILTER BUTTONS ===== */
 .filter-buttons {
     display: flex;
-    gap: 20px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-/* Custom Dropdown */
-.custom-dropdown {
-    position: relative;
+.filter-buttons .form-group {
+    margin: 0;
 }
 
-.dropdown-btn {
-    padding: 12px 30px;
-    background: #2E5AAC;
-    color: white;
+/* ===== DROPDOWNS ===== */
+.filter-dropdown {
+    padding: 14px 25px 14px 24px;
     border: none;
-    border-radius: 30px;
+    border-radius: 50px;
     font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background: var(--lusiazul);
     cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-}
-
-.dropdown-btn:hover {
-    background: #3651a3;
-    transform: translateY(-2px);
-}
-
-.dropdown-btn .arrow {
-    transition: transform 0.3s;
-}
-
-.custom-dropdown.active .arrow {
-    transform: rotate(180deg);
-}
-
-.dropdown-content {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    background: white;
-    border: 2px solid #2E5AAC;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
     min-width: 200px;
-    max-height: 300px;
-    overflow-y: auto;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s;
-    z-index: 1000;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: 0 2px 8px var(--lusiazul-shadow);
+    
+    /* Seta branca customizada */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 14px;
 }
 
-.custom-dropdown.active .dropdown-content {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+.filter-dropdown:hover {
+    background: var(--lusiazul-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--lusiazul-shadow-hover);
 }
 
-.dropdown-item {
-    padding: 12px 20px;
-    cursor: pointer;
-    transition: background 0.2s;
-    border-bottom: 1px solid #f0f0f0;
+.filter-dropdown:focus {
+    outline: none;
+    background: var(--lusiazul-hover);
+    box-shadow: 0 0 0 4px var(--lusiazul-shadow);
 }
 
-.dropdown-item:last-child {
-    border-bottom: none;
+.filter-dropdown option {
+    padding: 12px;
+    font-size: 14px;
+    color: var(--gray-700);
+    background: white;
+    font-weight: 500;
 }
 
-.dropdown-item:hover {
-    background: #f0f5ff;
-    color: #2E5AAC;
+.filter-dropdown option:hover {
+    background: var(--gray-100);
 }
 
-.dropdown-item.active {
-    background: #e6efff;
-    color: #2E5AAC;
+.filter-dropdown option:checked {
+    background: var(--lusiazul-lighter);
+    color: var(--lusiazul);
     font-weight: 600;
 }
 
-.dropdown-item a {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-/* Content Section */
+/* ===== CONTENT SECTION ===== */
 .content-section {
-    background: #ffffff;
+    background: white;
     padding-top: 120px;
     width: 100%;
+    position: relative;
 }
 
-/* Results Count */
 .results-count {
     max-width: 1200px;
     margin: 0 auto 30px;
     padding: 0 20px;
-    color: #666;
+    color: var(--gray-500);
     font-size: 16px;
 }
 
-/* Local Cards Grid */
+/* ===== LOCAL CARDS ===== */
 .locais-grid {
     max-width: 1200px;
     margin: 0 auto;
@@ -217,7 +232,6 @@ body > .wrap > .container {
     gap: 30px;
 }
 
-/* Local Card */
 .local-card {
     background: white;
     border-radius: 15px;
@@ -226,8 +240,8 @@ body > .wrap > .container {
     transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
     gap: 0;
-    height: 250px;
-    border: 2px solid #2E5AAC;
+    height: 260px;
+    border: 2px solid var(--lusiazul);
 }
 
 .local-card:hover {
@@ -240,9 +254,6 @@ body > .wrap > .container {
     height: 100%;
     object-fit: cover;
     flex-shrink: 0;
-}
-.local-image::before {
-    background: rgba(46, 90, 172, 0.90); 
 }
 
 .local-content {
@@ -257,24 +268,24 @@ body > .wrap > .container {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 10px;
-    color: #1f2937;
+    color: var(--gray-800);
 }
 
 .local-location {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #2E5AAC;
+    color: var(--lusiazul);
     font-size: 15px;
     margin-bottom: 15px;
 }
 
 .local-location svg {
-    color: #2E5AAC;
+    color: var(--lusiazul);
 }
 
 .local-description {
-    color: #4b5563;
+    color: var(--gray-600);
     font-size: 15px;
     line-height: 1.6;
     margin-bottom: 20px;
@@ -289,7 +300,7 @@ body > .wrap > .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--gray-200);
     padding-top: 15px;
 }
 
@@ -297,12 +308,12 @@ body > .wrap > .container {
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #2E5AAC;
+    color: var(--lusiazul);
     font-size: 16px;
 }
 
 .view-details {
-    color: #2E5AAC;
+    color: var(--lusiazul);
     font-weight: 600;
     text-decoration: none;
     display: flex;
@@ -310,16 +321,16 @@ body > .wrap > .container {
     gap: 5px;
     transition: all 0.3s;
     padding: 8px 20px;
-    border: 2px solid #2E5AAC;
+    border: 2px solid var(--lusiazul);
     border-radius: 25px;
 }
 
 .view-details:hover {
-    background: #2E5AAC;
+    background: var(--lusiazul);
     color: white;
 }
 
-/* Pagination */
+/* ===== PAGINATION ===== */
 .pagination-container {
     max-width: 1200px;
     margin: 0 auto 80px;
@@ -342,27 +353,70 @@ body > .wrap > .container {
     align-items: center;
     justify-content: center;
     background: white;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--gray-200);
     border-radius: 50%;
-    color: #374151;
+    color: var(--gray-700);
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s;
 }
 
 .pagination a:hover {
-    background: #4361a3;
+    background: var(--lusiazul);
     color: white;
-    border-color: #4361a3;
+    border-color: var(--lusiazul);
 }
 
 .pagination .active {
-    background: #4361a3;
+    background: var(--lusiazul);
     color: white;
-    border-color: #4361a3;
+    border-color: var(--lusiazul);
 }
 
-/* Responsive */
+/* ===== LOADING ===== */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--gray-200);
+    border-top: 4px solid var(--lusiazul);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== NO RESULTS ===== */
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.no-results p {
+    font-size: 16px;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .hero-section {
         padding: 60px 20px 100px;
@@ -382,33 +436,25 @@ body > .wrap > .container {
     }
     
     .search-container {
-        padding: 20px;
+        padding: 25px;
     }
     
     .search-box { 
-        flex-direction: column; 
+        flex-direction: column;
+        gap: 12px;
     }
     
-    .search-box input, 
     .search-box button { 
-        width: 100%; 
+        width: 100%;
     }
     
     .filter-buttons { 
         flex-direction: column; 
     }
     
-    .custom-dropdown { 
-        width: 100%; 
-    }
-    
-    .dropdown-btn { 
-        width: 100%; 
-        justify-content: center; 
-    }
-    
-    .dropdown-content { 
-        width: 100%; 
+    .filter-dropdown {
+        width: 100%;
+        min-width: unset;
     }
     
     .content-section { 
@@ -420,7 +466,8 @@ body > .wrap > .container {
     }
     
     .local-card { 
-        flex-direction: column; 
+        flex-direction: column;
+        height: auto;
     }
     
     .local-image { 

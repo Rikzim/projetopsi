@@ -1,5 +1,4 @@
 <?php
-// filepath: c:\wamp64\www\PlatSI\ProjetoPSI\ProjetoPSI\maislusitania\frontend\views\local-cultural\index.php
 
 use common\models\LocalCultural;
 use common\models\TipoLocal;
@@ -8,13 +7,18 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\widgets\LinkPager;
+use yii\widgets\Pjax;
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
+/** @var frontend\models\LocalCulturalSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var array $tiposLocal */
+/** @var array $distritos */
 
 $this->title = 'Explore o Património de Portugal';
 
-$this->registerCssFile('@web/css/local-cultural/index.css', ['depends' => [\yii\web\JqueryAsset::class]]);
+$this->registerCssFile('@web/css/local-cultural/index.css', ['depends' => [\yii\web\YiiAsset::class]]);
 
 $this->registerCss("
 .hero-section {
@@ -22,7 +26,6 @@ $this->registerCss("
 }
 ");
 ?>
-
 
 <!-- Hero Section - 100% Width -->
 <div class="hero-section">
@@ -32,81 +35,89 @@ $this->registerCss("
     </div>
 </div>
 
+<?php Pjax::begin([
+    'id' => 'local-pjax',
+    'enablePushState' => true,
+    'timeout' => 5000,
+]); ?>
+
 <!-- Search Container - Metade sobrepõe o hero -->
 <div class="search-wrapper">
     <div class="search-container">
+        <?php $form = ActiveForm::begin([
+            'action' => ['index'],
+            'method' => 'get',
+            'options' => [
+                'data-pjax' => '',
+                'id' => 'filter-form',
+            ],
+        ]); ?>
+        
         <div class="search-box">
-            <?= Html::textInput('search', Yii::$app->request->get('search'), [
+            <?= $form->field($searchModel, 'search', [
+                'template' => '{input}',
+            ])->textInput([
                 'placeholder' => 'Pesquisa por local, cidade ou monumento.....',
-                'id' => 'search-input'
+                'id' => 'search-input',
+                'class' => 'search-field',
             ]) ?>
-            <button onclick="searchLocais()">Pesquisar</button>
+            <button type="submit">Pesquisar</button>
         </div>
         
         <div class="filter-buttons">
-            <!-- Dropdown Categorias -->
-            <div class="custom-dropdown" id="dropdown-categorias">
-                <button class="dropdown-btn" onclick="toggleDropdown('dropdown-categorias')">
-                    <span id="selected-categoria">Todas as Categorias</span>
-                    <span class="arrow">▾</span>
-                </button>
-                <div class="dropdown-content">
-                    <div class="dropdown-item <?= !Yii::$app->request->get('tipo') ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index']) ?>">Todas as Categorias</a>
-                    </div>
-                    <?php foreach ($tiposLocal as $id => $nome): ?>
-                    <div class="dropdown-item <?= Yii::$app->request->get('tipo') == $id ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index', 'tipo' => $id]) ?>"><?= Html::encode($nome) ?></a>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
+            <!-- Dropdown Categorias (Yii2) -->
+            <?= $form->field($searchModel, 'tipo', [
+                'template' => '{input}',
+            ])->dropDownList(
+                ArrayHelper::merge(['' => 'Todas as Categorias'], $tiposLocal),
+                [
+                    'class' => 'filter-dropdown',
+                    'id' => 'filter-tipo',
+                    'onchange' => '$("#filter-form").submit()',
+                ]
+            ) ?>
 
-            <!-- Dropdown Regiões -->
-            <div class="custom-dropdown" id="dropdown-regioes">
-                <button class="dropdown-btn" onclick="toggleDropdown('dropdown-regioes')">
-                    <span id="selected-regiao">Todas as Regiões</span>
-                    <span class="arrow">▾</span>
-                </button>
-                <div class="dropdown-content">
-                    <div class="dropdown-item <?= !Yii::$app->request->get('distrito') ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index']) ?>">Todas as Regiões</a>
-                    </div>
-                    <?php foreach ($distritos as $id => $nome): ?>
-                    <div class="dropdown-item <?= Yii::$app->request->get('distrito') == $id ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index', 'distrito' => $id]) ?>"><?= Html::encode($nome) ?></a>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
+            <!-- Dropdown Regiões (Yii2) -->
+            <?= $form->field($searchModel, 'distrito', [
+                'template' => '{input}',
+            ])->dropDownList(
+                ArrayHelper::merge(['' => 'Todas as Regiões'], $distritos),
+                [
+                    'class' => 'filter-dropdown',
+                    'id' => 'filter-distrito',
+                    'onchange' => '$("#filter-form").submit()',
+                ]
+            ) ?>
 
-            <!-- Dropdown Ordenar -->
-            <div class="custom-dropdown" id="dropdown-ordenar">
-                <button class="dropdown-btn" onclick="toggleDropdown('dropdown-ordenar')">
-                    <span id="selected-ordem">Ordenar Por</span>
-                    <span class="arrow">▾</span>
-                </button>
-                <div class="dropdown-content">
-                    <div class="dropdown-item <?= !Yii::$app->request->get('order') ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index']) ?>">Relevância</a>
-                    </div>
-                    <div class="dropdown-item <?= Yii::$app->request->get('order') == 'nome' ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index', 'order' => 'nome']) ?>">Nome A-Z</a>
-                    </div>
-                    <div class="dropdown-item <?= Yii::$app->request->get('order') == 'nome-desc' ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index', 'order' => 'nome-desc']) ?>">Nome Z-A</a>
-                    </div>
-                    <div class="dropdown-item <?= Yii::$app->request->get('order') == 'rating' ? 'active' : '' ?>">
-                        <a href="<?= Url::to(['index', 'order' => 'rating']) ?>">Melhor Avaliação</a>
-                    </div>
-                </div>
-            </div>
+            <!-- Dropdown Ordenar (Yii2) -->
+            <?= $form->field($searchModel, 'order', [
+                'template' => '{input}',
+            ])->dropDownList(
+                [
+                    '' => 'Relevância',
+                    'nome' => 'Nome A-Z',
+                    'nome-desc' => 'Nome Z-A',
+                    'rating' => 'Melhor Avaliação',
+                ],
+                [
+                    'class' => 'filter-dropdown',
+                    'id' => 'filter-order',
+                    'onchange' => '$("#filter-form").submit()',
+                ]
+            ) ?>
         </div>
+        
+        <?php ActiveForm::end(); ?>
     </div>
 </div>
 
 <!-- Content Section -->
 <div class="content-section">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
     <!-- Results Count -->
     <div class="results-count">
         <strong><?= $dataProvider->totalCount ?></strong> locais encontrados
@@ -114,39 +125,47 @@ $this->registerCss("
 
     <!-- Locais Grid -->
     <div class="locais-grid">
-        <?php foreach ($dataProvider->models as $local): ?>
-        <div class="local-card">
-            
-            <img src="<?= 'https://picsum.photos/140/140?random=' . $local->id ?>" alt="<?= Html::encode($local->nome) ?>" class="local-image">
-            
-            <div class="local-content">
-                <h3 class="local-title"><?= Html::encode($local->nome) ?></h3>
+        <?php if (empty($dataProvider->models)): ?>
+            <div class="no-results">
+                <p>Nenhum local encontrado com os filtros selecionados.</p>
+            </div>
+        <?php else: ?>
+            <?php foreach ($dataProvider->models as $local): ?>
+            <div class="local-card">
+                <img src="<?= $local->imagem_principal ?: 'https://picsum.photos/140/140?random=' . $local->id ?>" 
+                     alt="<?= Html::encode($local->nome) ?>" 
+                     class="local-image">
                 
-                <div class="local-location">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 0a5.5 5.5 0 0 0-5.5 5.5c0 3.5 5.5 10.5 5.5 10.5s5.5-7 5.5-10.5A5.5 5.5 0 0 0 8 0zm0 8a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-                    </svg>
-                    <?= Html::encode($local->distrito->nome ?? 'Portugal') ?>
-                </div>
-                
-                <p class="local-description">
-                    <?= Html::encode(mb_substr($local->descricao, 0, 255)) ?>...
-                </p>
-                
-                <div class="local-footer">
-                    <div class="local-rating">
-                        ★★★★★ 4.5
+                <div class="local-content">
+                    <h3 class="local-title"><?= Html::encode($local->nome) ?></h3>
+                    
+                    <div class="local-location">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0a5.5 5.5 0 0 0-5.5 5.5c0 3.5 5.5 10.5 5.5 10.5s5.5-7 5.5-10.5A5.5 5.5 0 0 0 8 0zm0 8a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                        </svg>
+                        <?= Html::encode($local->distrito->nome ?? 'Portugal') ?>
                     </div>
-                    <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
-                        Ver Detalhes →
-                    </a>
+                    
+                    <p class="local-description">
+                        <?= Html::encode(mb_substr($local->descricao ?? '', 0, 120)) ?>...
+                    </p>
+                    
+                    <div class="local-footer">
+                        <div class="local-rating">
+                            ★★★★★ 4.5
+                        </div>
+                        <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
+                            Ver Detalhes →
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 
     <!-- Pagination -->
+    <?php if (!empty($dataProvider->models)): ?>
     <div class="pagination-container">
         <?= LinkPager::widget([
             'pagination' => $dataProvider->pagination,
@@ -156,48 +175,51 @@ $this->registerCss("
             'maxButtonCount' => 5,
         ]) ?>
     </div>
+    <?php endif; ?>
 </div>
 
-<script>
-// Toggle dropdown
-function toggleDropdown(id) {
-    const dropdown = document.getElementById(id);
-    const allDropdowns = document.querySelectorAll('.custom-dropdown');
-    
-    // Fechar outros dropdowns
-    allDropdowns.forEach(d => {
-        if (d.id !== id) d.classList.remove('active');
-    });
-    
-    dropdown.classList.toggle('active');
-}
+<?php Pjax::end(); ?>
 
-// Fechar dropdown ao clicar fora
-document.addEventListener('click', function(event) {
-    if (!event.target.closest('.custom-dropdown')) {
-        document.querySelectorAll('.custom-dropdown').forEach(d => {
-            d.classList.remove('active');
-        });
+<?php
+$this->registerJs("
+var searchTimeout;
+
+// Pesquisa com delay (500ms)
+$('#search-input').on('keyup', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function() {
+        $('#filter-form').submit();
+    }, 500);
+});
+
+// Loading durante Pjax
+$(document).on('pjax:send', function() {
+    $('.loading-overlay').fadeIn(200);
+});
+
+$(document).on('pjax:complete', function() {
+    $('.loading-overlay').fadeOut(200);
+    
+    // Scroll suave para resultados se houver filtros
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.toString() && urlParams.get('LocalCulturalSearch')) {
+        $('html, body').animate({
+            scrollTop: $('.content-section').offset().top - 120
+        }, 600);
     }
 });
 
-// Prevenir fechar ao clicar no botão
-document.querySelectorAll('.dropdown-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
-});
-
-// Pesquisar
-function searchLocais() {
-    const search = document.getElementById('search-input').value;
-    window.location.href = '<?= Url::to(['index']) ?>?search=' + encodeURIComponent(search);
-}
-
-// Enter key para pesquisa
-document.getElementById('search-input').addEventListener('keypress', function(e) {
-    if (e.which == 13 || e.keyCode == 13) {
-        searchLocais();
+// Prevenir duplo submit
+$('#filter-form').on('submit', function(e) {
+    if ($(this).data('submitting')) {
+        e.preventDefault();
+        return false;
     }
+    $(this).data('submitting', true);
+    
+    setTimeout(function() {
+        $('#filter-form').data('submitting', false);
+    }, 1000);
 });
-</script>
+");
+?>
