@@ -52,8 +52,11 @@ class NoticiaController extends Controller
             */
         ]);
 
+        $destaqueNoticia = Noticia::find()->where(['destaque' => 1, 'ativo' => 1])->orderBy(['data_publicacao' => SORT_DESC])->one();
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'destaqueNoticia' => $destaqueNoticia,
         ]);
     }
 
