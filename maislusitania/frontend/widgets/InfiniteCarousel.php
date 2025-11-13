@@ -110,7 +110,8 @@ class InfiniteCarousel extends Widget
         width: 100%;
         position: relative;
         background: white;
-        border: 1px solid #e0e0e0;
+        border: none;
+        outline: none;
         transition: all 0.3s ease;
         transform-origin: center center;
     }
@@ -120,6 +121,8 @@ class InfiniteCarousel extends Widget
         height: 100%;
         object-fit: cover;
         display: block;
+        border: none;
+        outline: none;
     }
 
     /* caption overlay */
@@ -147,7 +150,6 @@ class InfiniteCarousel extends Widget
 
     #{$this->carouselId} .carousel-card .card:hover {
         transform: scale(1.03);
-        border-color: #2E5AAC;
         box-shadow: 0 2px 8px rgba(46, 90, 172, 0.2);
         z-index: 5;
     }
@@ -196,129 +198,117 @@ class InfiniteCarousel extends Widget
 CSS;
     }
 
+
     protected function getJs()
     {
         $cardGapPx = $this->cardGap * 16;
         $cardWidthTotal = $this->cardWidth + $cardGapPx;
 
         return <<<JS
-        (function() {
-            const carousel = document.getElementById('{$this->carouselId}');
-            if (!carousel) return;
+    (function() {
+        const carousel = document.getElementById('{$this->carouselId}');
+        if (!carousel) return;
 
-            const wrapper = carousel.querySelector('.carousel-wrapper');
-            const track = carousel.querySelector('.carousel-track');
-            const originalCards = Array.from(track.querySelectorAll('.carousel-card'));
-            const prevBtn = carousel.querySelector('.carousel-nav.prev');
-            const nextBtn = carousel.querySelector('.carousel-nav.next');
+        const wrapper = carousel.querySelector('.carousel-wrapper');
+        const track = carousel.querySelector('.carousel-track');
+        const originalCards = Array.from(track.querySelectorAll('.carousel-card'));
+        const prevBtn = carousel.querySelector('.carousel-nav.prev');
+        const nextBtn = carousel.querySelector('.carousel-nav.next');
 
-            const totalOriginalCards = originalCards.length;
-            const cardWidth = {$cardWidthTotal};
-            const cloneMultiplier = 3;
+        const totalOriginalCards = originalCards.length;
+        const cardWidth = {$cardWidthTotal};
+        const cloneMultiplier = 3;
 
-            let currentIndex = totalOriginalCards * cloneMultiplier;
-            let isAnimating = false;
-            let wheelTimeout;
+        let currentIndex = totalOriginalCards * cloneMultiplier;
+        let isAnimating = false;
 
-            function initInfiniteCarousel() {
-                track.innerHTML = '';
+        function initInfiniteCarousel() {
+            track.innerHTML = '';
 
-                for (let i = 0; i < cloneMultiplier; i++) {
-                    originalCards.forEach(card => {
-                        const clone = card.cloneNode(true);
-                        track.appendChild(clone);
-                    });
-                }
-
+            for (let i = 0; i < cloneMultiplier; i++) {
                 originalCards.forEach(card => {
-                    track.appendChild(card);
+                    const clone = card.cloneNode(true);
+                    track.appendChild(clone);
                 });
-
-                for (let i = 0; i < cloneMultiplier; i++) {
-                    originalCards.forEach(card => {
-                        const clone = card.cloneNode(true);
-                        track.appendChild(clone);
-                    });
-                }
-
-                updatePosition(false);
             }
 
-            function updatePosition(animate = true) {
-                const offset = -(currentIndex * cardWidth) + (window.innerWidth / 2) - (cardWidth / 2);
-
-                if (!animate) {
-                    track.classList.add('no-transition');
-                    track.style.transform = 'translateX(' + offset + 'px)';
-                    void track.offsetWidth;
-                    requestAnimationFrame(() => {
-                        track.classList.remove('no-transition');
-                    });
-                } else {
-                    track.style.transform = 'translateX(' + offset + 'px)';
-                }
-            }
-
-            function checkLoop() {
-                const maxIndex = totalOriginalCards * (cloneMultiplier * 2 + 1);
-                const minIndex = totalOriginalCards * cloneMultiplier;
-
-                if (currentIndex >= maxIndex - totalOriginalCards) {
-                    currentIndex = totalOriginalCards * cloneMultiplier + (currentIndex % totalOriginalCards);
-                    updatePosition(false);
-                } else if (currentIndex < minIndex) {
-                    currentIndex = totalOriginalCards * (cloneMultiplier + 1) - totalOriginalCards + (currentIndex % totalOriginalCards);
-                    updatePosition(false);
-                }
-            }
-
-            function next() {
-                if (isAnimating) return;
-                isAnimating = true;
-                currentIndex++;
-                updatePosition(true);
-                setTimeout(() => {
-                    checkLoop();
-                    isAnimating = false;
-                }, 350);
-            }
-
-            function prev() {
-                if (isAnimating) return;
-                isAnimating = true;
-                currentIndex--;
-                updatePosition(true);
-                setTimeout(() => {
-                    checkLoop();
-                    isAnimating = false;
-                }, 350);
-            }
-
-            wrapper.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                clearTimeout(wheelTimeout);
-                wheelTimeout = setTimeout(() => {
-                    if (e.deltaY > 0) {
-                        next();
-                    } else {
-                        prev();
-                    }
-                }, 50);
-            }, { passive: false });
-
-            if (nextBtn) nextBtn.addEventListener('click', next);
-            if (prevBtn) prevBtn.addEventListener('click', prev);
-
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    updatePosition(false);
-                }, 100);
+            originalCards.forEach(card => {
+                track.appendChild(card);
             });
 
-            initInfiniteCarousel();
-        })();
+            for (let i = 0; i < cloneMultiplier; i++) {
+                originalCards.forEach(card => {
+                    const clone = card.cloneNode(true);
+                    track.appendChild(clone);
+                });
+            }
+
+            updatePosition(false);
+        }
+
+        function updatePosition(animate = true) {
+            const offset = -(currentIndex * cardWidth) + (window.innerWidth / 2) - (cardWidth / 2);
+
+            if (!animate) {
+                track.classList.add('no-transition');
+                track.style.transform = 'translateX(' + offset + 'px)';
+                void track.offsetWidth;
+                requestAnimationFrame(() => {
+                    track.classList.remove('no-transition');
+                });
+            } else {
+                track.style.transform = 'translateX(' + offset + 'px)';
+            }
+        }
+
+        function checkLoop() {
+            const maxIndex = totalOriginalCards * (cloneMultiplier * 2 + 1);
+            const minIndex = totalOriginalCards * cloneMultiplier;
+
+            if (currentIndex >= maxIndex - totalOriginalCards) {
+                currentIndex = totalOriginalCards * cloneMultiplier + (currentIndex % totalOriginalCards);
+                updatePosition(false);
+            } else if (currentIndex < minIndex) {
+                currentIndex = totalOriginalCards * (cloneMultiplier + 1) - totalOriginalCards + (currentIndex % totalOriginalCards);
+                updatePosition(false);
+            }
+        }
+
+        function next() {
+            if (isAnimating) return;
+            isAnimating = true;
+            currentIndex++;
+            updatePosition(true);
+            setTimeout(() => {
+                checkLoop();
+                isAnimating = false;
+            }, 350);
+        }
+
+        function prev() {
+            if (isAnimating) return;
+            isAnimating = true;
+            currentIndex--;
+            updatePosition(true);
+            setTimeout(() => {
+                checkLoop();
+                isAnimating = false;
+            }, 350);
+        }
+
+        if (nextBtn) nextBtn.addEventListener('click', next);
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                updatePosition(false);
+            }, 100);
+        });
+
+        initInfiniteCarousel();
+    })();
 JS;
     }
 

@@ -18,7 +18,7 @@ $this->registerCssFile('@web/css/local-cultural/index.css', ['depends' => [\yii\
 
 $this->registerCss("
 .hero-section {
-    background: linear-gradient(rgba(46, 90, 172, 0.75), rgba(46, 90, 172, 0.75)), url('" . Url::to('@web/images/components/locals-foreground.jpg') . "');
+    background: linear-gradient(rgba(46, 90, 172, 0.75), rgba(46, 90, 172, 0.75)), url('" . Url::to('@web/images/locais/palacio-pena.jpg') . "');
 }
 ");
 ?>
