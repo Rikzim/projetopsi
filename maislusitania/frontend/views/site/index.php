@@ -10,6 +10,7 @@ use frontend\widgets\CuriosidadesSection;
 use yii\helpers\Url;
 
 $this->title = 'My Yii Application';
+$this->registerCssFile('@web/css/homepage.css');
 ?>
 
 <div class="site-index">
@@ -24,12 +25,12 @@ $this->title = 'My Yii Application';
 
     <!-- Carrossel de Museus em Destaque -->
     <?php if (!empty($museusItems)): ?>
-        <div style="background: white; padding: 60px 0 80px 0;">
-            <div style="text-align: center; margin-bottom: 60px; padding: 0 20px;">
-                <h2 style="color: #2E5AAC; font-size: 2.8rem; font-weight: bold; margin: 0 0 15px 0; font-family: Georgia, serif;">
+        <div class="homepage-section">
+            <div class="section-header">
+                <h2 class="section-title">
                     Museus em Destaque
                 </h2>
-                <p style="color: #2E5AAC; font-size: 1.2rem; margin: 0; font-weight: normal;">
+                <p class="section-subtitle">
                     Conheça os espaços culturais mais visitados do país.
                 </p>
             </div>
@@ -78,12 +79,12 @@ $this->title = 'My Yii Application';
 
     <!-- Carrossel de Monumentos -->
     <?php if (!empty($monumentosItems)): ?>
-        <div style="background: white; padding: 60px 0 80px 0;">
-            <div style="text-align: center; margin-bottom: 60px; padding: 0 20px;">
-                <h2 style="color: #2E5AAC; font-size: 2.8rem; font-weight: bold; margin: 0 0 15px 0; font-family: Georgia, serif;">
+        <div class="homepage-section">
+            <div class="section-header">
+                <h2 class="section-title">
                     Monumentos Históricos
                 </h2>
-                <p style="color: #2E5AAC; font-size: 1.2rem; margin: 0; font-weight: normal;">
+                <p class="section-subtitle">
                     Descubra os monumentos mais emblemáticos do nosso património.
                 </p>
             </div>
