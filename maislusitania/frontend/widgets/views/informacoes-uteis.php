@@ -11,7 +11,7 @@ use yii\helpers\Html;
 <style>
     .info-uteis-card {
         background: white;
-        border: 2px solid #4169E1;
+        border: 2px solid #2E5AAC;
         border-radius: 20px;
         padding: 25px;
     }
@@ -28,7 +28,7 @@ use yii\helpers\Html;
     .info-uteis-card-icon {
         width: 32px;
         height: 32px;
-        background: #4169E1;
+        background: #2E5AAC;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -61,7 +61,7 @@ use yii\helpers\Html;
     }
 
     .info-value a {
-        color: #4169E1;
+        color: #2E5AAC;
         text-decoration: none;
     }
 

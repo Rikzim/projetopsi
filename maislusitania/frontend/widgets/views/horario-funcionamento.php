@@ -6,7 +6,7 @@
 <style>
     .horario-card {
         background: white;
-        border: 2px solid #4169E1;
+        border: 2px solid #2E5AAC;
         border-radius: 20px;
         padding: 25px;
     }
@@ -23,7 +23,7 @@
     .horario-card-icon {
         width: 32px;
         height: 32px;
-        background: #4169E1;
+        background: #2E5AAC;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -38,7 +38,7 @@
         justify-content: space-between;
         padding: 12px 0;
         border-bottom: 1px solid #f0f0f0;
-        color: #4169E1;
+        color: #2E5AAC;
     }
 
     .schedule-row:last-child {
