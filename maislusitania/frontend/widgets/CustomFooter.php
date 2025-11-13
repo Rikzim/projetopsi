@@ -52,10 +52,9 @@ class CustomFooter extends Widget
             $this->column1Links = [
                 'title' => 'Explorar',
                 'links' => [
-                    ['label' => 'Museus', 'url' => ['/museus/index']],
-                    ['label' => 'Monumentos', 'url' => ['/monumentos/index']],
-                    ['label' => 'Eventos', 'url' => ['/eventos/index']],
-                    ['label' => 'Notícias', 'url' => ['/noticias/index']],
+                    ['label' => 'Locais Culturais', 'url' => ['/local-cultural/index']],
+                    ['label' => 'Eventos', 'url' => ['/evento/index']],
+                    ['label' => 'Notícias', 'url' => ['/noticia/index']],
                 ]
             ];
         }
@@ -64,8 +63,8 @@ class CustomFooter extends Widget
             $this->column2Links = [
                 'title' => 'Sobre',
                 'links' => [
-                    ['label' => 'Quem Somos', 'url' => ['/site/about']],
-                    ['label' => 'Contactos', 'url' => ['/site/contact']],
+                    ['label' => 'Quem Somos', 'url' => ['/site/about', '#' => 'site-about']],
+                    ['label' => 'Nossa Missão', 'url' => ['/site/about', '#' => 'nossa-historia']],
                 ]
             ];
         }
