@@ -12,7 +12,7 @@ $this->registerCssFile('@web/css/about.css');
 
 <div class="site-index">
     <?= HeroSection::widget([
-            'backgroundImage' => '@web/images/hero-background.jpg',
+            'backgroundImage' => '@web/images/sobre-hero.jpg',
             'title' => 'Sobre o Projeto +Lusitânia',
             'subtitle' => 'Preservar e divulgar o património histórico e cultural de Portugal.',
             'buttons' => [
@@ -36,7 +36,7 @@ $this->registerCssFile('@web/css/about.css');
                     </p>
                 </div>
             </div>
-            <img src="<?= Url::to('@web/images/markers/torre-belem.jpg') ?>"
+            <img src="<?= Url::to('@web/images/locais/torre-belem.jpg') ?>"
                  alt="Torre de Belém"
                  class="about-image">
         </div>

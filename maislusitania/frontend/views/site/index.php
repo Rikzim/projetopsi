@@ -50,25 +50,25 @@ $this->registerCssFile('@web/css/homepage.css');
             'backgroundColor' => '#2E5AAC',
             'cards' => [
                     [
-                            'image' => '@web/images/hero-background.jpg',
+                            'image' => '@web/images/locais/mosteiro-jeronimos.jpg',
                             'title' => 'O Mosteiro dos Jerónimos levou um século para ser concluído.',
                             'buttonText' => 'Ver mais',
                             'url' => '#'
                     ],
                     [
-                            'image' => '@web/images/hero-background.jpg',
+                            'image' => '@web/images/locais/torre-belem.jpg',
                             'title' => 'A Torre de Belém foi construída para defender Lisboa.',
                             'buttonText' => 'Ver mais',
                             'url' => '#'
                     ],
                     [
-                            'image' => '@web/images/hero-background.jpg',
+                            'image' => '@web/images/locais/palacio-pena.jpg',
                             'title' => 'O Palácio da Pena é um dos 7 monumentos mais emblemáticos de Portugal.',
                             'buttonText' => 'Ver mais',
                             'url' => '#'
                     ],
                     [
-                            'image' => '@web/images/hero-background.jpg',
+                            'image' => '@web/images/locais/convento-cristo.jpg',
                             'title' => 'O Convento de Cristo é Património Mundial da UNESCO.',
                             'buttonText' => 'Ver mais',
                             'url' => '#'
