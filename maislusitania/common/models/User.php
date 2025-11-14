@@ -51,9 +51,13 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+    public $newPassword;
+    public $newPasswordConfirm;
     public function rules()
     {
         return [
+            [['newPassword', 'newPasswordConfirm'], 'string', 'min' => 6],
+            ['newPasswordConfirm', 'compare', 'compareAttribute' => 'newPassword', 'message' => "Passwords don't match"],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
