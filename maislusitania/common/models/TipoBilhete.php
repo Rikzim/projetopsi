@@ -14,13 +14,11 @@ use Yii;
  * @property int $ativo
  * @property int $local_id
  *
- * @property LinhaReserva $linhaReserva
  * @property LocalCultural $local
+ * @property LinhaReserva[] $linhaReservas
  */
 class TipoBilhete extends \yii\db\ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -52,21 +50,11 @@ class TipoBilhete extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'descricao' => 'Descricao',
-            'preco' => 'Preco',
+            'descricao' => 'Descrição',
+            'preco' => 'Preço',
             'ativo' => 'Ativo',
-            'local_id' => 'Local ID',
+            'local_id' => 'Local Cultural',
         ];
-    }
-
-    /**
-     * Gets query for [[LinhaReserva]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLinhaReserva()
-    {
-        return $this->hasOne(LinhaReserva::class, ['tipo_bilhete_id' => 'id']);
     }
 
     /**
@@ -79,4 +67,36 @@ class TipoBilhete extends \yii\db\ActiveRecord
         return $this->hasOne(LocalCultural::class, ['id' => 'local_id']);
     }
 
+    /**
+     * Gets query for [[LinhaReservas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLinhaReservas()
+    {
+        return $this->hasMany(LinhaReserva::class, ['tipo_bilhete_id' => 'id']);
+    }
+
+    /**
+     * Verifica se o bilhete é gratuito
+     * @return bool
+     */
+    public function isGratuito()
+    {
+        return floatval($this->preco) == 0;
+    }
+
+    /**
+     * Retorna o preço formatado com símbolo de euro
+     * @return string
+     */
+    public function getPrecoFormatado()
+    {
+        if ($this->isGratuito()) {
+            return 'Grátis';
+        }
+        
+        // Formatar: 10.00 => 10,00€
+        return number_format($this->preco, 2, ',', '') . '€';
+    }
 }

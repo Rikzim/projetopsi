@@ -178,7 +178,9 @@ class LocalCultural extends \yii\db\ActiveRecord
      */
     public function getTipoBilhetes()
     {
-        return $this->hasMany(TipoBilhete::class, ['local_id' => 'id']);
+        return $this->hasMany(TipoBilhete::class, ['local_id' => 'id'])
+                    ->where(['ativo' => 1])
+                    ->orderBy(['preco' => SORT_DESC]);
     }
 
     /**

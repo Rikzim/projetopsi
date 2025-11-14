@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'data_visita',
             'preco_total',
             //'estado',
-            //'data_reserva',
+            //'data_criacao',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Reserva $model, $key, $index, $column) {
