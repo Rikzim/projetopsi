@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'estado')->dropDownList([ 'Pendente' => 'Pendente', 'Confirmada' => 'Confirmada', 'Cancelada' => 'Cancelada', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'data_reserva')->textInput() ?>
+    <?= $form->field($model, 'data_criacao')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

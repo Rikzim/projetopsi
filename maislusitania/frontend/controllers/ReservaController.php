@@ -7,6 +7,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.
@@ -77,19 +78,62 @@ class ReservaController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Reserva();
-
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
+            $postData = $this->request->post();
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            // 1. Verificar se local_id existe
+            if (empty($postData['local_id'])) {
+                // erro
+            }
+
+            // 2. Verificar se há pelo menos 1 bilhete com quantidade > 0
+            $bilhetes = $postData['bilhetes'] ?? [];
+            $temBilhetes = false;
+
+            foreach ($bilhetes as $bilhete) {
+                if (isset($bilhete['quantidade']) && $bilhete['quantidade'] > 0) {
+                    $temBilhetes = true;
+                    break;
+                }
+            }
+
+            if (!$temBilhetes) {
+                // erro: "Selecione pelo menos 1 bilhete"
+                Yii::$app->session->setFlash('error', 'Selecione pelo menos 1 bilhete.');
+            }
+
+
+            // Calcular preço total
+            $precoTotal = 0;
+
+            foreach ($bilhetes as $bilhete) {
+                $quantidade = (int)($bilhete['quantidade'] ?? 0);
+                $preco = (float)($bilhete['preco'] ?? 0);
+
+                if ($quantidade > 0) {
+                    $precoTotal += ($quantidade * $preco);
+                }
+            }
+
+            //Salvar a reserva
+            $transaction = Yii::$app->db->beginTransaction();
+
+            try {
+                $reserva = new Reserva();
+
+                if (!$reserva->save()) {
+                throw new \Exception('Erro ao criar reserva');
+    }
+
+                
+                $transaction->commit();
+            } catch (\Exception $e) {
+                // Se houver erro, desfaz TUDO
+                $transaction->rollBack();
+
+                // A reserva E os bilhetes são apagados automaticamente!
+            }
+        }
     }
 
     /**

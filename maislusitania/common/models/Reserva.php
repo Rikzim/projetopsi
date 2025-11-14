@@ -166,4 +166,88 @@ class Reserva extends \yii\db\ActiveRecord
     {
         return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
+
+    //Metodos adicionados
+    /**
+     * Guarda uma nova reserva com os seus bilhetes
+     * @param array $postData Dados do formulário
+     * @return Reserva|null Retorna a reserva criada ou null em caso de erro
+     * @throws \Exception
+     */
+    public function GuardarReserva($postData)
+    {
+        // 1. Validar se os dados essenciais existem
+        if (empty($postData['local_id'])) {
+            throw new \Exception('Local não especificado.');
+        }
+
+        if (empty($postData['bilhetes'])) {
+            throw new \Exception('Nenhum bilhete selecionado.');
+        }
+
+        // 2. Verificar se há pelo menos 1 bilhete com quantidade > 0
+        $temBilhetes = false;
+        foreach ($postData['bilhetes'] as $bilhete) {
+            if (isset($bilhete['quantidade']) && $bilhete['quantidade'] > 0) {
+                $temBilhetes = true;
+                break;
+            }
+        }
+
+        if (!$temBilhetes) {
+            throw new \Exception('Selecione pelo menos 1 bilhete com quantidade maior que 0.');
+        }
+
+        foreach ($postData['bilhetes'] as $tipoBilheteId => $bilheteData) {
+            $quantidade = (int)($bilheteData['quantidade'] ?? 0);
+
+            if ($quantidade > 0) {
+                // IMPORTANTE: Buscar o preço real da BD, não confiar no POST
+                $tipoBilhete = TipoBilhete::findOne($tipoBilheteId);
+
+                if ($tipoBilhete === null) {
+                    throw new \Exception("Tipo de bilhete inválido: {$tipoBilheteId}");
+                }
+
+                $precoUnitario = floatval($tipoBilhete->preco);
+                $subtotal = $quantidade * $precoUnitario;
+                $precoTotal += $subtotal;
+
+                // Guardar para criar as linhas depois
+                $bilhetesParaGravar[] = [
+                    'tipo_bilhete_id' => $tipoBilheteId,
+                    'quantidade' => $quantidade,
+                    'preco_unitario' => $precoUnitario,
+                    'subtotal' => $subtotal,
+                ];
+            }
+        }
+
+        // 4. Iniciar transação
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            // 4.1. Preencher os dados da reserva
+            $this->utilizador_id = Yii::$app->user->id;
+            $this->local_id = $postData['local_id'];
+            $this->data_visita = $postData['data_visita'] ?? date('Y-m-d'); // ou podes pedir no formulário
+            $this->preco_total = $precoTotal;
+            $this->setEstadoToPendente(); // Usar o método que já tens
+            $this->data_criacao = date('Y-m-d H:i:s');
+
+            // 4.2. Gravar a reserva
+            if (!$this->save()) {
+                throw new \Exception('Erro ao gravar reserva: ' . json_encode($this->errors));
+            }
+
+            // PRÓXIMO PASSO: Gravar as linhas de reserva
+            // (vou dar-te no próximo bloco)
+
+            $transaction->commit();
+            return $this;
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e; // Re-lançar a exceção para o controller tratar
+        }
+    }
 }
