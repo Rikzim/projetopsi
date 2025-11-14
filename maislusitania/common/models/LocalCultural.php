@@ -170,6 +170,10 @@ class LocalCultural extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TipoLocal::class, ['id' => 'tipo_id']);
     }
+    public function gettipoLocal()
+    {
+        return $this->hasOne(TipoLocal::class, ['id' => 'tipo_id']);
+    }
 
     /**
      * Gets query for [[TipoBilhetes]].

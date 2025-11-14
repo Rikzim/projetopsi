@@ -29,9 +29,24 @@ use yii\helpers\Url;
                     <?php if ($isGuest): ?>
                         <?= Html::a($signupLabel, ['/site/signup'], ['class' => 'btn-signup']) ?>
                         <?= Html::a($loginLabel, ['/site/login'], ['class' => 'btn-login']) ?>
+                    <?php else: ?>
+                        <!-- User info in hamburger menu -->
+                        <div class="mobile-user-section">
+                            <div class="mobile-user-header">
+                                <div class="mobile-user-avatar"><?= $userInitial ?></div>
+                                <div class="mobile-user-name"><?= Html::encode($username) ?></div>
+                            </div>
+                            <a href="<?= Url::to(['/site/profile']) ?>" class="mobile-menu-link">Perfil</a>
+                            <a href="<?= Url::to(['/site/favorites']) ?>" class="mobile-menu-link">Favoritos</a>
+                            <a href="<?= Url::to(['/site/settings']) ?>" class="mobile-menu-link">Configurações</a>
+                            <?= Html::beginForm(['/site/logout'], 'post', ['style' => 'margin: 0']) ?>
+                            <button type="submit" class="mobile-menu-link logout">Logout</button>
+                            <?= Html::endForm() ?>
+                        </div>
                     <?php endif; ?>
                 </li>
             <?php endif; ?>
+
         </ul>
 
         <!-- Auth Buttons / User Info (Desktop) -->

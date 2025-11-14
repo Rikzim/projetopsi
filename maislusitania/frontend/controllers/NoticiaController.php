@@ -3,19 +3,15 @@
 namespace frontend\controllers;
 
 use common\models\Noticia;
-use yii\data\ActiveDataProvider;
+use common\models\TipoLocal;
+use frontend\models\NoticiaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * NoticiaController implements the CRUD actions for Noticia model.
- */
 class NoticiaController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
+
     public function behaviors()
     {
         return array_merge(
@@ -31,111 +27,37 @@ class NoticiaController extends Controller
         );
     }
 
-    /**
-     * Lists all Noticia models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Noticia::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-
-        $destaqueNoticia = Noticia::find()->where(['destaque' => 1, 'ativo' => 1])->orderBy(['data_publicacao' => SORT_DESC])->one();
+        $searchModel = new NoticiaSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $destaqueNoticia = Noticia::find()
+            ->where(['destaque' => 1, 'ativo' => 1])
+            ->orderBy(['data_publicacao' => SORT_DESC])
+            ->one();
+        $tiposLocal = TipoLocal::find()
+            ->select(['tipo_local.id', 'tipo_local.nome', 'COUNT(noticia.id) as total'])
+            ->leftJoin('local_cultural', 'local_cultural.tipo_id = tipo_local.id')
+            ->leftJoin('noticia', 'noticia.local_id = local_cultural.id AND noticia.ativo = 1')
+            ->groupBy(['tipo_local.id', 'tipo_local.nome'])
+            ->asArray()
+            ->all();
+        $totalNoticias = Noticia::find()->where(['ativo' => 1])->count();
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'destaqueNoticia' => $destaqueNoticia,
+            'tiposLocal' => $tiposLocal,
+            'totalNoticias' => $totalNoticias,
         ]);
     }
-
-    /**
-     * Displays a single Noticia model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
-
-    /**
-     * Creates a new Noticia model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Noticia();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Noticia model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Noticia model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Noticia model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Noticia the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Noticia::findOne(['id' => $id])) !== null) {
