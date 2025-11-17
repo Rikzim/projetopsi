@@ -8,6 +8,7 @@ use frontend\models\EventoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 class EventoController extends Controller
 {
@@ -31,10 +32,14 @@ class EventoController extends Controller
         $searchModel = new EventoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        // Eager loading das relações que existem no modelo Evento
         $dataProvider->query->joinWith(['local.tipo', 'local.distrito']);
 
-        // Conta eventos por tipo de local
+        // Filter by tipo if provided
+        $tipo = Yii::$app->request->get('tipo');
+        if ($tipo) {
+            $dataProvider->query->andWhere(['local_cultural.tipo_id' => $tipo]);
+        }
+
         $tiposLocal = TipoLocal::find()
             ->select(['tipo_local.id', 'tipo_local.nome', 'COUNT(evento.id) as total'])
             ->leftJoin('local_cultural', 'local_cultural.tipo_id = tipo_local.id')
@@ -52,6 +57,7 @@ class EventoController extends Controller
             'totalEventos' => $totalEventos,
         ]);
     }
+
 
     public function actionView($id)
     {
