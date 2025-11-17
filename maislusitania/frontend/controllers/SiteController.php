@@ -309,10 +309,9 @@ class SiteController extends Controller
             return $this->redirect(['site/login']);
         }
         $user = Yii::$app->user->identity;
-        $userProfile = UserProfile::findOne(['user_id' => $user->id]);
+
         return $this->render('profile', [
             'user' => $user,
-            'userProfile' => $userProfile,
         ]);
     }
 

@@ -25,8 +25,8 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
         <div class="profile-card">
             <div class="profile-avatar-section">
                 <div class="profile-avatar">
-                    <?php if ($userProfile && $userProfile->imagem_perfil): ?>
-                        <?= Html::img('@web/uploads/' . $userProfile->imagem_perfil, [
+                    <?php if ($user->userProfile && $user->userProfile->imagem_perfil): ?>
+                        <?= Html::img('@web/uploads/' . $user->userProfile->imagem_perfil, [
                             'alt' => 'Imagem de Perfil',
                             'class' => 'avatar-image'
                         ]) ?>
@@ -40,7 +40,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                 </div>
                 <div class="profile-name-section">
                     <h2 class="profile-name">
-                        <?= $userProfile ? Html::encode($userProfile->primeiro_nome . ' ' . $userProfile->ultimo_nome) : Html::encode($user->username) ?>
+                        <?= $user->userProfile ? Html::encode($user->userProfile->primeiro_nome . ' ' . $user->userProfile->ultimo_nome) : Html::encode($user->username) ?>
                     </h2>
                     <p class="profile-username">@<?= Html::encode($user->username) ?></p>
                 </div>
@@ -60,7 +60,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                         </div>
                         <div class="info-content">
                             <span class="info-label">Primeiro Nome</span>
-                            <span class="info-value"><?= $userProfile ? Html::encode($userProfile->primeiro_nome) : '-' ?></span>
+                            <span class="info-value"><?= $user->userProfile ? Html::encode($user->userProfile->primeiro_nome) : '-' ?></span>
                         </div>
                     </div>
 
@@ -70,7 +70,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                         </div>
                         <div class="info-content">
                             <span class="info-label">Último Nome</span>
-                            <span class="info-value"><?= $userProfile ? Html::encode($userProfile->ultimo_nome) : '-' ?></span>
+                            <span class="info-value"><?= $user->userProfile ? Html::encode($user->userProfile->ultimo_nome) : '-' ?></span>
                         </div>
                     </div>
 
