@@ -16,6 +16,8 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\models\LocalCultural;
+use common\models\UserProfile;
+use common\models\User;
 
 /**
  * Site controller
@@ -298,6 +300,44 @@ class SiteController extends Controller
 
         return $this->render('resendVerificationEmail', [
             'model' => $model
+        ]);
+    }
+
+    public function actionProfile()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        $user = Yii::$app->user->identity;
+        $userProfile = UserProfile::findOne(['user_id' => $user->id]);
+        return $this->render('profile', [
+            'user' => $user,
+            'userProfile' => $userProfile,
+        ]);
+    }
+
+    public function actionFavorites()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        $user = Yii::$app->user->identity;
+        $favorites = $user->getFavorites()->all();
+
+        return $this->render('favorites', [
+            'favorites' => $favorites,
+        ]);
+    }
+    public function actionBilhetes()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        $user = Yii::$app->user->identity;
+        $reservas = $user->getReservas()->all();
+        
+        return $this->render('myTickets', [
+            'reservas' => $reservas,
         ]);
     }
 }
