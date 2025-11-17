@@ -80,11 +80,7 @@ class AvaliacaoController extends Controller
         $avaliacao->comentario = Yii::$app->request->post('comentario');
         $avaliacao->data_avaliacao = date('Y-m-d H:i:s');
 
-        if ($avaliacao->save()) {
-            Yii::$app->session->setFlash('success', 'Avaliação publicada com sucesso!');
-        } else {
-            Yii::$app->session->setFlash('error', 'Erro ao publicar avaliação.');
-        }
+        $avaliacao->save();
 
         return $this->redirect(['local-cultural/view', 'id' => $localId]);
     }
@@ -96,11 +92,7 @@ class AvaliacaoController extends Controller
         $avaliacao->classificacao = Yii::$app->request->post('classificacao');
         $avaliacao->comentario = Yii::$app->request->post('comentario');
 
-        if ($avaliacao->save()) {
-            Yii::$app->session->setFlash('success', 'Avaliação atualizada com sucesso!');
-        } else {
-            Yii::$app->session->setFlash('error', 'Erro ao atualizar avaliação.');
-        }
+        $avaliacao->save();
 
         return $this->redirect(['local-cultural/view', 'id' => $avaliacao->local_id]);
     }
@@ -112,11 +104,7 @@ class AvaliacaoController extends Controller
 
         $avaliacao->ativo = 0;
 
-        if ($avaliacao->save(false)) {
-            Yii::$app->session->setFlash('success', 'Avaliação eliminada com sucesso!');
-        } else {
-            Yii::$app->session->setFlash('error', 'Erro ao eliminar avaliação.');
-        }
+        $avaliacao->save(false);
 
         return $this->redirect(['local-cultural/view', 'id' => $localId]);
     }
