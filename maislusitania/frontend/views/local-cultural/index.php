@@ -184,7 +184,7 @@ $this->registerCss("
 $this->registerJs("
 var searchTimeout;
 
-// Pesquisa com delay (500ms)
+// Debounced search for text input only
 $('#search-input').on('keyup', function() {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(function() {
@@ -192,34 +192,21 @@ $('#search-input').on('keyup', function() {
     }, 500);
 });
 
-// Loading durante Pjax
+// Instant submit for dropdowns
+$('#filter-tipo, #filter-distrito, #filter-order').on('change', function() {
+    clearTimeout(searchTimeout);
+    $('#filter-form').submit();
+});
+
+// Loading overlay
 $(document).on('pjax:send', function() {
     $('.loading-overlay').fadeIn(200);
 });
 
 $(document).on('pjax:complete', function() {
     $('.loading-overlay').fadeOut(200);
-    
-    // Scroll suave para resultados se houver filtros
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.toString() && urlParams.get('LocalCulturalSearch')) {
-        $('html, body').animate({
-            scrollTop: $('.content-section').offset().top - 120
-        }, 600);
-    }
-});
-
-// Prevenir duplo submit
-$('#filter-form').on('submit', function(e) {
-    if ($(this).data('submitting')) {
-        e.preventDefault();
-        return false;
-    }
-    $(this).data('submitting', true);
-    
-    setTimeout(function() {
-        $('#filter-form').data('submitting', false);
-    }, 1000);
 });
 ");
 ?>
+
+
