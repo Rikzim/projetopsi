@@ -2,143 +2,131 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use common\models\Avaliacao;
-use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
-/**
- * AvaliacaoController implements the CRUD actions for Avaliacao model.
- */
 class AvaliacaoController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['addReview'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['editOwnReview'],
+                        'matchCallback' => function ($rule, $action) {
+                            $id = Yii::$app->request->get('id');
+                            $avaliacao = Avaliacao::findOne($id);
+                            return $avaliacao && $avaliacao->utilizador_id === Yii::$app->user->id;
+                        },
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['deleteOwnReview'],
+                        'matchCallback' => function ($rule, $action) {
+                            $id = Yii::$app->request->get('id');
+                            $avaliacao = Avaliacao::findOne($id);
+                            return $avaliacao && $avaliacao->utilizador_id === Yii::$app->user->id;
+                        },
                     ],
                 ],
-            ]
-        );
-    }
-
-    /**
-     * Lists all Avaliacao models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Avaliacao::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
             ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
             ],
-            */
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+        ];
     }
 
-    /**
-     * Displays a single Avaliacao model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Avaliacao model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
-        $model = new Avaliacao();
+        $localId = Yii::$app->request->post('local_id');
+        $utilizadorId = Yii::$app->user->id;
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        // Verificar se já existe uma avaliação (ativa ou inativa)
+        $avaliacaoExistente = Avaliacao::findOne([
+            'local_id' => $localId,
+            'utilizador_id' => $utilizadorId
+        ]);
+
+        if ($avaliacaoExistente) {
+            // Reativar e atualizar a avaliação existente
+            $avaliacao = $avaliacaoExistente;
+            $avaliacao->ativo = 1;
         } else {
-            $model->loadDefaultValues();
+            // Criar nova avaliação
+            $avaliacao = new Avaliacao();
+            $avaliacao->utilizador_id = $utilizadorId;
+            $avaliacao->local_id = $localId;
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        $avaliacao->classificacao = Yii::$app->request->post('classificacao');
+        $avaliacao->comentario = Yii::$app->request->post('comentario');
+        $avaliacao->data_avaliacao = date('Y-m-d H:i:s');
+
+        if ($avaliacao->save()) {
+            Yii::$app->session->setFlash('success', 'Avaliação publicada com sucesso!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao publicar avaliação.');
+        }
+
+        return $this->redirect(['local-cultural/view', 'id' => $localId]);
     }
 
-    /**
-     * Updates an existing Avaliacao model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $avaliacao = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $avaliacao->classificacao = Yii::$app->request->post('classificacao');
+        $avaliacao->comentario = Yii::$app->request->post('comentario');
+
+        if ($avaliacao->save()) {
+            Yii::$app->session->setFlash('success', 'Avaliação atualizada com sucesso!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao atualizar avaliação.');
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->redirect(['local-cultural/view', 'id' => $avaliacao->local_id]);
     }
 
-    /**
-     * Deletes an existing Avaliacao model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $avaliacao = $this->findModel($id);
+        $localId = $avaliacao->local_id;
 
-        return $this->redirect(['index']);
+        $avaliacao->ativo = 0;
+
+        if ($avaliacao->save(false)) {
+            Yii::$app->session->setFlash('success', 'Avaliação eliminada com sucesso!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao eliminar avaliação.');
+        }
+
+        return $this->redirect(['local-cultural/view', 'id' => $localId]);
     }
 
-    /**
-     * Finds the Avaliacao model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Avaliacao the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
-        if (($model = Avaliacao::findOne(['id' => $id])) !== null) {
+        if (($model = Avaliacao::findOne(['id' => $id, 'ativo' => 1])) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('A avaliação solicitada não existe.');
     }
 }
