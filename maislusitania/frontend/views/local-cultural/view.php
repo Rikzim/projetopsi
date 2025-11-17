@@ -53,8 +53,10 @@ $this->registerCssFile('@web/css/localview.css', ['depends' => [\yii\web\JqueryA
 
         </div>
 
-        <?= BilhetesWidget::widget([
+            <?= BilhetesWidget::widget([
             'model' => $model,
+            'showComprar' => true,
+            'maxQuantidade' => 10,
         ]) ?>
 
         <?= EventosRelacionadosWidget::widget([
