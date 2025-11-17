@@ -3,19 +3,14 @@
 namespace frontend\controllers;
 
 use common\models\Evento;
-use yii\data\ActiveDataProvider;
+use common\models\TipoLocal;
+use frontend\models\EventoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * EventoController implements the CRUD actions for Evento model.
- */
 class EventoController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -31,38 +26,33 @@ class EventoController extends Controller
         );
     }
 
-    /**
-     * Lists all Evento models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Evento::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $searchModel = new EventoSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        // Eager loading das relações que existem no modelo Evento
+        $dataProvider->query->joinWith(['local.tipo', 'local.distrito']);
+
+        // Conta eventos por tipo de local
+        $tiposLocal = TipoLocal::find()
+            ->select(['tipo_local.id', 'tipo_local.nome', 'COUNT(evento.id) as total'])
+            ->leftJoin('local_cultural', 'local_cultural.tipo_id = tipo_local.id')
+            ->leftJoin('evento', 'evento.local_id = local_cultural.id AND evento.ativo = 1')
+            ->groupBy(['tipo_local.id', 'tipo_local.nome'])
+            ->asArray()
+            ->all();
+
+        $totalEventos = Evento::find()->where(['ativo' => 1])->count();
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'tiposLocal' => $tiposLocal,
+            'totalEventos' => $totalEventos,
         ]);
     }
 
-    /**
-     * Displays a single Evento model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         return $this->render('view', [
@@ -70,69 +60,6 @@ class EventoController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Evento model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Evento();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Evento model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Evento model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Evento model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Evento the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Evento::findOne(['id' => $id])) !== null) {

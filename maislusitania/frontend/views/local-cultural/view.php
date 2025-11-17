@@ -27,6 +27,7 @@ $this->registerCssFile('@web/css/localview.css', ['depends' => [\yii\web\JqueryA
             'backgroundImage' => $model->imagem_principal,
             'title' => $model->nome,
             'subtitle' => $model->descricao,
+            'showOverlay' => false,
          
     ]) ?>
 
