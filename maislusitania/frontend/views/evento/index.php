@@ -57,15 +57,15 @@ $this->registerCssFile('@web/css/evento/index.css', ['depends' => [\yii\web\YiiA
             <div class="sidebar-section">
                 <h3 class="sidebar-title">Categorias</h3>
                 <div class="category-list">
-                    <a href="<?= Url::to(['index']) ?>" class="category-item <?= empty($searchModel->tipoLocalNome) ? 'active' : '' ?>">
+                    <a href="<?= Url::to(['index']) ?>" class="category-item <?= empty(Yii::$app->request->get('tipo')) ? 'active' : '' ?>">
                         <span>Todos</span>
                         <span class="category-badge"><?= $totalEventos ?></span>
                     </a>
 
                     <?php foreach ($tiposLocal as $tipo): ?>
                         <?php if ($tipo['total'] > 0): ?>
-                            <a href="<?= Url::to(['index', 'EventoSearch[tipoLocalNome]' => $tipo['id']]) ?>"
-                               class="category-item <?= $searchModel->tipoLocalNome == $tipo['id'] ? 'active' : '' ?>">
+                            <a href="<?= Url::to(['index', 'tipo' => $tipo['id']]) ?>"
+                               class="category-item <?= Yii::$app->request->get('tipo') == $tipo['id'] ? 'active' : '' ?>">
                                 <span><?= Html::encode($tipo['nome']) ?></span>
                                 <span class="category-badge"><?= $tipo['total'] ?></span>
                             </a>

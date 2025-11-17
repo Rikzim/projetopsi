@@ -37,6 +37,15 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_at',
             //'updated_at',
             //'verification_token',
+            ['label' => 'Role',
+                    'value' => function (User $model) {
+                        $roles = Yii::$app->authManager->getRolesByUser($model->id);
+                        if (empty($roles)) {
+                            return '—';
+                        }
+                        return implode(', ', array_keys($roles)); // shows role names like "admin, editor"
+                    },
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, User $model, $key, $index, $column) {
