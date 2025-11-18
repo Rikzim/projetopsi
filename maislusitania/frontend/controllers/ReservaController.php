@@ -94,7 +94,6 @@ class ReservaController extends Controller
                 $reserva = new Reserva();
                 $reserva->GuardarReserva($postData);
 
-                Yii::$app->session->setFlash('success', 'Reserva criada com sucesso!');
                 return $this->redirect(['site/bilhetes']);
             } catch (\Exception $e) {
                 Yii::$app->session->setFlash('error', $e->getMessage());
