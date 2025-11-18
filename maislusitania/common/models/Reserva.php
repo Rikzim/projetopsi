@@ -127,12 +127,12 @@ class Reserva extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isEstadoPendente()
+    public function isEstadoExpirado()
     {
         return $this->estado === self::ESTADO_EXPIRADO;
     }
 
-    public function setEstadoToPendente()
+    public function setEstadoToExpirado()
     {
         $this->estado = self::ESTADO_EXPIRADO;
     }
@@ -236,9 +236,9 @@ class Reserva extends \yii\db\ActiveRecord
         try {
             $this->utilizador_id = Yii::$app->user->id;
             $this->local_id = $postData['local_id'];
-            $this->data_visita = $postData['data_visita'] ?? date('Y-m-d');
-            $this->preco_total = $dadosBilhetes['precoTotal'];
-            $this->setEstadoToPendente();
+            $this->data_visita = $postData['data_visita'] ?? date('Y-m-d'); // ou podes pedir no formulário
+            $this->preco_total = $precoTotal;
+            $this->setEstadoToExpirado(); // Usar o método que já tens
             $this->data_criacao = date('Y-m-d H:i:s');
 
             if (!$this->save()) {
