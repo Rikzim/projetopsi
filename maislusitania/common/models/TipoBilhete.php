@@ -95,8 +95,36 @@ class TipoBilhete extends \yii\db\ActiveRecord
         if ($this->isGratuito()) {
             return 'Grátis';
         }
-        
+
         // Formatar: 10.00 => 10,00€
         return number_format($this->preco, 2, ',', '') . '€';
+    }
+
+    //Metodos adicionados
+
+    //Retorna uma lista de bilhetes formatados para um local cultural específico
+    public static function getBilhetesFormatados($localId)
+    {
+        $bilhetes = self::find()
+            ->where(['local_id' => $localId, 'ativo' => 1])
+            ->orderBy(['preco' => SORT_DESC])
+            ->all();
+
+        $resultado = [];
+        foreach ($bilhetes as $bilhete) {
+            $preco = floatval($bilhete->preco);
+            $gratuito = ($preco == 0);
+
+            $resultado[] = [
+                'id' => $bilhete->id,
+                'tipo' => $bilhete->nome,
+                'descricao' => $bilhete->descricao,
+                'preco' => $gratuito ? 'Grátis' : number_format($preco, 2, ',', '') . '€',
+                'preco_valor' => $preco,
+                'gratuito' => $gratuito,
+            ];
+        }
+
+        return $resultado;
     }
 }
