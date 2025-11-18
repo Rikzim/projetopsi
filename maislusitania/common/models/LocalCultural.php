@@ -214,7 +214,10 @@ class LocalCultural extends \yii\db\ActiveRecord
 
     public function getAverageRating()
     {
-        $count = $this->getAvaliacoes()->count();
+        $count = $this->getAvaliacoes()
+            ->where(['ativo' => 1])
+            ->count();
+
         if ($count === 0) {
             return 0;
         }
@@ -225,7 +228,9 @@ class LocalCultural extends \yii\db\ActiveRecord
 
     public function getRatingCount()
     {
-        return $this->getAvaliacoes()->count();
+        return (int) $this->getAvaliacoes()
+            ->where(['ativo' => 1])
+            ->count();
     }
 
 
