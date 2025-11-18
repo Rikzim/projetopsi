@@ -26,7 +26,7 @@ class Reserva extends \yii\db\ActiveRecord
     /**
      * ENUM field values
      */
-    const ESTADO_PENDENTE = 'Pendente';
+    const ESTADO_EXPIRADO = 'Expirado';
     const ESTADO_CONFIRMADA = 'Confirmada';
     const ESTADO_CANCELADA = 'Cancelada';
 
@@ -110,7 +110,7 @@ class Reserva extends \yii\db\ActiveRecord
     public static function optsEstado()
     {
         return [
-            self::ESTADO_PENDENTE => 'Pendente',
+            self::ESTADO_EXPIRADO => 'Pendente',
             self::ESTADO_CONFIRMADA => 'Confirmada',
             self::ESTADO_CANCELADA => 'Cancelada',
         ];
@@ -129,12 +129,12 @@ class Reserva extends \yii\db\ActiveRecord
      */
     public function isEstadoPendente()
     {
-        return $this->estado === self::ESTADO_PENDENTE;
+        return $this->estado === self::ESTADO_EXPIRADO;
     }
 
     public function setEstadoToPendente()
     {
-        $this->estado = self::ESTADO_PENDENTE;
+        $this->estado = self::ESTADO_EXPIRADO;
     }
 
     /**
