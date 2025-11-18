@@ -237,7 +237,7 @@ class Reserva extends \yii\db\ActiveRecord
             $this->utilizador_id = Yii::$app->user->id;
             $this->local_id = $postData['local_id'];
             $this->data_visita = $postData['data_visita'] ?? date('Y-m-d'); // ou podes pedir no formulário
-            $this->preco_total = $precoTotal;
+            $this->preco_total = $dadosBilhetes['precoTotal']; // ✅ Acede ao array retornado
             $this->setEstadoToExpirado(); // Usar o método que já tens
             $this->data_criacao = date('Y-m-d H:i:s');
 
