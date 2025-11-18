@@ -173,54 +173,56 @@ use yii\widgets\ActiveForm;
             Nenhum bilhete disponível no momento.
         </p>
     <?php else: ?>
-        
+
         <?php $form = ActiveForm::begin([
             'action' => ['reserva/create'],
             'method' => 'post',
         ]); ?>
 
-            <!-- Campo oculto com o local_id -->
-            <?= Html::hiddenInput('local_id', $model->id) ?>
+        <!-- Campo oculto com o local_id -->
+        <?= Html::hiddenInput('local_id', $model->id) ?>
 
-            <?php foreach ($bilhetes as $index => $bilhete): ?>
-                <div class="ticket-row">
-                    <div class="ticket-info">
-                        <h4><?= Html::encode($bilhete['tipo']) ?></h4>
-                        <p><?= Html::encode($bilhete['descricao']) ?></p>
-                    </div>
-                    
-                    <div class="ticket-price">
-                        <?= Html::encode($bilhete['preco']) ?>
-                    </div>
-
-                    <?php if (isset($showComprar) && $showComprar): ?>
-                        <!-- Input de Quantidade -->
-                        <?= Html::input('number', 
-                            'bilhetes[' . $bilhete['id'] . '][quantidade]', 
-                            0, 
-                            [
-                                'class' => 'quantity-input',
-                                'min' => 0,
-                                'max' => $maxQuantidade,
-                            ]
-                        ) ?>
-                        
-                        <!-- Campos ocultos com informações do bilhete -->
-                        <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][tipo_bilhete_id]', $bilhete['id']) ?>
-                        <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][preco]', $bilhete['preco_valor']) ?>
-                    <?php endif; ?>
+        <?php foreach ($bilhetes as $index => $bilhete): ?>
+            <div class="ticket-row">
+                <div class="ticket-info">
+                    <h4><?= Html::encode($bilhete['tipo']) ?></h4>
+                    <p><?= Html::encode($bilhete['descricao']) ?></p>
                 </div>
-            <?php endforeach; ?>
 
-            <!-- Seção de Compra -->
-            <?php if (isset($showComprar) && $showComprar): ?>
-                <div class="comprar-section">
-                    <?= Html::submitButton('Comprar Bilhetes', [
-                        'class' => 'btn-comprar-global',
-                        'id' => 'btn-comprar-global',
-                    ]) ?>
+                <div class="ticket-price">
+                    <?= Html::encode($bilhete['preco']) ?>
                 </div>
-            <?php endif; ?>
+
+                <?php if (isset($showComprar) && $showComprar): ?>
+                    <!-- Input de Quantidade -->
+                    <?= Html::input(
+                        'number',
+                        "bilhetes[{$bilhete['id']}][quantidade]",  // ✅ USAR o ID do bilhete
+                        0,
+                        [
+                            'class' => 'quantity-input',
+                            'min' => 0,
+                            'max' => $maxQuantidade,
+                            'value' => 0
+                        ]
+                    ) ?>
+
+                    <!-- Campos ocultos com informações do bilhete -->
+                    <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][tipo_bilhete_id]', $bilhete['id']) ?>
+                    <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][preco]', $bilhete['preco_valor']) ?>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+
+        <!-- Seção de Compra -->
+        <?php if (isset($showComprar) && $showComprar): ?>
+            <div class="comprar-section">
+                <?= Html::submitButton('Comprar Bilhetes', [
+                    'class' => 'btn-comprar-global',
+                    'id' => 'btn-comprar-global',
+                ]) ?>
+            </div>
+        <?php endif; ?>
 
         <?php ActiveForm::end(); ?>
 
