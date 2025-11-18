@@ -225,5 +225,14 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
     }
 
+    public function getFavorites()
+    {
+        return $this->hasMany(Favorito::class, ['utilizador_id' => 'id']);
+    }
+
+    public function getReservas(){
+        return $this->hasMany(Reserva::class, ['utilizador_id' => 'id']);
+    }
+
 
 }

@@ -235,7 +235,7 @@ class CustomNavBar extends Widget
     top: calc(100% + 1rem);
     right: 0;
     background: white;
-    border-radius: 12px;
+    border-radius: 30px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     min-width: 260px;
     opacity: 0;
@@ -243,6 +243,7 @@ class CustomNavBar extends Widget
     transform: translateY(-10px);
     transition: all 0.3s ease;
     z-index: 1001;
+    border: 2px solid {$this->brandColor};
 }
 
 .custom-navbar .user-dropdown.show {
@@ -256,9 +257,9 @@ class CustomNavBar extends Widget
     display: flex;
     align-items: center;
     gap: 1rem;
-    background: linear-gradient(135deg, {$this->brandColor} 0%, #1e4a9c 100%);
-    border-radius: 12px 12px 0 0;
+    border-radius: 26px 26px 0 0;
     color: white;
+    background: {$this->brandColor};
 }
 
 .custom-navbar .user-dropdown-avatar {
@@ -291,8 +292,8 @@ class CustomNavBar extends Widget
 }
 
 .custom-navbar .user-dropdown-divider {
-    height: 1px;
-    background: #e9ecef;
+    height: 2px;
+    background: {$this->brandColor};
     margin: 0.5rem 0;
 }
 
