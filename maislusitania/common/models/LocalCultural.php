@@ -217,7 +217,7 @@ class LocalCultural extends \yii\db\ActiveRecord
         $count = $this->getAvaliacoes()
             ->where(['ativo' => 1])
             ->count();
-        
+
         if ($count === 0) {
             return 0;
         }
