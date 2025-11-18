@@ -84,26 +84,18 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            // Verifica se tem permissão para estar no backend
-            if (!Yii::$app->user->can('accessBackoffice')) {
-                Yii::$app->session->setFlash('error', 'Não tem permissão para aceder ao back-office.');
-                Yii::$app->user->logout();
-                return $this->refresh();
-            }
-            return $this->goHome();
-        }
-
         $this->layout = 'blank';
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             // Após login, verifica se tem permissão
             if (!Yii::$app->user->can('accessBackoffice')) {
-                Yii::$app->session->setFlash('error', 'Não tem permissão para aceder ao back-office. Apenas gestores e administradores.');
                 Yii::$app->user->logout();
                 $model->password = '';
-                return $this->render('login', ['model' => $model]);
+                return $this->render('login', [
+                    'model' => $model,
+                    'error' => 'Não tem permissão para aceder ao back-office. Apenas gestores e administradores.',
+                ]);
             }
             return $this->goBack();
         }

@@ -1,7 +1,7 @@
 <?php
-
 /** @var yii\web\View $this */
 /** @var \common\models\LoginForm $model */
+/** @var string|null $error */
 
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
@@ -22,20 +22,25 @@ $this->title = 'Login - Back Office';
 
             <div class="card shadow">
                 <div class="card-body p-4">
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger mb-3">
+                            <?= Html::encode($error) ?>
+                            <?= Html::a('Ir para Login Front', '../../../frontend/web/site/login', [
+    'class' => 'btn btn-outline-secondary btn-sm ml-2'
+]) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <?php if (Yii::$app->session->hasFlash('error')): ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            <?= Yii::$app->session->getFlash('error') ?>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        <div class="alert alert-danger mb-3">
+                            <?= Html::encode(Yii::$app->session->getFlash('error')) ?>
                         </div>
                     <?php endif; ?>
 
                     <?php if (Yii::$app->session->hasFlash('success')): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="fas fa-check-circle mr-2"></i>
-                            <?= Yii::$app->session->getFlash('success') ?>
+                            <?= Html::encode(Yii::$app->session->getFlash('success')) ?>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -70,7 +75,7 @@ $this->title = 'Login - Back Office';
                                 'id' => 'rememberMe',
                                 'uncheck' => null
                             ]) ?>
-                            <label class="custom-control-label" for="rememberMe"></label>
+                            <label class="custom-control-label" for="rememberMe">Lembrar-me</label>
                         </div>
                     </div>
 
@@ -97,29 +102,24 @@ $this->title = 'Login - Back Office';
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         background-attachment: fixed;
     }
-    
     .card {
         border: none;
         border-radius: 10px;
     }
-    
     .btn-primary {
         background-color: #667eea;
         border-color: #667eea;
         font-weight: 600;
     }
-    
     .btn-primary:hover,
     .btn-primary:focus {
         background-color: #5568d3;
         border-color: #5568d3;
     }
-    
     .form-control:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
     }
-    
     .custom-control-input:checked ~ .custom-control-label::before {
         background-color: #667eea;
         border-color: #667eea;
