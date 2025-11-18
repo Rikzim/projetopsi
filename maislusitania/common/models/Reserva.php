@@ -26,7 +26,7 @@ class Reserva extends \yii\db\ActiveRecord
     /**
      * ENUM field values
      */
-    const ESTADO_PENDENTE = 'Pendente';
+    const ESTADO_EXPIRADO = 'Expirado';
     const ESTADO_CONFIRMADA = 'Confirmada';
     const ESTADO_CANCELADA = 'Cancelada';
 
@@ -110,7 +110,7 @@ class Reserva extends \yii\db\ActiveRecord
     public static function optsEstado()
     {
         return [
-            self::ESTADO_PENDENTE => 'Pendente',
+            self::ESTADO_EXPIRADO => 'Pendente',
             self::ESTADO_CONFIRMADA => 'Confirmada',
             self::ESTADO_CANCELADA => 'Cancelada',
         ];
@@ -127,14 +127,14 @@ class Reserva extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isEstadoPendente()
+    public function isEstadoExpirado()
     {
-        return $this->estado === self::ESTADO_PENDENTE;
+        return $this->estado === self::ESTADO_EXPIRADO;
     }
 
-    public function setEstadoToPendente()
+    public function setEstadoToExpirado()
     {
-        $this->estado = self::ESTADO_PENDENTE;
+        $this->estado = self::ESTADO_EXPIRADO;
     }
 
     /**
@@ -169,40 +169,20 @@ class Reserva extends \yii\db\ActiveRecord
 
     //Metodos adicionados
     /**
-     * Guarda uma nova reserva com os seus bilhetes
-     * @param array $postData Dados do formulário
-     * @return Reserva|null Retorna a reserva criada ou null em caso de erro
+     * Validar e preparar dados dos bilhetes
+     * @param array $bilhetesPost
+     * @return array ['bilhetes' => [], 'precoTotal' => 0]
      * @throws \Exception
      */
-    public function GuardarReserva($postData)
+    private function prepararBilhetes($bilhetesPost)
     {
-        // 1. Validar se os dados essenciais existem
-        if (empty($postData['local_id'])) {
-            throw new \Exception('Local não especificado.');
-        }
+        $bilhetesParaGravar = [];
+        $precoTotal = 0;
 
-        if (empty($postData['bilhetes'])) {
-            throw new \Exception('Nenhum bilhete selecionado.');
-        }
-
-        // 2. Verificar se há pelo menos 1 bilhete com quantidade > 0
-        $temBilhetes = false;
-        foreach ($postData['bilhetes'] as $bilhete) {
-            if (isset($bilhete['quantidade']) && $bilhete['quantidade'] > 0) {
-                $temBilhetes = true;
-                break;
-            }
-        }
-
-        if (!$temBilhetes) {
-            throw new \Exception('Selecione pelo menos 1 bilhete com quantidade maior que 0.');
-        }
-
-        foreach ($postData['bilhetes'] as $tipoBilheteId => $bilheteData) {
+        foreach ($bilhetesPost as $tipoBilheteId => $bilheteData) {
             $quantidade = (int)($bilheteData['quantidade'] ?? 0);
 
             if ($quantidade > 0) {
-                // IMPORTANTE: Buscar o preço real da BD, não confiar no POST
                 $tipoBilhete = TipoBilhete::findOne($tipoBilheteId);
 
                 if ($tipoBilhete === null) {
@@ -213,9 +193,9 @@ class Reserva extends \yii\db\ActiveRecord
                 $subtotal = $quantidade * $precoUnitario;
                 $precoTotal += $subtotal;
 
-                // Guardar para criar as linhas depois
                 $bilhetesParaGravar[] = [
                     'tipo_bilhete_id' => $tipoBilheteId,
+                    'tipo' => $tipoBilhete->nome, // Para exibir na confirmação
                     'quantidade' => $quantidade,
                     'preco_unitario' => $precoUnitario,
                     'subtotal' => $subtotal,
@@ -223,31 +203,90 @@ class Reserva extends \yii\db\ActiveRecord
             }
         }
 
-        // 4. Iniciar transação
+        if (empty($bilhetesParaGravar)) {
+            throw new \Exception('Selecione pelo menos 1 bilhete com quantidade maior que 0.');
+        }
+
+        return [
+            'bilhetes' => $bilhetesParaGravar,
+            'precoTotal' => $precoTotal,
+        ];
+    }
+
+    /**
+     * Simplificar GuardarReserva
+     */
+    public function GuardarReserva($postData)
+    {
+        // 1. Validações básicas
+        if (empty($postData['local_id'])) {
+            throw new \Exception('Local não especificado.');
+        }
+
+        if (empty($postData['bilhetes'])) {
+            throw new \Exception('Nenhum bilhete selecionado.');
+        }
+
+        // 2. Preparar bilhetes (validação + cálculo)
+        $dadosBilhetes = $this->prepararBilhetes($postData['bilhetes']);
+
+        // 3. Gravar com transação
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            // 4.1. Preencher os dados da reserva
             $this->utilizador_id = Yii::$app->user->id;
             $this->local_id = $postData['local_id'];
             $this->data_visita = $postData['data_visita'] ?? date('Y-m-d'); // ou podes pedir no formulário
             $this->preco_total = $precoTotal;
-            $this->setEstadoToPendente(); // Usar o método que já tens
+            $this->setEstadoToExpirado(); // Usar o método que já tens
             $this->data_criacao = date('Y-m-d H:i:s');
 
-            // 4.2. Gravar a reserva
             if (!$this->save()) {
                 throw new \Exception('Erro ao gravar reserva: ' . json_encode($this->errors));
             }
 
-            // PRÓXIMO PASSO: Gravar as linhas de reserva
-            // (vou dar-te no próximo bloco)
+            // Gravar linhas
+            foreach ($dadosBilhetes['bilhetes'] as $bilheteData) {
+                $linhaReserva = new LinhaReserva();
+                $linhaReserva->reserva_id = $this->id;
+                $linhaReserva->tipo_bilhete_id = $bilheteData['tipo_bilhete_id'];
+                $linhaReserva->quantidade = $bilheteData['quantidade'];
+
+                if (!$linhaReserva->save()) {
+                    throw new \Exception('Erro ao gravar linha: ' . json_encode($linhaReserva->errors));
+                }
+            }
 
             $transaction->commit();
             return $this;
         } catch (\Exception $e) {
             $transaction->rollBack();
-            throw $e; // Re-lançar a exceção para o controller tratar
+            throw $e;
         }
+    }
+
+    /**
+     * Obter dados para página de create/confirmação
+     */
+    public static function obterDadosConfirmacao($postData)
+    {
+        if (empty($postData['local_id'])) {
+            throw new \Exception('Local não especificado.');
+        }
+
+        $local = \common\models\LocalCultural::findOne($postData['local_id']);
+        if (!$local) {
+            throw new \Exception('Local não encontrado.');
+        }
+
+        // Reutilizar a lógica privada através de uma instância temporária
+        $reservaTemp = new self();
+        $dadosBilhetes = $reservaTemp->prepararBilhetes($postData['bilhetes'] ?? []);
+
+        return [
+            'local' => $local,
+            'bilhetes' => $dadosBilhetes['bilhetes'],
+            'precoTotal' => $dadosBilhetes['precoTotal'],
+        ];
     }
 }

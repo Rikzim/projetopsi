@@ -207,4 +207,31 @@ class LocalCultural extends \yii\db\ActiveRecord
         return $this->hasMany(User::class, ['id' => 'utilizador_id'])->viaTable('favorito', ['local_id' => 'id']);
     }
 
+    public function getAvaliacoes()
+    {
+        return $this->hasMany(Avaliacao::class, ['local_id' => 'id']);
+    }
+
+    public function getAverageRating()
+    {
+        $count = $this->getAvaliacoes()
+            ->where(['ativo' => 1])
+            ->count();
+
+        if ($count === 0) {
+            return 0;
+        }
+
+        $sum = $this->getAvaliacoes()->sum('classificacao');
+        return round($sum / $count, 1);
+    }
+
+    public function getRatingCount()
+    {
+        return (int) $this->getAvaliacoes()
+            ->where(['ativo' => 1])
+            ->count();
+    }
+
+
 }

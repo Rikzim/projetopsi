@@ -72,67 +72,43 @@ class ReservaController extends Controller
     }
 
     /**
-     * Creates a new Reserva model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * Criar reserva (já está OK, só garantir autenticação)
      */
     public function actionCreate()
     {
-        if ($this->request->isPost) {
-            $postData = $this->request->post();
+        if (!$this->request->isPost) {
+            return $this->redirect(['site/index']);
+        }
 
-            // 1. Verificar se local_id existe
-            if (empty($postData['local_id'])) {
-                // erro
+        $postData = $this->request->post();
+
+        // Se vem com 'confirmar' = 1, GRAVA na BD
+        if (isset($postData['confirmar']) && $postData['confirmar'] == '1') {
+
+            if (Yii::$app->user->isGuest) {
+                Yii::$app->session->setFlash('error', 'Precisa de estar autenticado.');
+                return $this->redirect(['site/login']);
             }
-
-            // 2. Verificar se há pelo menos 1 bilhete com quantidade > 0
-            $bilhetes = $postData['bilhetes'] ?? [];
-            $temBilhetes = false;
-
-            foreach ($bilhetes as $bilhete) {
-                if (isset($bilhete['quantidade']) && $bilhete['quantidade'] > 0) {
-                    $temBilhetes = true;
-                    break;
-                }
-            }
-
-            if (!$temBilhetes) {
-                // erro: "Selecione pelo menos 1 bilhete"
-                Yii::$app->session->setFlash('error', 'Selecione pelo menos 1 bilhete.');
-            }
-
-
-            // Calcular preço total
-            $precoTotal = 0;
-
-            foreach ($bilhetes as $bilhete) {
-                $quantidade = (int)($bilhete['quantidade'] ?? 0);
-                $preco = (float)($bilhete['preco'] ?? 0);
-
-                if ($quantidade > 0) {
-                    $precoTotal += ($quantidade * $preco);
-                }
-            }
-
-            //Salvar a reserva
-            $transaction = Yii::$app->db->beginTransaction();
 
             try {
                 $reserva = new Reserva();
+                $reserva->GuardarReserva($postData);
 
-                if (!$reserva->save()) {
-                throw new \Exception('Erro ao criar reserva');
-    }
-
-                
-                $transaction->commit();
+                Yii::$app->session->setFlash('success', 'Reserva criada com sucesso!');
+                return $this->redirect(['site/bilhetes']);
             } catch (\Exception $e) {
-                // Se houver erro, desfaz TUDO
-                $transaction->rollBack();
-
-                // A reserva E os bilhetes são apagados automaticamente!
+                Yii::$app->session->setFlash('error', $e->getMessage());
+                return $this->redirect(Yii::$app->request->referrer);
             }
+        }
+
+        // Se NÃO tem 'confirmar', MOSTRA a página de prévia (create.php)
+        try {
+            $dados = Reserva::obterDadosConfirmacao($postData);
+            return $this->render('create', $dados);
+        } catch (\Exception $e) {
+            Yii::$app->session->setFlash('error', $e->getMessage());
+            return $this->redirect(Yii::$app->request->referrer);
         }
     }
 
