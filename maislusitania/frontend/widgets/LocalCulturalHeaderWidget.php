@@ -29,10 +29,16 @@ class LocalCulturalHeaderWidget extends Widget
      */
     public function run()
     {
+        $averageRating = $this->model->getAverageRating();
+        $ratingCount = $this->model->getRatingCount();
+
         return $this->render('local-cultural-header', [
             'model' => $this->model,
             'showBadge' => $this->showBadge,
             'showRating' => $this->showRating,
+            'averageRating' => $averageRating,
+            'ratingCount' => $ratingCount,
         ]);
     }
+
 }

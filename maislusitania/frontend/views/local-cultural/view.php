@@ -9,11 +9,13 @@ use frontend\widgets\BilhetesWidget;
 use frontend\widgets\EventosRelacionadosWidget;
 use frontend\widgets\NoticiasRelacionadasWidget;
 use frontend\widgets\HeroSection;
+use frontend\widgets\AvaliacoesWidget;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\LocalCultural */
 
-$this->registerCssFile('@web/css/localview.css', ['depends' => [\yii\web\JqueryAsset::class]]);
+$this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\web\JqueryAsset::class]]);
 
 \yii\web\YiiAsset::register($this);
 ?>
@@ -27,6 +29,7 @@ $this->registerCssFile('@web/css/localview.css', ['depends' => [\yii\web\JqueryA
             'backgroundImage' => $model->imagem_principal,
             'title' => $model->nome,
             'subtitle' => $model->descricao,
+            'showOverlay' => false,
          
     ]) ?>
 
@@ -52,7 +55,7 @@ $this->registerCssFile('@web/css/localview.css', ['depends' => [\yii\web\JqueryA
 
         </div>
 
-            <?= BilhetesWidget::widget([
+        <?= BilhetesWidget::widget([
             'model' => $model,
             'showComprar' => true,
             'maxQuantidade' => 10,
@@ -66,6 +69,10 @@ $this->registerCssFile('@web/css/localview.css', ['depends' => [\yii\web\JqueryA
         <?= NoticiasRelacionadasWidget::widget([
             'localCulturalId' => $model->id,
             'limit' => 3,
+        ]) ?>
+
+        <?= AvaliacoesWidget::widget([
+                'localCulturalId' => $model->id,
         ]) ?>
 
     </div>

@@ -5,6 +5,8 @@ use yii\helpers\Html;
 /* @var $model common\models\LocalCultural */
 /* @var $showBadge boolean */
 /* @var $showRating boolean */
+/* @var $averageRating float */
+/* @var $ratingCount int */
 ?>
 
 <style>
@@ -116,31 +118,35 @@ use yii\helpers\Html;
         <div class="lc-rating-container">
             <div class="lc-stars">
                 <?php
-                // Por enquanto hardcoded - depois integrar com sistema de avaliações
-                $rating = 4.0;
-                $fullStars = floor($rating);
-                $emptyStars = 5 - ceil($rating);
-                
+                $fullStars = floor($averageRating);
+                $hasHalfStar = ($averageRating - $fullStars) >= 0.5;
+
                 // Estrelas cheias
                 for ($i = 0; $i < $fullStars; $i++) {
                     echo '★';
                 }
-                
-                // Estrela vazia (se não for 5)
-                if ($rating < 5) {
-                    echo '<span class="lc-stars-empty">★</span>';
+
+                // Meia estrela
+                if ($hasHalfStar) {
+                    echo '☆';
                 }
-                
-                // Estrelas vazias restantes
-                for ($i = 0; $i < $emptyStars - 1; $i++) {
-                    echo '<span class="lc-stars-empty">★</span>';
+
+                // Estrelas vazias
+                $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
+                for ($i = 0; $i < $emptyStars; $i++) {
+                    echo '<span class="lc-stars-empty">☆</span>';
                 }
                 ?>
             </div>
             <span class="lc-rating-text">
-                <?= number_format($rating, 1) ?> (2.000 Avaliações)
-            </span>
+            <?php if ($ratingCount > 0): ?>
+                <?= number_format($averageRating, 1) ?> (<?= number_format($ratingCount) ?> Avaliações)
+            <?php else: ?>
+                Sem avaliações
+            <?php endif; ?>
+        </span>
         </div>
-    <?php endif; ?>       
-    
+    <?php endif; ?>
+
+
 </div>

@@ -7,6 +7,7 @@ use backend\models\SignupForm;
 use backend\models\UserSearch;
 use backend\models\UpdateForm;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
@@ -27,13 +28,44 @@ class UserController extends Controller
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
-                        'delete' => ['POST'],
+                        [
+                            'allow' => true,
+                            'actions' => ['index', 'view'],
+                            'roles' => ['viewUser'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['create'],
+                            'roles' => ['addUser'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['update'],
+                            'roles' => ['editUser'],
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['delete'],
+                            'roles' => ['deleteUser'],
+                        ],
                     ],
                 ],
             ]
         );
     }
+    public function beforeAction($action)
+    {
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
 
+        // Verificação adicional: apenas admin pode gerir utilizadores
+        if (!Yii::$app->user->can('admin')) {
+            throw new ForbiddenHttpException('Acesso negado. Apenas administradores podem gerir utilizadores.');
+        }
+
+        return true;
+    }
     /**
      * Lists all User models.
      *

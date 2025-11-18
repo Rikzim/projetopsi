@@ -149,10 +149,29 @@ $this->registerCss("
                     <p class="local-description">
                         <?= Html::encode(mb_substr($local->descricao ?? '', 0, 120)) ?>...
                     </p>
-                    
+
                     <div class="local-footer">
+                        <?php
+                        $avgRating = $local->getAverageRating();
+                        $ratingCount = $local->getRatingCount();
+                        $fullStars = floor($avgRating);
+                        $hasHalfStar = ($avgRating - $fullStars) >= 0.5;
+                        ?>
                         <div class="local-rating">
-                            ★★★★★ 4.5
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?php if ($i <= $fullStars): ?>
+                                    ★
+                                <?php elseif ($i == $fullStars + 1 && $hasHalfStar): ?>
+                                    ☆
+                                <?php else: ?>
+                                    ☆
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                            <?php if ($ratingCount > 0): ?>
+                                <?= number_format($avgRating, 1) ?> (<?= $ratingCount ?>)
+                            <?php else: ?>
+                                Sem avaliações
+                            <?php endif; ?>
                         </div>
                         <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
                             Ver Detalhes →
@@ -184,7 +203,7 @@ $this->registerCss("
 $this->registerJs("
 var searchTimeout;
 
-// Pesquisa com delay (500ms)
+// Debounced search for text input only
 $('#search-input').on('keyup', function() {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(function() {
@@ -192,34 +211,21 @@ $('#search-input').on('keyup', function() {
     }, 500);
 });
 
-// Loading durante Pjax
+// Instant submit for dropdowns
+$('#filter-tipo, #filter-distrito, #filter-order').on('change', function() {
+    clearTimeout(searchTimeout);
+    $('#filter-form').submit();
+});
+
+// Loading overlay
 $(document).on('pjax:send', function() {
     $('.loading-overlay').fadeIn(200);
 });
 
 $(document).on('pjax:complete', function() {
     $('.loading-overlay').fadeOut(200);
-    
-    // Scroll suave para resultados se houver filtros
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.toString() && urlParams.get('LocalCulturalSearch')) {
-        $('html, body').animate({
-            scrollTop: $('.content-section').offset().top - 120
-        }, 600);
-    }
-});
-
-// Prevenir duplo submit
-$('#filter-form').on('submit', function(e) {
-    if ($(this).data('submitting')) {
-        e.preventDefault();
-        return false;
-    }
-    $(this).data('submitting', true);
-    
-    setTimeout(function() {
-        $('#filter-form').data('submitting', false);
-    }, 1000);
 });
 ");
 ?>
+
+
