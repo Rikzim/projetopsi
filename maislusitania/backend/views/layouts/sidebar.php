@@ -65,10 +65,10 @@ if ($profile && !empty($profile->imagem_perfil)) {
                             [
                                     'label' => 'Utilizadores',
                                     'icon' => 'users',
-                                    'items' => [
-                                            ['label' => 'Utilizadores', 'icon' => 'user', 'iconStyle' => 'far', 'url' => ['user/index']],
+                                    'items' => array_filter([
+                                            Yii::$app->user->can('viewUser') ? ['label' => 'Utilizadores', 'icon' => 'user', 'iconStyle' => 'far', 'url' => ['user/index']] : null,
                                             ['label' => 'Avaliações', 'icon' => 'star', 'iconStyle' => 'far', 'url' => ['avaliacao/index']],
-                                    ]
+                                    ])
                             ],
                             ['label' => 'MEU PERFIL', 'header' => true],
                             ['label' => 'Gerir Perfil', 'icon' => 'user-cog', 'iconStyle' => 'fas', 'url' => ['site/profile']],
