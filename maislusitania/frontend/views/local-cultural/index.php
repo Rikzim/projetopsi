@@ -149,10 +149,29 @@ $this->registerCss("
                     <p class="local-description">
                         <?= Html::encode(mb_substr($local->descricao ?? '', 0, 120)) ?>...
                     </p>
-                    
+
                     <div class="local-footer">
+                        <?php
+                        $avgRating = $local->getAverageRating();
+                        $ratingCount = $local->getRatingCount();
+                        $fullStars = floor($avgRating);
+                        $hasHalfStar = ($avgRating - $fullStars) >= 0.5;
+                        ?>
                         <div class="local-rating">
-                            ★★★★★ 4.5
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?php if ($i <= $fullStars): ?>
+                                    ★
+                                <?php elseif ($i == $fullStars + 1 && $hasHalfStar): ?>
+                                    ☆
+                                <?php else: ?>
+                                    ☆
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                            <?php if ($ratingCount > 0): ?>
+                                <?= number_format($avgRating, 1) ?> (<?= $ratingCount ?>)
+                            <?php else: ?>
+                                Sem avaliações
+                            <?php endif; ?>
                         </div>
                         <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
                             Ver Detalhes →
