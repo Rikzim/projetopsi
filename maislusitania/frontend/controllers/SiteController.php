@@ -18,6 +18,7 @@ use frontend\models\ContactForm;
 use common\models\LocalCultural;
 use common\models\UserProfile;
 use common\models\User;
+use common\models\Reserva;
 
 /**
  * Site controller
@@ -328,15 +329,26 @@ class SiteController extends Controller
         ]);
     }
     public function actionBilhetes()
-    {
-        if (Yii::$app->user->isGuest) {
-            return $this->redirect(['site/login']);
-        }
-        $user = Yii::$app->user->identity;
-        $reservas = $user->getReservas()->all();
-        
-        return $this->render('myTickets', [
-            'reservas' => $reservas,
-        ]);
+{
+    if (Yii::$app->user->isGuest) {
+        return $this->redirect(['site/login']);
     }
+    
+    $userId = Yii::$app->user->id;
+    
+    // Buscar todas as reservas do utilizador com eager loading das relações
+    $reservas = Reserva::find()
+        ->where(['utilizador_id' => $userId])
+        ->with([
+            'local',              // Carregar dados do local cultural
+            'linhaReservas',      // Carregar linhas de reserva (bilhetes)
+            'linhaReservas.tipoBilhete' // Carregar tipos de bilhete
+        ])
+        ->orderBy(['data_criacao' => SORT_DESC]) // Mais recentes primeiro
+        ->all();
+    
+    return $this->render('myTickets', [
+        'reservas' => $reservas,
+    ]);
+}
 }
