@@ -62,6 +62,7 @@ class CustomNavBar extends Widget
         }
     }
 
+
     public function run()
     {
         $this->registerAssets();
@@ -72,10 +73,19 @@ class CustomNavBar extends Widget
 
         $username = '';
         $userInitial = '';
+        $userImage = Yii::$app->request->baseUrl . '/images/default-user.png'; // Initialize here
 
         if (!Yii::$app->user->isGuest) {
-            $username = Yii::$app->user->identity->username;
+            $identity = Yii::$app->user->identity;
+            $profile = $identity ? $identity->userProfile : null;
+            
+            $username = $identity->username;
             $userInitial = strtoupper(substr($username, 0, 1));
+            
+            if ($profile && !empty($profile->imagem_perfil)) {
+                // Use the backend URL path for uploaded images
+                $userImage = '../../../backend/web/uploads/' . $profile->imagem_perfil;
+            }
         }
 
         return $this->render('custom-navbar', [
@@ -86,6 +96,7 @@ class CustomNavBar extends Widget
             'isGuest' => Yii::$app->user->isGuest,
             'username' => $username,
             'userInitial' => $userInitial,
+            'userImage' => $userImage,
             'signupLabel' => $this->signupLabel,
             'loginLabel' => $this->loginLabel,
         ]);
