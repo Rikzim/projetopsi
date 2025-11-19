@@ -1,9 +1,11 @@
 <?php
+
 namespace frontend\widgets;
 
 use yii\base\Widget;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use Yii;
 
 class InfiniteCarousel extends Widget
 {
@@ -33,12 +35,28 @@ class InfiniteCarousel extends Widget
     {
         $this->registerAssets();
 
+        // Process items to build full image URLs
+        $processedItems = array_map(function($item) {
+            if (isset($item['image'])) {
+                // If image is just a filename (from backend uploads)
+                if (strpos($item['image'], '/') === false || strpos($item['image'], 'uploads/') !== false) {
+                    // Remove 'uploads/' if it's already there
+                    $filename = str_replace('uploads/', '', $item['image']);
+                    $item['image'] = '../../../backend/web/uploads/' . $filename;
+                } else if (strpos($item['image'], '@web') === 0) {
+                    // Handle @web alias
+                    $item['image'] = Yii::$app->request->baseUrl . str_replace('@web', '', $item['image']);
+                }
+            }
+            return $item;
+        }, $this->items);
+
         // resolve arrow URLs
         $prevUrl = Url::to($this->prevArrow);
         $nextUrl = Url::to($this->nextArrow);
 
         return $this->render('infinite-carousel', [
-            'items' => $this->items,
+            'items' => $processedItems,
             'cardWidth' => $this->cardWidth,
             'cardHeight' => $this->cardHeight,
             'cardGap' => $this->cardGap,

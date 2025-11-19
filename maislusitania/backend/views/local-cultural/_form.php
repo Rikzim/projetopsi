@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\LocalCultural */
+/* @var $model backend\models\LocalCulturalForm */
 /* @var $form yii\bootstrap4\ActiveForm */
 ?>
 
 <div class="local-cultural-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
@@ -30,9 +30,22 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'website')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'imagem_principal')->textInput(['maxlength' => true]) ?>
+    <?php if ($model->getCurrentImage()): ?>
+        <div class="form-group">
+            <label>Imagem Atual:</label>
+            <div>
+                <?= Html::img('@web/uploads/' . $model->getCurrentImage(), ['style' => 'max-width: 200px;', 'class' => 'img-thumbnail']) ?>
+            </div>
+        </div>
+    <?php endif; ?>
 
-    <?= $form->field($model, 'ativo')->textInput() ?>
+    <?= $form->field($model, 'imageFile')->fileInput(['accept' => 'image/*']) ?>
+
+    <?= $form->field($model, 'latitude')->textInput() ?>
+
+    <?= $form->field($model, 'longitude')->textInput() ?>
+
+    <?= $form->field($model, 'ativo')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
