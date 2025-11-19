@@ -26,7 +26,7 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
 
     <div class="site-index">
     <?= HeroSection::widget([
-            'backgroundImage' => $model->imagem_principal,
+            'backgroundImage' => Url::to('../../../backend/web/uploads/' . $model->imagem_principal),
             'title' => $model->nome,
             'subtitle' => $model->descricao,
             'showOverlay' => false,
