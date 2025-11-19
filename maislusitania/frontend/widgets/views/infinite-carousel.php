@@ -18,7 +18,8 @@ use yii\helpers\Url;
         <div class="carousel-wrapper">
             <div class="carousel-track">
                 <?php foreach ($items as $item):
-                    $image = isset($item['image']) && is_string($item['image']) ? Url::to($item['image']) : null;
+                    // Image is already processed in the widget
+                    $image = isset($item['image']) ? $item['image'] : null;
                     $title = isset($item['title']) && is_string($item['title']) ? $item['title'] : '';
                     $distrito = isset($item['distrito']) && is_string($item['distrito']) ? $item['distrito'] : (isset($item['subtitle']) && is_string($item['subtitle']) ? $item['subtitle'] : '');
 
