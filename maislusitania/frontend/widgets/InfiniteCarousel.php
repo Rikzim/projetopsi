@@ -42,7 +42,7 @@ class InfiniteCarousel extends Widget
                 if (strpos($item['image'], '/') === false || strpos($item['image'], 'uploads/') !== false) {
                     // Remove 'uploads/' if it's already there
                     $filename = str_replace('uploads/', '', $item['image']);
-                    $item['image'] = '../../../backend/web/uploads/' . $filename;
+                    $item['image'] = 'http://localhost/projetopsi/maislusitania/backend/web/uploads/' . $filename;
                 } else if (strpos($item['image'], '@web') === 0) {
                     // Handle @web alias
                     $item['image'] = Yii::$app->request->baseUrl . str_replace('@web', '', $item['image']);
