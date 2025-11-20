@@ -132,7 +132,7 @@ $this->registerCss("
         <?php else: ?>
             <?php foreach ($dataProvider->models as $local): ?>
             <div class="local-card">
-                <img src="../../../backend/web/uploads/<?= Html::encode($local->imagem_principal) ?>" 
+                <img src="http://localhost/projetopsi/maislusitania/backend/web/uploads/<?= Html::encode($local->imagem_principal) ?>" 
                     alt="<?= Html::encode($local->nome) ?>"
                     class="local-image">
                 
