@@ -30,7 +30,6 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
             'title' => $model->nome,
             'subtitle' => $model->descricao,
             'showOverlay' => false,
-         
     ]) ?>
 
     <div class="content-wrapper">
