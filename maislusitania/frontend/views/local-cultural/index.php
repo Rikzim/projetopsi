@@ -132,9 +132,9 @@ $this->registerCss("
         <?php else: ?>
             <?php foreach ($dataProvider->models as $local): ?>
             <div class="local-card">
-                <img src="<?= $local->imagem_principal ?: 'https://picsum.photos/140/140?random=' . $local->id ?>" 
-                     alt="<?= Html::encode($local->nome) ?>" 
-                     class="local-image">
+                <img src="../../../backend/web/uploads/<?= Html::encode($local->imagem_principal) ?>" 
+                    alt="<?= Html::encode($local->nome) ?>"
+                    class="local-image">
                 
                 <div class="local-content">
                     <h3 class="local-title"><?= Html::encode($local->nome) ?></h3>

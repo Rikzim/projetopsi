@@ -12,9 +12,9 @@
 # Log files
 /logs/
 # Web assets (gerados automaticamente)
-/web/assets/
-/frontend/web/assets/
-/backend/web/assets/
+#/web/assets/
+#/frontend/web/assets/
+#/backend/web/assets/
 
 # Uploads e ficheiros temporários
 /uploads/
