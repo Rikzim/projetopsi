@@ -104,8 +104,6 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-
-        $transaction = Yii::$app->db->beginTransaction();
         
         try {
             // Criar utilizador
@@ -159,11 +157,9 @@ class SignupForm extends Model
                 throw new \Exception('Erro ao salvar perfil');
             }
 
-            $transaction->commit();
             return $user;
             
         } catch (\Exception $e) {
-            $transaction->rollBack();
             $this->addError('username', $e->getMessage());
             return null;
         }
