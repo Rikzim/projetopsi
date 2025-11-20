@@ -39,14 +39,10 @@ class InfiniteCarousel extends Widget
         $processedItems = array_map(function($item) {
             if (isset($item['image'])) {
                 // If image is just a filename (from backend uploads)
-                if (strpos($item['image'], '/') === false || strpos($item['image'], 'uploads/') !== false) {
-                    // Remove 'uploads/' if it's already there
-                    $filename = str_replace('uploads/', '', $item['image']);
-                    $item['image'] = 'http://localhost/projetopsi/maislusitania/backend/web/uploads/' . $filename;
-                } else if (strpos($item['image'], '@web') === 0) {
-                    // Handle @web alias
-                    $item['image'] = Yii::$app->request->baseUrl . str_replace('@web', '', $item['image']);
+                if (strpos($item['image'], '/') === false) {
+                    $item['image'] = 'http://localhost/projetopsi/maislusitania/backend/web/uploads/' . $item['image'];
                 }
+                // Otherwise keep the full path/URL as is
             }
             return $item;
         }, $this->items);
