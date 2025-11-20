@@ -11,7 +11,7 @@ class CustomNavBar extends Widget
     /**
      * @var string Logo URL
      */
-    public $logoUrl = '@web/images/logo/logo.svg';
+    public $logoUrl = '@web/images/logo/Logo.svg';
 
     /**
      * @var string Logo text
