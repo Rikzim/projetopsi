@@ -20,7 +20,7 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="<?= \yii\helpers\Url::home() ?>" class="brand-link">
-        <img src="<?= Yii::getAlias('@web') ?>/images/logo/Logo-white.svg" alt="maislusitania Logo" style="opacity: .8">
+        <img src="<?= Yii::getAlias('@web') ?>/images/logo/logo-white.svg" alt="maislusitania Logo" style="opacity: .8">
         <span class="brand-text font-weight-light" style="font-size: 1.5rem;">+Lusitânia</span>
     </a>
 
