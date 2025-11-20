@@ -146,8 +146,6 @@ class UpdateForm extends Model
         if (!$this->validate()) {
             return false;
         }
-
-        $transaction = Yii::$app->db->beginTransaction();
         
         try {
             // Atualizar utilizador
@@ -214,12 +212,9 @@ class UpdateForm extends Model
             if (!$this->_userProfile->save()) {
                 throw new \Exception('Erro ao atualizar perfil: ' . json_encode($this->_userProfile->errors));
             }
-
-            $transaction->commit();
             return true;
             
         } catch (\Exception $e) {
-            $transaction->rollBack();
             $this->addError('username', $e->getMessage());
             return false;
         }
