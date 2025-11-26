@@ -89,7 +89,7 @@ $this->registerCssFile('@web/css/evento/index.css', ['depends' => [\yii\web\YiiA
             <?php else: ?>
                 <?php foreach ($dataProvider->models as $evento): ?>
                     <a href="<?= Url::to(['view', 'id' => $evento->id]) ?>" class="evento-list-card">
-                        <div class="evento-list-image" style="background-image: url('<?= $evento->imagem ?: 'https://picsum.photos/300/200?random=' . $evento->id ?>');">
+                        <div class="evento-list-image" style="background-image: url('<?= Yii::getAlias('@uploadsUrl') . '/' . Html::encode($evento->imagem) ?>');">
                             <span class="evento-list-category">
                                 <?= Html::encode($evento->local && $evento->local->tipo ? $evento->local->tipo->nome : 'Eventos') ?>
                             </span>
