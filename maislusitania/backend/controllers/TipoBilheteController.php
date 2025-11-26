@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use common\models\TipoBilhete;
+use common\Models\TipoBilhete;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -36,7 +36,7 @@ class TipoBilheteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($id)
     {
         $dataProvider = new ActiveDataProvider([
             'query' => TipoBilhete::find(),
