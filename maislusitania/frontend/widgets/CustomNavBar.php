@@ -86,7 +86,7 @@ class CustomNavBar extends Widget
             
             if ($profile && !empty($profile->imagem_perfil)) {
                 // Use the backend URL path for uploaded images
-                $userImage = 'http://172.22.21.218/projetopsi/maislusitania/backend/web/uploads/' . $profile->imagem_perfil;
+                $userImage = Yii::getAlias('@uploadsUrl') . '/' . $profile->imagem_perfil;
             }
         }
 
