@@ -85,9 +85,8 @@ class CustomNavBar extends Widget
             $userInitial = strtoupper(substr($username, 0, 1));
             
             if ($profile && !empty($profile->imagem_perfil)) {
-                // Use relative path for uploaded images
-                //$userImage = Yii::getAlias ('@web') . '/../../backend/web/uploads/' . $profile->imagem_perfil;
-                $userImage = Yii::$app->request->baseUrl . '/../../backend/web/uploads/' . $profile->imagem_perfil;
+                // Use the backend URL path for uploaded images
+                $userImage = Yii::getAlias('@uploadsUrl') . '/' . $profile->imagem_perfil;
             }
         }
 
