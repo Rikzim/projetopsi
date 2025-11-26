@@ -74,7 +74,49 @@ class SiteController extends Controller
         if (!Yii::$app->user->can('accessBackoffice')) {
             return $this->redirect(['site/login']);
         }
-        return $this->render('index');
+
+        $locaisCount = \common\models\LocalCultural::find()->count();
+        $eventosCount = \common\models\Evento::find()->count();
+        $noticiasCount = \common\models\Noticia::find()->count();
+        $usersCount = \common\models\User::find()->count();
+
+        $reservasMesCount = \common\models\Reserva::find()
+            ->where(['between', 'data_visita', date('Y-m-01'), date('Y-m-t')])
+            ->count();
+
+        $ultimasReservas = \common\models\Reserva::find()
+            ->orderBy(['data_visita' => SORT_DESC])
+            ->limit(5)
+            ->all();
+
+        $ultimasAvaliacoes = \common\models\Avaliacao::find()
+            ->orderBy(['data_avaliacao' => SORT_DESC])
+            ->limit(5)
+            ->all();
+
+        $salesData = [];
+        $labels = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = date('Y-m', strtotime("-$i months"));
+            $start = $month . '-01';
+            $end = date('Y-m-t', strtotime($start));
+            $labels[] = Yii::$app->formatter->asDate($start, 'MMMM'); // e.g., 'Maio'
+            $salesData[] = (float)\common\models\Reserva::find()
+                ->where(['between', 'data_visita', $start, $end])
+                ->sum('preco_total') ?: 0;
+}
+        
+        return $this->render('index', [
+            'locaisCount' => $locaisCount,
+            'eventosCount' => $eventosCount,
+            'noticiasCount' => $noticiasCount,
+            'usersCount' => $usersCount,
+            'reservasMesCount' => $reservasMesCount,
+            'ultimasReservas' => $ultimasReservas,
+            'ultimasAvaliacoes' => $ultimasAvaliacoes,
+            'salesData' => $salesData,
+            'salesLabels' => $labels,
+        ]);
     }
 
     /**
