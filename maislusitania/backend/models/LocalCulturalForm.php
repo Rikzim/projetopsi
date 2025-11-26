@@ -2,10 +2,11 @@
 
 namespace backend\models;
 
-use common\models\LocalCultural;
-use yii\base\Model;
-use yii\web\UploadedFile;
 use Yii;
+use yii\base\Model;
+use common\models\LocalCultural;
+use common\models\Horario;
+use yii\web\UploadedFile;
 
 class LocalCulturalForm extends Model
 {
@@ -18,34 +19,46 @@ class LocalCulturalForm extends Model
     public $contacto_telefone;
     public $contacto_email;
     public $website;
-    public $imageFile;
+    public $ativo;
     public $latitude;
     public $longitude;
-    public $ativo;
+    public $imageFile;
     
-    private $_localCultural;
+    // Horário fields
+    public $segunda;
+    public $terca;
+    public $quarta;
+    public $quinta;
+    public $sexta;
+    public $sabado;
+    public $domingo;
 
-    public function __construct($localCultural = null, $config = [])
+    private $_localCultural;
+    private $_horario;
+
+    public function __construct(LocalCultural $localCultural = null, $config = [])
     {
-        if ($localCultural instanceof LocalCultural) {
+        if ($localCultural !== null) {
             $this->_localCultural = $localCultural;
-            $this->nome = $localCultural->nome;
-            $this->tipo_id = $localCultural->tipo_id;
-            $this->morada = $localCultural->morada;
-            $this->distrito_id = $localCultural->distrito_id;
-            $this->descricao = $localCultural->descricao;
-            $this->horario_funcionamento = $localCultural->horario_funcionamento;
-            $this->contacto_telefone = $localCultural->contacto_telefone;
-            $this->contacto_email = $localCultural->contacto_email;
-            $this->website = $localCultural->website;
-            $this->latitude = $localCultural->latitude;
-            $this->longitude = $localCultural->longitude;
-            $this->ativo = $localCultural->ativo;
+            $this->setAttributes($localCultural->attributes, false);
+            
+            // Load horario data if exists
+            $horario = Horario::findOne(['local_id' => $localCultural->id]);
+            if ($horario !== null) {
+                $this->_horario = $horario;
+                $this->segunda = $horario->segunda;
+                $this->terca = $horario->terca;
+                $this->quarta = $horario->quarta;
+                $this->quinta = $horario->quinta;
+                $this->sexta = $horario->sexta;
+                $this->sabado = $horario->sabado;
+                $this->domingo = $horario->domingo;
+            }
         } else {
             $this->_localCultural = new LocalCultural();
+            $this->_horario = new Horario();
             $this->ativo = 1;
         }
-        
         parent::__construct($config);
     }
 
@@ -56,14 +69,13 @@ class LocalCulturalForm extends Model
             [['tipo_id', 'distrito_id', 'ativo'], 'integer'],
             [['descricao'], 'string'],
             [['latitude', 'longitude'], 'number'],
-            [['horario_funcionamento', 'contacto_telefone', 'contacto_email', 'website'], 'default', 'value' => null],
             [['nome'], 'string', 'max' => 200],
             [['morada', 'website'], 'string', 'max' => 255],
             [['horario_funcionamento'], 'string', 'max' => 500],
             [['contacto_telefone'], 'string', 'max' => 20],
             [['contacto_email'], 'string', 'max' => 100],
-            [['contacto_email'], 'email'],
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif', 'maxSize' => 1024 * 1024 * 2],
+            [['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'], 'string', 'max' => 100],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -76,13 +88,20 @@ class LocalCulturalForm extends Model
             'distrito_id' => 'Distrito',
             'descricao' => 'Descrição',
             'horario_funcionamento' => 'Horário de Funcionamento',
-            'contacto_telefone' => 'Telefone',
-            'contacto_email' => 'Email',
+            'contacto_telefone' => 'Contacto Telefone',
+            'contacto_email' => 'Contacto Email',
             'website' => 'Website',
-            'imageFile' => 'Imagem Principal',
+            'ativo' => 'Ativo',
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
-            'ativo' => 'Ativo',
+            'imageFile' => 'Imagem Principal',
+            'segunda' => 'Segunda-feira',
+            'terca' => 'Terça-feira',
+            'quarta' => 'Quarta-feira',
+            'quinta' => 'Quinta-feira',
+            'sexta' => 'Sexta-feira',
+            'sabado' => 'Sábado',
+            'domingo' => 'Domingo',
         ];
     }
 
@@ -92,63 +111,52 @@ class LocalCulturalForm extends Model
             return false;
         }
 
-        $this->_localCultural->nome = $this->nome;
-        $this->_localCultural->tipo_id = $this->tipo_id;
-        $this->_localCultural->morada = $this->morada;
-        $this->_localCultural->distrito_id = $this->distrito_id;
-        $this->_localCultural->descricao = $this->descricao;
-        $this->_localCultural->horario_funcionamento = $this->horario_funcionamento;
-        $this->_localCultural->contacto_telefone = $this->contacto_telefone;
-        $this->_localCultural->contacto_email = $this->contacto_email;
-        $this->_localCultural->website = $this->website;
-        $this->_localCultural->latitude = $this->latitude;
-        $this->_localCultural->longitude = $this->longitude;
-        $this->_localCultural->ativo = $this->ativo;
-
-        // Handle image upload
-        if ($this->imageFile instanceof UploadedFile) {
+        // Save LocalCultural
+        $this->_localCultural->setAttributes($this->attributes, false);
+        
+        if ($this->imageFile) {
             $uploadPath = Yii::getAlias('@backend/web/uploads/');
-            
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
-
-            // Delete old image if exists
-            if (!empty($this->_localCultural->imagem_principal)) {
-                $oldImagePath = $uploadPath . $this->_localCultural->imagem_principal;
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
-            }
-
-            $fileName = 'local_' . uniqid() . '.' . $this->imageFile->extension;
-            $filePath = $uploadPath . $fileName;
-
-            if ($this->imageFile->saveAs($filePath)) {
-                $this->_localCultural->imagem_principal = $fileName;
-            }
+            
+            $fileName = uniqid() . '.' . $this->imageFile->extension;
+            $this->imageFile->saveAs($uploadPath . $fileName);
+            $this->_localCultural->imagem_principal = $fileName;
         }
 
-        return $this->_localCultural->save(false);
+        if (!$this->_localCultural->save()) {
+            return false;
+        }
+
+        // Save or update Horario
+        if ($this->_horario->isNewRecord) {
+            $this->_horario = new Horario();
+        }
+        
+        $this->_horario->local_id = $this->_localCultural->id;
+        $this->_horario->segunda = $this->segunda;
+        $this->_horario->terca = $this->terca;
+        $this->_horario->quarta = $this->quarta;
+        $this->_horario->quinta = $this->quinta;
+        $this->_horario->sexta = $this->sexta;
+        $this->_horario->sabado = $this->sabado;
+        $this->_horario->domingo = $this->domingo;
+
+        if (!$this->_horario->save()) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getLocalCultural()
     {
         return $this->_localCultural;
     }
-
-    public function getCurrentImage()
+    
+    public function getHorario()
     {
-        return $this->_localCultural->imagem_principal;
-    }
-
-    public function getId()
-    {
-        return $this->_localCultural->id;
-    }
-
-    public function getIsNewRecord()
-    {
-        return $this->_localCultural->isNewRecord;
+        return $this->_horario;
     }
 }

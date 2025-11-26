@@ -20,8 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
 
-
-
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'columns' => [
@@ -29,25 +27,43 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             'id',
                             'nome',
-                            'tipo_id',
+                            [
+                                'attribute' => 'tipo_id',
+                                'value' => function($model) {
+                                    return $model->tipo ? $model->tipo->nome : '-';
+                                }
+                            ],
                             'morada',
-                            'distrito_id',
-                            //'descricao:ntext',
-                            //'horario_funcionamento',
-                            //'contacto_telefone',
-                            //'contacto_email:email',
-                            //'website',
-                            //'imagem_principal',
-                            //'ativo',
+                            [
+                                'attribute' => 'distrito_id',
+                                'value' => function($model) {
+                                    return $model->distrito ? $model->distrito->nome : '-';
+                                }
+                            ],
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'yii\grid\ActionColumn',
+                                'template' => '{view} {update} {delete} {bilhetes}',
+                                'buttons' => [
+                                    'bilhetes' => function ($url, $model, $key) {
+                                        return Html::a(
+                                            '<i class="fas fa-ticket-alt"></i>',
+                                            ['tipo-bilhete/index', 'local_id' => $model->id],
+                                            [
+                                                'title' => 'Gerir Bilhetes',
+                                                'class' => 'btn btn-sm btn-info',
+                                                'data-pjax' => '0',
+                                            ]
+                                        );
+                                    },
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
                         ]
                     ]); ?>
-
 
                 </div>
                 <!--.card-body-->

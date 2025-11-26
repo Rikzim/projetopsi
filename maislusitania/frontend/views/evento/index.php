@@ -138,24 +138,3 @@ $this->registerCssFile('@web/css/evento/index.css', ['depends' => [\yii\web\YiiA
 </div>
 
 <?php Pjax::end(); ?>
-
-<?php
-$this->registerJs("
-var searchTimeout;
-
-$('#search-input').on('keyup', function() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(function() {
-        $('#filter-form').submit();
-    }, 500);
-});
-
-$(document).on('pjax:send', function() {
-    $('.loading-overlay').fadeIn(200);
-});
-
-$(document).on('pjax:complete', function() {
-    $('.loading-overlay').fadeOut(200);
-});
-");
-?>
