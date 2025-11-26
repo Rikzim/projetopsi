@@ -74,6 +74,7 @@ class ReservaController extends Controller
     /**
      * Criar reserva (já está OK, só garantir autenticação)
      */
+
     public function actionCreate()
     {
         if (!$this->request->isPost) {
@@ -94,10 +95,19 @@ class ReservaController extends Controller
                 $reserva = new Reserva();
                 $reserva->GuardarReserva($postData);
 
+                Yii::$app->session->setFlash('success', 'Reserva criada com sucesso!');
                 return $this->redirect(['site/bilhetes']);
             } catch (\Exception $e) {
+                // NÃO redirecionar - renderizar novamente com os dados
                 Yii::$app->session->setFlash('error', $e->getMessage());
-                return $this->redirect(Yii::$app->request->referrer);
+
+                try {
+                    $dados = Reserva::obterDadosConfirmacao($postData);
+                    return $this->render('create', $dados);
+                } catch (\Exception $e2) {
+                    Yii::$app->session->setFlash('error', $e2->getMessage());
+                    return $this->redirect(['site/index']);
+                }
             }
         }
 
@@ -107,7 +117,7 @@ class ReservaController extends Controller
             return $this->render('create', $dados);
         } catch (\Exception $e) {
             Yii::$app->session->setFlash('error', $e->getMessage());
-            return $this->redirect(Yii::$app->request->referrer);
+            return $this->redirect(['site/index']);
         }
     }
 

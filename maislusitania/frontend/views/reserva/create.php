@@ -146,9 +146,9 @@ $this->title = 'Confirmar Reserva';
         <h4 style="color: #2E5AAC; margin-bottom: 15px;">Bilhetes Selecionados:</h4>
 
         <?php foreach ($bilhetes as $bilhete): ?>
-            <?php 
-                // Calcular subtotal
-                $subtotal = $bilhete['quantidade'] * $bilhete['preco_unitario'];
+            <?php
+            // Calcular subtotal
+            $subtotal = $bilhete['quantidade'] * $bilhete['preco_unitario'];
             ?>
             <div class="bilhete-linha">
                 <div class="bilhete-info">
@@ -179,23 +179,34 @@ $this->title = 'Confirmar Reserva';
         'method' => 'post',
     ]); ?>
 
-        <!-- Campo hidden que indica confirmação -->
-        <?= Html::hiddenInput('confirmar', '1') ?>
-        
-        <!-- Dados do local -->
-        <?= Html::hiddenInput('local_id', $local->id) ?>
+    <!-- Campo hidden que indica confirmação -->
+    <?= Html::hiddenInput('confirmar', '1') ?>
 
-        <!-- Dados dos bilhetes -->
-        <?php foreach ($bilhetes as $bilhete): ?>
-            <?= Html::hiddenInput("bilhetes[{$bilhete['tipo_bilhete_id']}][quantidade]", $bilhete['quantidade']) ?>
-            <?= Html::hiddenInput("bilhetes[{$bilhete['tipo_bilhete_id']}][tipo_bilhete_id]", $bilhete['tipo_bilhete_id']) ?>
-        <?php endforeach; ?>
+    <!-- Dados do local -->
+    <?= Html::hiddenInput('local_id', $local->id) ?>
 
-        <!-- Botões de Ação -->
-        <div class="botoes-acao">
-            <?= Html::a('Cancelar', ['local-cultural/view', 'id' => $local->id], ['class' => 'btn-cancelar']) ?>
-            <?= Html::submitButton('✓ Confirmar Reserva', ['class' => 'btn-confirmar']) ?>
-        </div>
+    <!-- Dados dos bilhetes -->
+    <?php foreach ($bilhetes as $bilhete): ?>
+        <?= Html::hiddenInput("bilhetes[{$bilhete['tipo_bilhete_id']}][quantidade]", $bilhete['quantidade']) ?>
+        <?= Html::hiddenInput("bilhetes[{$bilhete['tipo_bilhete_id']}][tipo_bilhete_id]", $bilhete['tipo_bilhete_id']) ?>
+    <?php endforeach; ?>
+
+    <!-- Selecionar data visita -->
+    <div class="info-local" style="margin-top: 20px;">
+        <h4 style="color: #2E5AAC; margin: 0 0 10px 0;">Data da Visita:</h4>
+        <?= Html::input('date', 'data_visita', '', [
+            'id' => 'data-visita',
+            'required' => true,
+            'min' => date('Y-m-d', strtotime('+1 day')),
+            'style' => 'width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;'
+        ]) ?>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="botoes-acao">
+        <?= Html::a('Cancelar', ['local-cultural/view', 'id' => $local->id], ['class' => 'btn-cancelar']) ?>
+        <?= Html::submitButton('✓ Confirmar Reserva', ['class' => 'btn-confirmar']) ?>
+    </div>
 
     <?php \yii\widgets\ActiveForm::end(); ?>
 </div>
