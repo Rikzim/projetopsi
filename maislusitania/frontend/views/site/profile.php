@@ -26,7 +26,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
             <div class="profile-avatar-section">
                 <div class="profile-avatar">
                     <?php if ($user->userProfile && $user->userProfile->imagem_perfil): ?>
-                        <?= Html::img('@web/uploads/' . $user->userProfile->imagem_perfil, [
+                        <?= Html::img('http://172.22.21.218/projetopsi/maislusitania/backend/web/uploads/' . $user->userProfile->imagem_perfil, [
                             'alt' => 'Imagem de Perfil',
                             'class' => 'avatar-image'
                         ]) ?>

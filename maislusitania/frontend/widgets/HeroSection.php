@@ -10,7 +10,7 @@ class HeroSection extends Widget
     public $title;
     public $subtitle;
     public $buttons = [];
-    public $backgroundImage = '/images/hero-background.jpg';
+    public $backgroundImage = 'http://localhost/projetopsi/maislusitania/frontend/web/images/hero-background.jpg';
     public $showOverlay = true; // Add this property
 
     public function run()

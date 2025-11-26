@@ -15,7 +15,7 @@ $this->registerCssFile('@web/css/homepage.css');
 
 <div class="site-index">
     <?= HeroSection::widget([
-            'backgroundImage' => '@web/images/hero-background.jpg',
+            'backgroundImage' => 'http://172.22.21.218/projetopsi/maislusitania/frontend/web/images/hero-background.jpg',
             'title' => 'Descubra o Património Histórico de Portugal',
             'subtitle' => 'Explore museus, monumentos e experiências culturais inesquecíveis.',
             'buttons' => [

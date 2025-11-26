@@ -3,10 +3,13 @@
 namespace backend\controllers;
 
 use common\models\LocalCultural;
+use backend\models\LocalCulturalForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
+use Yii;
 
 /**
  * LocalCulturalController implements the CRUD actions for LocalCultural model.
@@ -40,16 +43,6 @@ class LocalCulturalController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => LocalCultural::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
         ]);
 
         return $this->render('index', [
@@ -77,14 +70,19 @@ class LocalCulturalController extends Controller
      */
     public function actionCreate()
     {
-        $model = new LocalCultural();
+        $model = new LocalCulturalForm();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'Local Cultural criado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->getLocalCultural()->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao criar Local Cultural.');
+                }
             }
-        } else {
-            $model->loadDefaultValues();
         }
 
         return $this->render('create', [
@@ -101,10 +99,18 @@ class LocalCulturalController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $localCultural = $this->findModel($id);
+        $model = new LocalCulturalForm($localCultural);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Local Cultural atualizado com sucesso!');
+                return $this->redirect(['view', 'id' => $model->getLocalCultural()->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Erro ao atualizar Local Cultural.');
+            }
         }
 
         return $this->render('update', [
@@ -121,7 +127,20 @@ class LocalCulturalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        
+        // Delete image if exists
+        if ($model->imagem_principal) {
+            $uploadPath = Yii::getAlias('@backend/web/uploads/');
+            $imagePath = $uploadPath . $model->imagem_principal;
+            
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+        
+        $model->delete();
+        Yii::$app->session->setFlash('success', 'Local Cultural deletado com sucesso!');
 
         return $this->redirect(['index']);
     }

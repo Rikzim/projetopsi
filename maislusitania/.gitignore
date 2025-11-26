@@ -1,65 +1,43 @@
-# ============================================
-# Yii2 Framework - .gitignore
-# ============================================
+# yii console commands
+/yii
+/yii_test
+/yii_test.bat
 
-# Composer vendor directory
-/vendor/
-# Composer lock file (opcional — se quiser forçar reprodutibilidade, mantenha-o)
-/composer.lock
+# phpstorm project files
+.idea
 
-# Yii2 runtime e cache
-/runtime/
-# Log files
-/logs/
-# Web assets (gerados automaticamente)
-/web/assets/
-/frontend/web/assets/
-/backend/web/assets/
+# netbeans project files
+nbproject
 
-# Uploads e ficheiros temporários
-/uploads/
-/temp/
-/tmp/
+# zend studio for eclipse project files
+.buildpath
+.project
+.settings
 
-# Configurações locais (credenciais, etc.)
-/config/db.php
-/config/params-local.php
-/common/config/main-local.php
-/common/config/params-local.php
-/frontend/config/main-local.php
-/backend/config/main-local.php
-/console/config/main-local.php
-
-# IDEs e editores
-/.idea/
-/.vscode/
-/nbproject/
-/*.sublime-workspace
-/*.sublime-project
-
-# Sistema operacional
-.DS_Store
+# windows thumbnail cache
 Thumbs.db
-ehthumbs.db
-Desktop.ini
 
-# Node.js / npm (se usar asset bundles via npm)
-node_modules/
-npm-debug.log
-yarn.lock
+# composer vendor dir
+/vendor
 
-# Docker (se usar containers)
-docker-compose.override.yml
+# composer itself is not needed
+composer.phar
 
-# PHPUnit / testes
-.phpunit.result.cache
-/codeception/_output/*
-/tests/_output/*
-/tests/_support/_generated/*
-/tests/_log/*
+# Mac DS_Store Files
+.DS_Store
 
-# Outras ferramentas
-/.env
-/.env.local
-/.php-cs-fixer.cache
-/.coverage/
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
+
+# vagrant runtime
+/.vagrant
+
+# ignore generated files
+/frontend/web/index.php
+/frontend/web/index-test.php
+/frontend/web/robots.txt
+/backend/web/index.php
+/backend/web/index-test.php
+/backend/web/robots.txt

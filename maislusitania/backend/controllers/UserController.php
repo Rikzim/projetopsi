@@ -166,8 +166,6 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
         
-        $transaction = Yii::$app->db->beginTransaction();
-        
         try {
             // Buscar o perfil do utilizador
             $userProfile = $model->userProfile;
@@ -195,12 +193,9 @@ class UserController extends Controller
             if (!$model->delete()) {
                 throw new \Exception('Erro ao deletar utilizador');
             }
-            
-            $transaction->commit();
             Yii::$app->session->setFlash('success', 'Utilizador deletado com sucesso!');
             
         } catch (\Exception $e) {
-            $transaction->rollBack();
             Yii::$app->session->setFlash('error', 'Erro ao deletar utilizador: ' . $e->getMessage());
         }
 

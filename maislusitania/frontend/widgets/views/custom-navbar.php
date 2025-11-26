@@ -33,7 +33,9 @@ use yii\helpers\Url;
                         <!-- User info in hamburger menu -->
                         <div class="mobile-user-section">
                             <div class="mobile-user-header">
-                                <div class="mobile-user-avatar"><?= $userInitial ?></div>
+                                <div class="mobile-user-avatar">
+                                    <img src="<?= Html::encode($userImage) ?>" alt="User Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                </div>
                                 <div class="mobile-user-name"><?= Html::encode($username) ?></div>
                             </div>
                             <a href="<?= Url::to(['/site/profile']) ?>" class="mobile-menu-link">Perfil</a>
@@ -58,14 +60,22 @@ use yii\helpers\Url;
                 <?php else: ?>
                     <div class="user-info" id="user-dropdown-toggle" onclick="toggleUserDropdown(event)">
                         <div class="user-avatar" title="<?= Html::encode($username) ?>">
-                            <?= strtoupper(substr($username, 0, 1)) ?>
+                            <?php if ($userImage): ?>
+                                <img src="<?= Html::encode($userImage) ?>" alt="User Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            <?php else: ?>
+                                <?= strtoupper(substr($username, 0, 1)) ?>
+                            <?php endif; ?>
                         </div>
 
-                        <!-- Dropdown Menu (unchanged) -->
+                        <!-- Dropdown Menu -->
                         <div class="user-dropdown" id="user-dropdown-menu" onclick="event.stopPropagation()">
                             <div class="user-dropdown-header">
                                 <div class="user-dropdown-avatar">
-                                    <?= strtoupper(substr($username, 0, 1)) ?>
+                                    <?php if ($userImage): ?>
+                                        <img src="<?= Html::encode($userImage) ?>" alt="User Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                    <?php else: ?>
+                                        <?= strtoupper(substr($username, 0, 1)) ?>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="user-dropdown-info">
                                     <strong><?= Html::encode($username) ?></strong>

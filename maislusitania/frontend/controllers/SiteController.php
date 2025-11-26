@@ -329,26 +329,39 @@ class SiteController extends Controller
         ]);
     }
     public function actionBilhetes()
-{
-    if (Yii::$app->user->isGuest) {
-        return $this->redirect(['site/login']);
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        
+        $userId = Yii::$app->user->id;
+        $hoje = date('Y-m-d');
+        
+        // Buscar todas as reservas do utilizador com eager loading das relações
+        $reservas = Reserva::find()
+            ->where(['utilizador_id' => $userId])
+            ->andWhere(['>=', 'data_visita', $hoje])
+            ->with([
+                'local',              // Carregar dados do local cultural
+                'linhaReservas',      // Carregar linhas de reserva (bilhetes)
+                'linhaReservas.tipoBilhete' // Carregar tipos de bilhete
+            ])
+            ->orderBy(['data_criacao' => SORT_DESC]) // Mais recentes primeiro
+            ->all();
+        $reservasExpiradas = Reserva::find()
+            ->where(['utilizador_id' => $userId])
+            ->andWhere(['<', 'data_visita', date('Y-m-d')])
+            ->with([
+                'local',              
+                'linhaReservas',      
+                'linhaReservas.tipoBilhete' 
+            ])
+            ->orderBy(['data_criacao' => SORT_DESC]) 
+            ->all();
+        
+        return $this->render('myTickets', [
+            'reservas' => $reservas,
+            'reservasExpiradas' => $reservasExpiradas,
+        ]);
     }
-    
-    $userId = Yii::$app->user->id;
-    
-    // Buscar todas as reservas do utilizador com eager loading das relações
-    $reservas = Reserva::find()
-        ->where(['utilizador_id' => $userId])
-        ->with([
-            'local',              // Carregar dados do local cultural
-            'linhaReservas',      // Carregar linhas de reserva (bilhetes)
-            'linhaReservas.tipoBilhete' // Carregar tipos de bilhete
-        ])
-        ->orderBy(['data_criacao' => SORT_DESC]) // Mais recentes primeiro
-        ->all();
-    
-    return $this->render('myTickets', [
-        'reservas' => $reservas,
-    ]);
-}
 }

@@ -244,7 +244,7 @@ class Reserva extends \yii\db\ActiveRecord
             }
 
             $this->preco_total = $dadosBilhetes['precoTotal']; // ✅ Acede ao array retornado
-            $this->setEstadoToExpirado(); // Usar o método que já tens
+            $this->setEstadoToConfirmada(); // Usar o método que já tens
             $this->data_criacao = date('Y-m-d H:i:s');
 
             if (!$this->save()) {

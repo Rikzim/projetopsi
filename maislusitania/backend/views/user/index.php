@@ -31,6 +31,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
+            [
+                'label' => 'Profile Image',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $profile = $model->userProfile;
+                    if ($profile && !empty($profile->imagem_perfil)) {
+                        $imageUrl = Yii::getAlias('@web') . '/uploads/' . Html::encode($profile->imagem_perfil);
+                        return Html::img($imageUrl, ['width' => '50', 'height' => '50', 'style' => 'object-fit: cover; border-radius: 50%;']);
+                    }
+                    return Html::tag('div', strtoupper(substr($model->username, 0, 1)), [
+                        'style' => 'width: 50px; height: 50px; border-radius: 50%; background-color: #2E5AAC; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;'
+                    ]);
+                },
+            ],
             'username',
             'email:email',
             'status',
