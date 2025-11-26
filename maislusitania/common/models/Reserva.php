@@ -236,7 +236,13 @@ class Reserva extends \yii\db\ActiveRecord
         try {
             $this->utilizador_id = Yii::$app->user->id;
             $this->local_id = $postData['local_id'];
-            $this->data_visita = $postData['data_visita'] ?? date('Y-m-d'); // ou podes pedir no formulário
+
+            $this->data_visita = $postData['data_visita'] ?? date('Y-m-d');
+
+            if (!$this->validateData($this->data_visita)) {
+                throw new \Exception('Data de visita inválida. Não pode ser domingo ou uma data passada.');
+            }
+
             $this->preco_total = $dadosBilhetes['precoTotal']; // ✅ Acede ao array retornado
             $this->setEstadoToConfirmada(); // Usar o método que já tens
             $this->data_criacao = date('Y-m-d H:i:s');
@@ -288,5 +294,28 @@ class Reserva extends \yii\db\ActiveRecord
             'bilhetes' => $dadosBilhetes['bilhetes'],
             'precoTotal' => $dadosBilhetes['precoTotal'],
         ];
+    }
+
+    public static function validateData($data_visita)
+    {
+        // Verificar se a data é válida
+        $timestamp = strtotime($data_visita);
+        if ($timestamp === false) {
+            return false;
+        }
+
+        // Verificar se é domingo (0 = domingo)
+        $diaSemana = date('w', $timestamp);
+        if ($diaSemana == 0) {
+            return false;
+        }
+
+        // Verificar se a data é no passado
+        $hoje = strtotime(date('Y-m-d'));
+        if ($timestamp < $hoje) {
+            return false;
+        }
+
+        return true;
     }
 }
