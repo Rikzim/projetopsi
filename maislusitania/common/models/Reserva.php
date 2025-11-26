@@ -216,6 +216,7 @@ class Reserva extends \yii\db\ActiveRecord
     /**
      * Simplificar GuardarReserva
      */
+
     public function GuardarReserva($postData)
     {
         // 1. Validações básicas
@@ -230,45 +231,37 @@ class Reserva extends \yii\db\ActiveRecord
         // 2. Preparar bilhetes (validação + cálculo)
         $dadosBilhetes = $this->prepararBilhetes($postData['bilhetes']);
 
-        // 3. Gravar com transação
-        $transaction = Yii::$app->db->beginTransaction();
+        // 3. Validar data antes de gravar
+        $this->data_visita = $postData['data_visita'] ?? date('Y-m-d');
 
-        try {
-            $this->utilizador_id = Yii::$app->user->id;
-            $this->local_id = $postData['local_id'];
-
-            $this->data_visita = $postData['data_visita'] ?? date('Y-m-d');
-
-            if (!$this->validateData($this->data_visita)) {
-                throw new \Exception('Data de visita inválida. Não pode ser domingo ou uma data passada.');
-            }
-
-            $this->preco_total = $dadosBilhetes['precoTotal']; // ✅ Acede ao array retornado
-            $this->setEstadoToConfirmada(); // Usar o método que já tens
-            $this->data_criacao = date('Y-m-d H:i:s');
-
-            if (!$this->save()) {
-                throw new \Exception('Erro ao gravar reserva: ' . json_encode($this->errors));
-            }
-
-            // Gravar linhas
-            foreach ($dadosBilhetes['bilhetes'] as $bilheteData) {
-                $linhaReserva = new LinhaReserva();
-                $linhaReserva->reserva_id = $this->id;
-                $linhaReserva->tipo_bilhete_id = $bilheteData['tipo_bilhete_id'];
-                $linhaReserva->quantidade = $bilheteData['quantidade'];
-
-                if (!$linhaReserva->save()) {
-                    throw new \Exception('Erro ao gravar linha: ' . json_encode($linhaReserva->errors));
-                }
-            }
-
-            $transaction->commit();
-            return $this;
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            throw $e;
+        if (!$this->validateData($this->data_visita)) {
+            throw new \Exception('Data de visita inválida. Não pode ser domingo ou uma data passada.');
         }
+
+        // 4. Gravar reserva
+        $this->utilizador_id = Yii::$app->user->id;
+        $this->local_id = $postData['local_id'];
+        $this->preco_total = $dadosBilhetes['precoTotal'];
+        $this->setEstadoToConfirmada();
+        $this->data_criacao = date('Y-m-d H:i:s');
+
+        if (!$this->save()) {
+            throw new \Exception('Erro ao gravar reserva: ' . json_encode($this->errors));
+        }
+
+        // 5. Gravar linhas
+        foreach ($dadosBilhetes['bilhetes'] as $bilheteData) {
+            $linhaReserva = new LinhaReserva();
+            $linhaReserva->reserva_id = $this->id;
+            $linhaReserva->tipo_bilhete_id = $bilheteData['tipo_bilhete_id'];
+            $linhaReserva->quantidade = $bilheteData['quantidade'];
+
+            if (!$linhaReserva->save()) {
+                throw new \Exception('Erro ao gravar linha: ' . json_encode($linhaReserva->errors));
+            }
+        }
+
+        return $this;
     }
 
     /**
