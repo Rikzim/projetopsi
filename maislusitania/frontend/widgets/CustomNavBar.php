@@ -11,7 +11,7 @@ class CustomNavBar extends Widget
     /**
      * @var string Logo URL
      */
-    public $logoUrl = 'http://172.22.21.218/projetopsi/maislusitania/frontend/web/images/logo/logo.svg';
+    public $logoUrl = '@web/images/logo/logo.svg';
     /**
      * @var string Logo text
      */
