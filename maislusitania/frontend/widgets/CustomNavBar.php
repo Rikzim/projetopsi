@@ -11,7 +11,7 @@ class CustomNavBar extends Widget
     /**
      * @var string Logo URL
      */
-    public $logoUrl = 'http://172.22.21.218/projetopsi/maislusitania/frontend/web/images/logo/logo.svg';
+    public $logoUrl = '@web/images/logo/logo.svg';
     /**
      * @var string Logo text
      */
@@ -85,8 +85,9 @@ class CustomNavBar extends Widget
             $userInitial = strtoupper(substr($username, 0, 1));
             
             if ($profile && !empty($profile->imagem_perfil)) {
-                // Use the backend URL path for uploaded images
-                $userImage = 'http://172.22.21.218/projetopsi/maislusitania/backend/web/uploads/' . $profile->imagem_perfil;
+                // Use relative path for uploaded images
+                //$userImage = Yii::getAlias ('@web') . '/../../backend/web/uploads/' . $profile->imagem_perfil;
+                $userImage = Yii::$app->request->baseUrl . '/../../backend/web/uploads/' . $profile->imagem_perfil;
             }
         }
 
