@@ -3,6 +3,8 @@ return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@uploads' => dirname(dirname(__DIR__)) . '/backend/web/uploads',
+        '@uploadsUrl' => '/projetopsi/maislusitania/backend/web/uploads',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
