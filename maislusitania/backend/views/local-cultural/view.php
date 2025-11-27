@@ -5,6 +5,7 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\LocalCultural */
+/* @var $horarios common\models\Horario */
 
 $this->title = $model->nome;
 
@@ -40,7 +41,7 @@ $this->title = $model->nome;
                             <div class="text-center">
                                 <?php if ($model->imagem_principal): ?>
                                     <?= Html::img(
-                                        Yii::getAlias('@web') . '/uploads/' . $model->imagem_principal,
+                                        Yii::getAlias('@uploadsUrl') . '/' . $model->imagem_principal,
                                         [
                                             'class' => 'img-fluid rounded shadow-sm',
                                             'style' => 'width: 100%; max-height: 400px; object-fit: cover;',
@@ -95,11 +96,6 @@ $this->title = $model->nome;
                                         'value' => $model->descricao ? Html::tag('p', Html::encode($model->descricao), ['class' => 'text-justify mb-0']) : '<span class="text-muted">-</span>',
                                     ],
                                     [
-                                        'attribute' => 'horario_funcionamento',
-                                        'format' => 'raw',
-                                        'value' => $model->horario_funcionamento ? '<i class="fas fa-clock mr-2 text-muted"></i>' . Html::encode($model->horario_funcionamento) : '<span class="text-muted">-</span>',
-                                    ],
-                                    [
                                         'attribute' => 'contacto_telefone',
                                         'format' => 'raw',
                                         'value' => $model->contacto_telefone ? '<i class="fas fa-phone mr-2 text-muted"></i>' . Html::encode($model->contacto_telefone) : '<span class="text-muted">-</span>',
@@ -122,12 +118,63 @@ $this->title = $model->nome;
                                             ? Html::tag('span', '<i class="fas fa-check-circle mr-2"></i>Ativo', ['class' => 'badge badge-success', 'style' => 'font-size: 0.95rem; padding: 0.5em 1em;'])
                                             : Html::tag('span', '<i class="fas fa-times-circle mr-2"></i>Inativo', ['class' => 'badge badge-danger', 'style' => 'font-size: 0.95rem; padding: 0.5em 1em;']),
                                     ],
+                                    [
+                                        'label' => 'Horários',
+                                        'format' => 'raw',
+                                        'value' => $horario ? Html::a(
+                                            '<i class="fas fa-clock mr-2"></i>Ver Horários de Funcionamento <i class="fas fa-chevron-down ml-2"></i>',
+                                            '#collapseHorarios',
+                                            [
+                                                'class' => 'btn btn-info btn-sm',
+                                                'data-toggle' => 'collapse',
+                                                'aria-expanded' => 'false',
+                                                'aria-controls' => 'collapseHorarios'
+                                            ]
+                                        ) . Html::tag('div', 
+                                            Html::tag('table',
+                                                Html::tag('tbody',
+                                                    Html::tag('tr',
+                                                        Html::tag('td', Html::tag('strong', 'Segunda-feira'), ['style' => 'width: 150px;']) .
+                                                        Html::tag('td', Html::encode($horario[0]->segunda))
+                                                    ) .
+                                                    Html::tag('tr',
+                                                        Html::tag('td', Html::tag('strong', 'Terça-feira')) .
+                                                        Html::tag('td', Html::encode($horario[0]->terca))
+                                                    ) .
+                                                    Html::tag('tr',
+                                                        Html::tag('td', Html::tag('strong', 'Quarta-feira')) .
+                                                        Html::tag('td', Html::encode($horario[0]->quarta))
+                                                    ) .
+                                                    Html::tag('tr',
+                                                        Html::tag('td', Html::tag('strong', 'Quinta-feira')) .
+                                                        Html::tag('td', Html::encode($horario[0]->quinta))
+                                                    ) .
+                                                    Html::tag('tr',
+                                                        Html::tag('td', Html::tag('strong', 'Sexta-feira')) .
+                                                        Html::tag('td', Html::encode($horario[0]->sexta))
+                                                    ) .
+                                                    Html::tag('tr',
+                                                        Html::tag('td', Html::tag('strong', 'Sábado')) .
+                                                        Html::tag('td', Html::encode($horario[0]->sabado))
+                                                    ) .
+                                                    Html::tag('tr',
+                                                        Html::tag('td', Html::tag('strong', 'Domingo')) .
+                                                        Html::tag('td', Html::encode($horario[0]->domingo))
+                                                    )
+                                                ),
+                                                ['class' => 'table table-sm table-striped mb-0']
+                                            ),
+                                            [
+                                                'class' => 'collapse mt-3',
+                                                'id' => 'collapseHorarios'
+                                            ]
+                                        ) : '<span class="text-muted">-</span>',
+                                    ],
                                 ],
                             ]) ?>
                         </div>
                     </div>
                 </div>
-                
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
                         <?= Html::a('<i class="fas fa-arrow-left mr-2"></i>Voltar à Lista', ['index'], ['class' => 'btn btn-secondary']) ?>
