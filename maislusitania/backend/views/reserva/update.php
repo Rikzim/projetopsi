@@ -4,6 +4,8 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var common\models\Reserva $model */
+/** @var array $utilizadores */
+/** @var array $locais */
 
 $this->title = 'Update Reserva: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Reservas', 'url' => ['index']];
@@ -16,6 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'utilizadores' => $utilizadores,
+        'locais' => $locais,
     ]) ?>
 
 </div>

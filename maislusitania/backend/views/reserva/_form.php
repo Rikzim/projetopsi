@@ -2,26 +2,11 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
-use yii\helpers\ArrayHelper;
-use common\models\User;
-use common\models\LocalCultural;
 use kartik\select2\Select2;
 
 /** @var yii\web\View $this */
 /** @var common\models\Reserva $model */
 /** @var yii\bootstrap4\ActiveForm $form */
-
-// Obter utilizadores ativos e locais culturais para os dropdowns
-$utilizadores = ArrayHelper::map(
-    User::find()->where(['status' => User::STATUS_ACTIVE])->all(),
-    'id',
-    'username'
-);
-$locais = ArrayHelper::map(
-    LocalCultural::find()->all(),
-    'id',
-    'nome'
-);
 ?>
 
 <div class="reserva-form">
@@ -65,9 +50,6 @@ $locais = ArrayHelper::map(
                 \common\models\Reserva::optsEstado(),
                 ['prompt' => 'Selecione o estado...']
             ) ?>
-        </div>
-        <div class="col-md-6">
-            <?= $form->field($model, 'data_criacao')->textInput(['placeholder' => 'AAAA-MM-DD HH:MM:SS']) ?>
         </div>
     </div>
 
