@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LocalCultural;
+use common\models\Horario;
 use backend\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -52,7 +53,7 @@ class LocalCulturalController extends Controller
     {
         $model = new LocalCultural();
         $uploadForm = new UploadForm();
-        $horario = new \common\models\Horario();
+        $horario = new Horario();
 
         if (Yii::$app->request->isPost) {
             if (
@@ -68,7 +69,7 @@ class LocalCulturalController extends Controller
                     }
                 }
                 if ($model->save(false)) {
-                    $horario->local_cultural_id = $model->id;
+                    $horario->local_id = $model->id;
                     $horario->save(false);
 
                     Yii::$app->session->setFlash('success', 'Local Cultural criado com sucesso!');
@@ -113,7 +114,7 @@ class LocalCulturalController extends Controller
                     }
                 }
                 if ($model->save(false)) {
-                    $horario->local_cultural_id = $model->id;
+                    $horario->local_id = $model->id;
                     $horario->save(false);
 
                     Yii::$app->session->setFlash('success', 'Local Cultural atualizado com sucesso!');
@@ -142,6 +143,12 @@ class LocalCulturalController extends Controller
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
+        }
+
+        // Delete associated horario
+        $horario = $model->getHorarios()->one();
+        if ($horario) {
+            $horario->delete();
         }
 
         $model->delete();
