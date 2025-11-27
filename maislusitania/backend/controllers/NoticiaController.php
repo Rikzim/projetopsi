@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 use common\models\Noticia;
+use backend\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -64,10 +65,21 @@ class NoticiaController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Noticia();
+        $model = new UploadForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+                if ($model->destaque == 1) {
+                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                }
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
         }
 
         return $this->render('create', [
@@ -84,9 +96,15 @@ class NoticiaController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        
+        $model = new UploadForm($this->findModel($id));
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->destaque == 1) {
+                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

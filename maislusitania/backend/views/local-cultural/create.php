@@ -4,6 +4,8 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\LocalCultural */
+/* @var $uploadForm backend\models\UploadForm */
+/* @var $horario common\models\Horario */
 
 $this->title = 'Create Local Cultural';
 $this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
@@ -15,8 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <?=$this->render('_form', [
-                        'model' => $model
+                    <?= $this->render('_form', [
+                        'model' => $model,
+                        'uploadForm' => $uploadForm,
+                        'horario' => $horario,
                     ]) ?>
                 </div>
             </div>

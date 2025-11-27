@@ -89,7 +89,7 @@ $this->registerCssFile('@web/css/evento/index.css', ['depends' => [\yii\web\YiiA
             <?php else: ?>
                 <?php foreach ($dataProvider->models as $evento): ?>
                     <a href="<?= Url::to(['view', 'id' => $evento->id]) ?>" class="evento-list-card">
-                        <div class="evento-list-image" style="background-image: url('<?= $evento->imagem ?: 'https://picsum.photos/300/200?random=' . $evento->id ?>');">
+                        <div class="evento-list-image" style="background-image: url('<?= Yii::getAlias('@uploadsUrl') . '/' . Html::encode($evento->imagem) ?>');">
                             <span class="evento-list-category">
                                 <?= Html::encode($evento->local && $evento->local->tipo ? $evento->local->tipo->nome : 'Eventos') ?>
                             </span>
@@ -138,24 +138,3 @@ $this->registerCssFile('@web/css/evento/index.css', ['depends' => [\yii\web\YiiA
 </div>
 
 <?php Pjax::end(); ?>
-
-<?php
-$this->registerJs("
-var searchTimeout;
-
-$('#search-input').on('keyup', function() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(function() {
-        $('#filter-form').submit();
-    }, 500);
-});
-
-$(document).on('pjax:send', function() {
-    $('.loading-overlay').fadeIn(200);
-});
-
-$(document).on('pjax:complete', function() {
-    $('.loading-overlay').fadeOut(200);
-});
-");
-?>

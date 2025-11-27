@@ -132,7 +132,7 @@ $this->registerCss("
         <?php else: ?>
             <?php foreach ($dataProvider->models as $local): ?>
             <div class="local-card">
-                <img src="http://localhost/projetopsi/maislusitania/backend/web/uploads/<?= Html::encode($local->imagem_principal) ?>" 
+                <img src="<?= Yii::getAlias('@uploadsUrl') . '/' . Html::encode($local->imagem_principal) ?>" 
                     alt="<?= Html::encode($local->nome) ?>"
                     class="local-image">
                 
@@ -198,34 +198,4 @@ $this->registerCss("
 </div>
 
 <?php Pjax::end(); ?>
-
-<?php
-$this->registerJs("
-var searchTimeout;
-
-// Debounced search for text input only
-$('#search-input').on('keyup', function() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(function() {
-        $('#filter-form').submit();
-    }, 500);
-});
-
-// Instant submit for dropdowns
-$('#filter-tipo, #filter-distrito, #filter-order').on('change', function() {
-    clearTimeout(searchTimeout);
-    $('#filter-form').submit();
-});
-
-// Loading overlay
-$(document).on('pjax:send', function() {
-    $('.loading-overlay').fadeIn(200);
-});
-
-$(document).on('pjax:complete', function() {
-    $('.loading-overlay').fadeOut(200);
-});
-");
-?>
-
 

@@ -31,7 +31,7 @@ $this->registerCssFile('@web/css/noticia/index.css', ['depends' => [\yii\web\Yii
 <?php if ($destaqueNoticia): ?>
     <div class="featured-wrapper">
         <a href="<?= Url::to(['view', 'id' => $destaqueNoticia->id]) ?>" class="featured-card">
-            <div class="featured-image" style="background-image: url('<?= $destaqueNoticia->imagem ?: 'https://picsum.photos/800/500?random=1' ?>');">
+            <div class="featured-image" style="background-image: url('<?= Yii::getAlias('@uploadsUrl') . '/' . Html::encode($destaqueNoticia->imagem) ?>');">
                 <div class="featured-overlay">
                 <span class="featured-category">
                     <?= Html::encode($destaqueNoticia->localCultural->tipoLocal->nome ?? 'Monumentos') ?>
@@ -155,10 +155,10 @@ $this->registerCssFile('@web/css/noticia/index.css', ['depends' => [\yii\web\Yii
             <?php else: ?>
                 <?php foreach ($dataProvider->models as $noticia): ?>
                     <a href="<?= Url::to(['view', 'id' => $noticia->id]) ?>" class="noticia-list-card">
-                        <div class="noticia-list-image" style="background-image: url('<?= $noticia->imagem ?: 'https://picsum.photos/300/200?random=' . $noticia->id ?>');">
-                        <span class="noticia-list-category">
-                            <?= Html::encode($noticia->localCultural->tipoLocal->nome ?? 'Monumentos') ?>
-                        </span>
+                        <div class="noticia-list-image" style="background-image: url('<?= Yii::getAlias('@uploadsUrl') . '/' . Html::encode($noticia->imagem) ?>');">
+                            <span class="noticia-list-category">
+                                <?= Html::encode($noticia->localCultural->tipoLocal->nome ?? 'Monumentos') ?>
+                            </span>
                         </div>
 
                         <div class="noticia-list-content">
@@ -213,28 +213,5 @@ $this->registerCssFile('@web/css/noticia/index.css', ['depends' => [\yii\web\Yii
 </div>
 
 <?php Pjax::end(); ?>
-
-<?php
-$this->registerJs("
-var searchTimeout;
-
-// Debounced search for text input only
-$('#search-input').on('keyup', function() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(function() {
-        $('#filter-form').submit();
-    }, 500);
-});
-
-// Loading overlay
-$(document).on('pjax:send', function() {
-    $('.loading-overlay').fadeIn(200);
-});
-
-$(document).on('pjax:complete', function() {
-    $('.loading-overlay').fadeOut(200);
-});
-");
-?>
 
 
