@@ -3,7 +3,10 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\LocalCulturalForm */
+/* @var $model common\models\LocalCultural */
+/* @var $uploadForm backend\models\UploadForm */
+/* @var $horario common\models\Horario */
+
 
 $this->title = 'Update Local Cultural: ' . $model->getLocalCultural()->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
@@ -12,14 +15,15 @@ $this->params['breadcrumbs'][] = 'Update';
 ?>
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h1><?= Html::encode($this->title) ?></h1>
-
-                    <?= $this->render('_form', [
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <?=$this->render('_form', [
                         'model' => $model,
+                        'uploadForm' => $uploadForm,
+                        'horario' => $horario,
+
                     ]) ?>
 
                 </div>
