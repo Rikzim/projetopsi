@@ -41,8 +41,10 @@ class LocalCulturalController extends Controller
 
     public function actionView($id)
     {
+        $horario = $this->findModel($id)->getHorarios()->all();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'horario' => $horario,
         ]);
     }
 
