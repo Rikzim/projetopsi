@@ -1,31 +1,79 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
+use yii\helpers\ArrayHelper;
+use common\models\User;
+use common\models\LocalCultural;
+use kartik\select2\Select2;
 
 /** @var yii\web\View $this */
 /** @var common\models\Reserva $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var yii\bootstrap4\ActiveForm $form */
+
+// Obter utilizadores ativos e locais culturais para os dropdowns
+$utilizadores = ArrayHelper::map(
+    User::find()->where(['status' => User::STATUS_ACTIVE])->all(),
+    'id',
+    'username'
+);
+$locais = ArrayHelper::map(
+    LocalCultural::find()->all(),
+    'id',
+    'nome'
+);
 ?>
 
 <div class="reserva-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'utilizador_id')->textInput() ?>
+    <h5 class="text-primary mb-3"><i class="fas fa-user"></i> Dados da Reserva</h5>
+    <div class="row">
+    <div class="col-md-6">
+        <?= $form->field($model, 'utilizador_id')->widget(Select2::class, [
+            'data' => $utilizadores,
+            'options' => ['placeholder' => 'Selecione o utilizador...'],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
+    </div>
+    <div class="col-md-6">
+        <?= $form->field($model, 'local_id')->widget(Select2::class, [
+            'data' => $locais,
+            'options' => ['placeholder' => 'Selecione o local...'],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
+    </div>
+</div>
 
-    <?= $form->field($model, 'local_id')->textInput() ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'data_visita')->textInput(['placeholder' => 'AAAA-MM-DD']) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'preco_total')->textInput(['maxlength' => true, 'placeholder' => 'Preço total (€)']) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'data_visita')->textInput() ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'estado')->dropDownList(
+                \common\models\Reserva::optsEstado(),
+                ['prompt' => 'Selecione o estado...']
+            ) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'data_criacao')->textInput(['placeholder' => 'AAAA-MM-DD HH:MM:SS']) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'preco_total')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'estado')->dropDownList([ 'Expirado' => 'Expirado', 'Confirmada' => 'Confirmada', 'Cancelada' => 'Cancelada', ], ['prompt' => '']) ?>
-
-    <?= $form->field($model, 'data_criacao')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="form-group mt-4 text-right">
+        <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-secondary mr-2']) ?>
+        <?= Html::submitButton('<i class="fas fa-save"></i> Guardar', ['class' => 'btn btn-success px-4']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
