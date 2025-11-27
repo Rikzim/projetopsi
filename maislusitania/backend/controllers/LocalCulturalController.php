@@ -2,32 +2,35 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\LocalCultural;
 use backend\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
-use Yii;
 
 class LocalCulturalController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
+    /**
+     * Lists all LocalCultural models.
+     * @return mixed
+     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -39,6 +42,12 @@ class LocalCulturalController extends Controller
         ]);
     }
 
+    /**
+     * Displays a single LocalCultural model.
+     * @param int $id ID
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     public function actionView($id)
     {
         $horario = $this->findModel($id)->getHorarios()->all();
@@ -152,7 +161,7 @@ class LocalCulturalController extends Controller
 
     protected function findModel($id)
     {
-        if (($model = LocalCultural::findOne(['id' => $id])) !== null) {
+        if (($model = LocalCultural::findOne($id)) !== null) {
             return $model;
         }
         throw new NotFoundHttpException('The requested page does not exist.');
