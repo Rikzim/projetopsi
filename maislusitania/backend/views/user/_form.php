@@ -1,13 +1,13 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 use backend\models\SignupForm;
 use backend\models\UpdateForm;
 
 /** @var yii\web\View $this */
 /** @var backend\models\SignupForm|backend\models\UpdateForm $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var yii\bootstrap4\ActiveForm $form */
 /** @var bool $isUpdate */
 
 $isUpdate = isset($isUpdate) ? $isUpdate : false;
@@ -17,42 +17,117 @@ $isUpdate = isset($isUpdate) ? $isUpdate : false;
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?php if ($isUpdate && $model->current_image): ?>
-        <div class="form-group">
-            <label>Imagem Atual:</label>
-            <div>
-                <?= Html::img('@web/uploads/' . $model->current_image, ['style' => 'max-width: 200px;', 'class' => 'img-thumbnail']) ?>
+    <h5 class="text-primary mb-3"><i class="fas fa-user-circle"></i> Informações Pessoais</h5>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header p-2">Imagem de Perfil</div>
+                <div class="card-body text-center p-2">
+                    <?php if ($isUpdate && $model->current_image): ?>
+                        <?= Html::img('@web/uploads/' . $model->current_image, [
+                            'style' => 'max-height: 150px; width: auto;', 
+                            'class' => 'img-fluid rounded mb-2'
+                        ]) ?>
+                    <?php else: ?>
+                        <div class="text-muted py-4"><i class="fas fa-image fa-3x"></i><br>Sem imagem</div>
+                    <?php endif; ?>
+                    
+                    <?= $form->field($model, 'imagem_perfil', ['options' => ['class' => 'mb-0']])->fileInput(['class' => 'form-control-file mt-2', 'accept' => 'image/*'])->label(false) ?>
+                </div>
             </div>
         </div>
-    <?php endif; ?>
 
-    <?= $form->field($model, 'imagem_perfil')->fileInput(['accept' => 'image/*']) ?>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'primeiro_nome')->textInput(['maxlength' => true, 'placeholder' => 'Primeiro Nome']) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'ultimo_nome')->textInput(['maxlength' => true, 'placeholder' => 'Último Nome']) ?>
+                </div>
+                <div class="col-md-12">
+                    <?= $form->field($model, 'username', [
+                        'inputTemplate' => '
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                                {input}
+                            </div>'
+                    ])->textInput(['maxlength' => true, 'placeholder' => 'Nome de utilizador']) ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'primeiro_nome')->textInput(['maxlength' => true, 'placeholder' => 'Primeiro Nome']) ?>
+    <hr>
 
-    <?= $form->field($model, 'ultimo_nome')->textInput(['maxlength' => true, 'placeholder' => 'Último Nome']) ?>
-
-    <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'placeholder' => 'Nome de utilizador']) ?>
-
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true, 'type' => 'email', 'placeholder' => 'email@exemplo.com']) ?>
-
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'placeholder' => $isUpdate ? 'Deixe em branco para não alterar' : 'Password']) ?>
-
-    <?= $form->field($model, 'password_confirm')->passwordInput(['maxlength' => true, 'placeholder' => 'Confirmar Password']) ?>
-
-    <?= $form->field($model, 'role')->dropDownList(
-        $model instanceof SignupForm ? SignupForm::getRoles() : UpdateForm::getRoles(), 
-        ['prompt' => 'Selecione o tipo de utilizador']
-    ) ?>
-
-    <?= $form->field($model, 'status')->dropDownList([
-        10 => 'Ativo',
-        9 => 'Inativo',
-        0 => 'Deletado'
-    ]) ?>
+    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-id-card"></i> Dados de Acesso</h5>
     
-    <div class="form-group">
-        <?= Html::submitButton($isUpdate ? 'Atualizar Utilizador' : 'Criar Utilizador', ['class' => 'btn btn-success']) ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'email', [
+                'inputTemplate' => '
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        </div>
+                        {input}
+                    </div>'
+            ])->textInput(['maxlength' => true, 'type' => 'email', 'placeholder' => 'email@exemplo.com']) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'role')->dropDownList(
+                $model instanceof SignupForm ? SignupForm::getRoles() : UpdateForm::getRoles(), 
+                ['prompt' => 'Selecione o tipo de utilizador']
+            ) ?>
+        </div>
+    </div>
+
+    <hr>
+
+    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-lock"></i> Segurança</h5>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'placeholder' => $isUpdate ? 'Deixe em branco para não alterar' : 'Password']) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'password_confirm')->passwordInput(['maxlength' => true, 'placeholder' => 'Confirmar Password']) ?>
+        </div>
+    </div>
+
+    <hr>
+
+    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-toggle-on"></i> Estado da Conta</h5>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <?= $form->field($model, 'status', ['options' => ['class' => 'mb-0']])->dropDownList([
+                                10 => 'Ativo',
+                                9 => 'Inativo',
+                                0 => 'Deletado'
+                            ]) ?>
+                        </div>
+                        <div class="col-md-8">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> "Inativo" impede o login. "Deletado" remove o acesso permanentemente (soft delete).
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mt-4 text-right">
+        <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-secondary mr-2']) ?>
+        <?= Html::submitButton($isUpdate ? '<i class="fas fa-sync"></i> Atualizar Utilizador' : '<i class="fas fa-save"></i> Criar Utilizador', ['class' => 'btn btn-success px-4']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

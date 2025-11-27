@@ -1,15 +1,20 @@
 <?php
 
+use common\models\Avaliacao;
+use common\models\LocalCultural;
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-use yii\helpers\ArrayHelper;
 
-/* @var $this yii\web\View */
-/* @var $searchModel backend\models\LocalCulturalSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/** @var yii\web\View $this */
+/** @var backend\models\AvalicaoSearch $searchModel */
+/** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var array $locaisAtivos */
 
-$this->title = 'Locais Culturais';
+$this->title = 'Avaliações';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
@@ -18,14 +23,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-landmark mr-2"></i>
-                        Gestão de Locais Culturais
+                        <i class="fas fa-star mr-2"></i>
+                        Gestão de Avaliações
                     </h3>
                     <div class="card-tools">
-                        <?= Html::a('<i class="fas fa-plus"></i> Criar Local Cultural', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
+                        <?= Html::a('<i class="fas fa-plus"></i> Criar Avaliação', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
                     </div>
                 </div>
-
+                
                 <!-- Filtros e Pesquisa -->
                 <div class="card-body border-bottom">
                     <?php $form = \yii\widgets\ActiveForm::begin([
@@ -33,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'method' => 'get',
                         'options' => [
                             'data-pjax' => true,
-                            'id' => 'local-filter-form'
+                            'id' => 'avaliacao-filter-form'
                         ],
                     ]); ?>
                     
@@ -46,31 +51,37 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </div>
                                 <?= Html::activeTextInput($searchModel, 'globalSearch', [
                                     'class' => 'form-control',
-                                    'placeholder' => 'Pesquisar por nome ou morada...'
+                                    'placeholder' => 'Pesquisar...'
                                 ]) ?>
                             </div>
                         </div>
                         
-                        <!-- Filtro por Tipo -->
+                        <!-- Filtro por Local -->
                         <div class="col-md-3 mb-2">
-                            <?= Html::activeDropDownList($searchModel, 'tipo_id', 
-                                $TipoLocais,
+                            <?= Html::activeDropDownList($searchModel, 'local_id', 
+                                $locaisAtivos,
                                 [
                                     'class' => 'form-control form-control-sm',
-                                    'prompt' => 'Todos os Tipos',
-                                    'onchange' => '$("#local-filter-form").submit()'
+                                    'prompt' => 'Todos os Locais',
+                                    'onchange' => '$("#avaliacao-filter-form").submit()'
                                 ]
                             ) ?>
                         </div>
                         
-                        <!-- Filtro por Distrito -->
+                        <!-- Filtro por Classificação -->
                         <div class="col-md-2 mb-2">
-                            <?= Html::activeDropDownList($searchModel, 'distrito_id', 
-                                $distritos,
+                            <?= Html::activeDropDownList($searchModel, 'classificacao', 
+                                [
+                                    1 => '1 Estrela',
+                                    2 => '2 Estrelas',
+                                    3 => '3 Estrelas',
+                                    4 => '4 Estrelas',
+                                    5 => '5 Estrelas',
+                                ],
                                 [
                                     'class' => 'form-control form-control-sm',
-                                    'prompt' => 'Todos os Distritos',
-                                    'onchange' => '$("#local-filter-form").submit()'
+                                    'prompt' => 'Todas Classificações',
+                                    'onchange' => '$("#avaliacao-filter-form").submit()'
                                 ]
                             ) ?>
                         </div>
@@ -85,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 [
                                     'class' => 'form-control form-control-sm',
                                     'prompt' => 'Todos os Estados',
-                                    'onchange' => '$("#local-filter-form").submit()'
+                                    'onchange' => '$("#avaliacao-filter-form").submit()'
                                 ]
                             ) ?>
                         </div>
@@ -101,9 +112,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                     <?php \yii\widgets\ActiveForm::end(); ?>
                 </div>
-
+                
                 <div class="card-body p-0">
-                    <?php Pjax::begin(['id' => 'local-pjax']); ?>
+                    <?php Pjax::begin(['id' => 'avaliacao-pjax']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'filterModel' => false,
@@ -117,82 +128,73 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
 
                             [
-                                'attribute' => 'imagem',
-                                'label' => 'Imagem',
+                                'attribute' => 'local_id',
+                                'label' => 'Local',
                                 'format' => 'raw',
                                 'value' => function($model) {
-                                    if ($model->imagem_principal) {
-                                        return Html::img(
-                                            Yii::getAlias('@uploadsUrl') . '/' . $model->imagem_principal,
-                                            [
-                                                'style' => 'width: 80px; height: 60px; object-fit: cover; border-radius: 4px;',
-                                                'class' => 'img-thumbnail'
-                                            ]
+                                    if ($model->local) {
+                                        return Html::tag('div', 
+                                            Html::tag('strong', Html::encode($model->local->nome), ['class' => 'text-dark']),
+                                            ['class' => 'py-1']
                                         );
                                     }
-                                    return Html::tag('div', 
-                                        '<i class="fas fa-image fa-2x text-muted"></i>', 
-                                        [
-                                            'style' => 'width: 80px; height: 60px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; margin: 0 auto;'
-                                        ]
-                                    );
+                                    return '<span class="text-muted">-</span>';
                                 },
-                                'headerOptions' => ['style' => 'width: 100px; text-align: center;'],
-                                'contentOptions' => ['class' => 'text-center align-middle'],
-                            ],
-
-                            [
-                                'attribute' => 'nome',
-                                'format' => 'raw',
-                                'value' => function($model) {
-                                    return Html::tag('div', 
-                                        Html::tag('strong', Html::encode($model->nome), ['class' => 'text-dark']) .
-                                        Html::tag('small', Html::encode($model->morada), ['class' => 'd-block text-muted']),
-                                        ['class' => 'py-1']
-                                    );
-                                },
-                                'headerOptions' => ['style' => 'width: 250px;'],
+                                'headerOptions' => ['style' => 'width: 200px;'],
                                 'contentOptions' => ['class' => 'align-middle'],
                             ],
 
                             [
-                                'attribute' => 'tipo_id',
-                                'label' => 'Tipo',
+                                'attribute' => 'utilizador_id',
+                                'label' => 'Utilizador',
                                 'format' => 'raw',
                                 'value' => function($model) {
-                                    if ($model->tipo) {
-                                        return Html::tag('span', 
-                                            '<i class="fas fa-tag mr-2"></i>' . Html::encode($model->tipo->nome),
-                                            [
-                                                'class' => 'badge badge-info',
-                                                'style' => 'font-size: 0.95rem; padding: 0.6em 1em; display: inline-block;'
-                                            ]
+                                    if ($model->utilizador) {
+                                        return Html::tag('div', 
+                                            Html::tag('strong', Html::encode($model->utilizador->username), ['class' => 'text-dark']),
+                                            ['class' => 'py-1']
                                         );
                                     }
                                     return '<span class="text-muted">-</span>';
+                                },
+                                'headerOptions' => ['style' => 'width: 180px;'],
+                                'contentOptions' => ['class' => 'align-middle'],
+                            ],
+
+                            [
+                                'attribute' => 'classificacao',
+                                'label' => 'Classificação',
+                                'format' => 'raw',
+                                'value' => function($model) {
+                                    $stars = '';
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        if ($i <= $model->classificacao) {
+                                            $stars .= '<i class="fas fa-star text-warning"></i> ';
+                                        } else {
+                                            $stars .= '<i class="far fa-star text-muted"></i> ';
+                                        }
+                                    }
+                                    return $stars;
                                 },
                                 'headerOptions' => ['style' => 'width: 150px; text-align: center;'],
                                 'contentOptions' => ['class' => 'text-center align-middle'],
                             ],
 
                             [
-                                'attribute' => 'distrito_id',
-                                'label' => 'Distrito',
+                                'attribute' => 'comentario',
                                 'format' => 'raw',
                                 'value' => function($model) {
-                                    if ($model->distrito) {
-                                        return Html::tag('span',
-                                            '<i class="fas fa-map-marker-alt mr-2"></i>' . Html::encode($model->distrito->nome),
-                                            [
-                                                'class' => 'badge badge-secondary',
-                                                'style' => 'font-size: 0.95rem; padding: 0.6em 1em; display: inline-block;'
-                                            ]
-                                        );
+                                    if ($model->comentario) {
+                                        $comentario = Html::encode($model->comentario);
+                                        if (strlen($comentario) > 100) {
+                                            $comentario = substr($comentario, 0, 100) . '...';
+                                        }
+                                        return Html::tag('div', $comentario, ['class' => 'text-muted small']);
                                     }
                                     return '<span class="text-muted">-</span>';
                                 },
-                                'headerOptions' => ['style' => 'width: 150px; text-align: center;'],
-                                'contentOptions' => ['class' => 'text-center align-middle'],
+                                'headerOptions' => ['style' => 'width: 300px;'],
+                                'contentOptions' => ['class' => 'align-middle'],
                             ],
 
                             [
@@ -224,7 +226,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'class' => 'yii\grid\ActionColumn',
                                 'header' => 'Ações',
-                                'template' => '{view} {update} {bilhetes} {delete}',
+                                'template' => '{view} {update} {delete}',
                                 'buttons' => [
                                     'view' => function ($url, $model, $key) {
                                         return Html::a(
@@ -248,17 +250,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                             ]
                                         );
                                     },
-                                    'bilhetes' => function ($url, $model, $key) {
-                                        return Html::a(
-                                            '<i class="fas fa-ticket-alt"></i>',
-                                            ['tipo-bilhete/index', 'local_id' => $model->id],
-                                            [
-                                                'title' => 'Gerir Bilhetes',
-                                                'class' => 'btn btn-sm btn-primary mr-1',
-                                                'data-pjax' => '0',
-                                            ]
-                                        );
-                                    },
                                     'delete' => function ($url, $model, $key) {
                                         return Html::a(
                                             '<i class="fas fa-trash"></i>',
@@ -267,14 +258,17 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 'title' => 'Eliminar',
                                                 'class' => 'btn btn-sm btn-danger',
                                                 'data' => [
-                                                    'confirm' => 'Tem a certeza que deseja eliminar este local cultural?',
+                                                    'confirm' => 'Tem a certeza que deseja eliminar esta avaliação?',
                                                     'method' => 'post',
                                                 ],
                                             ]
                                         );
                                     },
                                 ],
-                                'headerOptions' => ['style' => 'width: 220px; text-align: center;'],
+                                'urlCreator' => function ($action, Avaliacao $model, $key, $index, $column) {
+                                    return Url::toRoute([$action, 'id' => $model->id]);
+                                },
+                                'headerOptions' => ['style' => 'width: 180px; text-align: center;'],
                                 'contentOptions' => ['class' => 'text-center align-middle'],
                             ],
                         ],
