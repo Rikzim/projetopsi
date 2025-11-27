@@ -3,10 +3,13 @@
 namespace backend\controllers;
 
 use common\models\Avaliacao;
-use yii\data\ActiveDataProvider;
+use backend\models\AvalicaoSearch;
+use common\models\LocalCultural;
+use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * AvaliacaoController implements the CRUD actions for Avaliacao model.
@@ -38,22 +41,18 @@ class AvaliacaoController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Avaliacao::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $searchModel = new AvalicaoSearch();
+        $locaisAtivos = ArrayHelper::map(
+        LocalCultural::find()->where(['ativo' => 1])->orderBy('nome')->all(),
+            'id',
+            'nome'
+        );
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'locaisAtivos' => $locaisAtivos,
         ]);
     }
 
@@ -78,6 +77,16 @@ class AvaliacaoController extends Controller
     public function actionCreate()
     {
         $model = new Avaliacao();
+        $locaisAtivos = ArrayHelper::map(
+            LocalCultural::find()->where(['ativo' => 1])->orderBy('nome')->all(),
+            'id',
+            'nome'
+        );
+        $utilizadoresAtivos = ArrayHelper::map(
+            User::find()->where(['status' => 10])->orderBy('username')->all(),
+            'id',
+            'username'
+        );
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -89,6 +98,8 @@ class AvaliacaoController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'locaisAtivos' => $locaisAtivos,
+            'utilizadoresAtivos' => $utilizadoresAtivos,
         ]);
     }
 
