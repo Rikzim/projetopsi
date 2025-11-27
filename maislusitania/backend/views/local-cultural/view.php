@@ -6,50 +6,134 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\LocalCultural */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = $model->nome;
+
 \yii\web\YiiAsset::register($this);
 ?>
 
 <div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <p>
-                        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-                            'class' => 'btn btn-danger',
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-landmark mr-2"></i>
+                        <?= Html::encode($this->title) ?>
+                    </h3>
+                    <div class="card-tools">
+                        <?= Html::a('<i class="fas fa-edit mr-2"></i>Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-warning btn-sm mr-2']) ?>
+                        <?= Html::a('<i class="fas fa-ticket-alt mr-2"></i>Gerir Bilhetes', ['tipo-bilhete/index', 'local_id' => $model->id], ['class' => 'btn btn-primary btn-sm mr-2']) ?>
+                        <?= Html::a('<i class="fas fa-trash mr-2"></i>Eliminar', ['delete', 'id' => $model->id], [
+                            'class' => 'btn btn-danger btn-sm',
                             'data' => [
-                                'confirm' => 'Are you sure you want to delete this item?',
+                                'confirm' => 'Tem a certeza que deseja eliminar este local cultural?',
                                 'method' => 'post',
                             ],
                         ]) ?>
-                    </p>
-                    <?= DetailView::widget([
-                        'model' => $model,
-                        'attributes' => [
-                            'id',
-                            'nome',
-                            'tipo_id',
-                            'morada',
-                            'distrito_id',
-                            'descricao:ntext',
-                            'horario_funcionamento',
-                            'contacto_telefone',
-                            'contacto_email:email',
-                            'website',
-                            'imagem_principal',
-                            'ativo',
-                        ],
-                    ]) ?>
+                    </div>
                 </div>
-                <!--.col-md-12-->
+                
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Coluna da Imagem -->
+                        <div class="col-md-4 mb-4">
+                            <div class="text-center">
+                                <?php if ($model->imagem_principal): ?>
+                                    <?= Html::img(
+                                        Yii::getAlias('@web') . '/uploads/' . $model->imagem_principal,
+                                        [
+                                            'class' => 'img-fluid rounded shadow-sm',
+                                            'style' => 'width: 100%; max-height: 400px; object-fit: cover;',
+                                            'alt' => Html::encode($model->nome)
+                                        ]
+                                    ) ?>
+                                <?php else: ?>
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                                        <i class="fas fa-image fa-5x text-muted"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Coluna dos Detalhes -->
+                        <div class="col-md-8">
+                            <?= DetailView::widget([
+                                'model' => $model,
+                                'options' => ['class' => 'table table-hover table-striped detail-view'],
+                                'attributes' => [
+                                    [
+                                        'attribute' => 'nome',
+                                        'format' => 'raw',
+                                        'value' => Html::tag('strong', Html::encode($model->nome), ['class' => 'text-dark h5']),
+                                    ],
+                                    [
+                                        'attribute' => 'tipo_id',
+                                        'label' => 'Tipo',
+                                        'format' => 'raw',
+                                        'value' => $model->tipo ? Html::tag('span', 
+                                            '<i class="fas fa-tag mr-2"></i>' . Html::encode($model->tipo->nome),
+                                            ['class' => 'badge badge-info', 'style' => 'font-size: 0.95rem; padding: 0.5em 1em;']
+                                        ) : '<span class="text-muted">-</span>',
+                                    ],
+                                    [
+                                        'attribute' => 'morada',
+                                        'format' => 'raw',
+                                        'value' => '<i class="fas fa-map-marker-alt mr-2 text-muted"></i>' . Html::encode($model->morada),
+                                    ],
+                                    [
+                                        'attribute' => 'distrito_id',
+                                        'label' => 'Distrito',
+                                        'format' => 'raw',
+                                        'value' => $model->distrito ? Html::tag('span',
+                                            '<i class="fas fa-map-marker-alt mr-2"></i>' . Html::encode($model->distrito->nome),
+                                            ['class' => 'badge badge-secondary', 'style' => 'font-size: 0.95rem; padding: 0.5em 1em;']
+                                        ) : '<span class="text-muted">-</span>',
+                                    ],
+                                    [
+                                        'attribute' => 'descricao',
+                                        'format' => 'raw',
+                                        'value' => $model->descricao ? Html::tag('p', Html::encode($model->descricao), ['class' => 'text-justify mb-0']) : '<span class="text-muted">-</span>',
+                                    ],
+                                    [
+                                        'attribute' => 'horario_funcionamento',
+                                        'format' => 'raw',
+                                        'value' => $model->horario_funcionamento ? '<i class="fas fa-clock mr-2 text-muted"></i>' . Html::encode($model->horario_funcionamento) : '<span class="text-muted">-</span>',
+                                    ],
+                                    [
+                                        'attribute' => 'contacto_telefone',
+                                        'format' => 'raw',
+                                        'value' => $model->contacto_telefone ? '<i class="fas fa-phone mr-2 text-muted"></i>' . Html::encode($model->contacto_telefone) : '<span class="text-muted">-</span>',
+                                    ],
+                                    [
+                                        'attribute' => 'contacto_email',
+                                        'format' => 'raw',
+                                        'value' => $model->contacto_email ? '<i class="fas fa-envelope mr-2 text-muted"></i>' . Html::a(Html::encode($model->contacto_email), 'mailto:' . $model->contacto_email) : '<span class="text-muted">-</span>',
+                                    ],
+                                    [
+                                        'attribute' => 'website',
+                                        'format' => 'raw',
+                                        'value' => $model->website ? '<i class="fas fa-globe mr-2 text-muted"></i>' . Html::a(Html::encode($model->website), $model->website, ['target' => '_blank', 'rel' => 'noopener']) : '<span class="text-muted">-</span>',
+                                    ],
+                                    [
+                                        'attribute' => 'ativo',
+                                        'label' => 'Estado',
+                                        'format' => 'raw',
+                                        'value' => $model->ativo 
+                                            ? Html::tag('span', '<i class="fas fa-check-circle mr-2"></i>Ativo', ['class' => 'badge badge-success', 'style' => 'font-size: 0.95rem; padding: 0.5em 1em;'])
+                                            : Html::tag('span', '<i class="fas fa-times-circle mr-2"></i>Inativo', ['class' => 'badge badge-danger', 'style' => 'font-size: 0.95rem; padding: 0.5em 1em;']),
+                                    ],
+                                ],
+                            ]) ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <?= Html::a('<i class="fas fa-arrow-left mr-2"></i>Voltar à Lista', ['index'], ['class' => 'btn btn-secondary']) ?>
+                    </div>
+                </div>
             </div>
-            <!--.row-->
         </div>
-        <!--.card-body-->
     </div>
-    <!--.card-->
 </div>

@@ -1,0 +1,75 @@
+/* Melhorias visuais para a tabela de locais culturais */
+.local-cultural-index .table {
+    font-size: 0.9rem;
+}
+
+.local-cultural-index .table thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.local-cultural-index .table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.local-cultural-index .table tbody tr:hover {
+    background-color: #f8f9fa !important;
+    transform: translateX(2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Badges personalizados */
+.badge {
+    padding: 0.4em 0.8em;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+/* Botões de ação */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.2rem;
+    transition: all 0.2s ease;
+}
+
+.btn-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Card header personalizado */
+.card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.card-header .card-title {
+    color: white;
+    font-weight: 600;
+}
+
+/* Imagem placeholder */
+.img-thumbnail {
+    transition: all 0.2s ease;
+}
+
+.img-thumbnail:hover {
+    transform: scale(1.05);
+    border-color: #007bff;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+    }
+}
