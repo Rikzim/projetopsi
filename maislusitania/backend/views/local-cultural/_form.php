@@ -17,7 +17,6 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <!-- Seção: Informações Principais -->
     <h5 class="text-primary mb-3"><i class="fas fa-info-circle"></i> Informações Principais</h5>
     <div class="row">
         <div class="col-md-8">
@@ -36,7 +35,6 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
 
     <hr>
 
-    <!-- Seção: Localização -->
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-map-marker-alt"></i> Localização</h5>
     <div class="row">
         <div class="col-md-6">
@@ -48,27 +46,34 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
                 ['prompt' => 'Selecione o Distrito...']
             ) ?>
         </div>
+        
         <div class="col-md-6">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-globe"></i></span>
-                </div>
-                <?= $form->field($model, 'latitude', ['options' => ['class' => 'form-group flex-grow-1 mb-0']])->textInput(['placeholder' => 'Ex: 38.736946']) ?>
-            </div>
+            <?= $form->field($model, 'latitude', [
+                'inputTemplate' => '
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                        </div>
+                        {input}
+                    </div>'
+            ])->textInput(['placeholder' => 'Ex: 38.736946']) ?>
         </div>
+
         <div class="col-md-6">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-globe"></i></span>
-                </div>
-                <?= $form->field($model, 'longitude', ['options' => ['class' => 'form-group flex-grow-1 mb-0']])->textInput(['placeholder' => 'Ex: -9.142685']) ?>
-            </div>
+            <?= $form->field($model, 'longitude', [
+                'inputTemplate' => '
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                        </div>
+                        {input}
+                    </div>'
+            ])->textInput(['placeholder' => 'Ex: -9.142685']) ?>
         </div>
     </div>
 
     <hr>
 
-    <!-- Seção: Contatos -->
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-address-book"></i> Contatos</h5>
     <div class="row">
         <div class="col-md-4">
@@ -84,7 +89,6 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
 
     <hr>
 
-    <!-- Seção: Horário Semanal -->
     <h5 class="text-primary mb-3 mt-4"><i class="far fa-clock"></i> Horário de Funcionamento Semanal</h5>
     <div class="card">
         <div class="card-body">
@@ -123,7 +127,6 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
 
     <hr>
 
-    <!-- Seção: Mídia e Status -->
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Mídia e Status</h5>
     <div class="row align-items-center">
         <div class="col-md-6">

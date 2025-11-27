@@ -32,7 +32,7 @@ use yii\grid\GridView;
                             ],
 
                             [
-                                'attribute' => 'imagem_principal',
+                                'attribute' => 'imagem',
                                 'label' => 'Imagem',
                                 'format' => 'raw',
                                 'value' => function($model) {
@@ -47,7 +47,9 @@ use yii\grid\GridView;
                                     }
                                     return Html::tag('div', 
                                         '<i class="fas fa-image fa-2x text-muted"></i>', 
-                                        ['style' => 'width: 80px; height: 60px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px;']
+                                        [
+                                            'style' => 'width: 80px; height: 60px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; margin: 0 auto;'
+                                        ]
                                     );
                                 },
                                 'headerOptions' => ['style' => 'width: 100px; text-align: center;'],
