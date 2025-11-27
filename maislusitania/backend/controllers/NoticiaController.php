@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * NoticiaController implements the CRUD actions for Noticia model.
@@ -78,26 +79,34 @@ class NoticiaController extends Controller
      */
     public function actionCreate()
     {
-        $model = new UploadForm();
+        $model = new Noticia();
+    $uploadForm = new UploadForm();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                
-                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-
-                if ($model->destaque == 1) {
-                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+    if (Yii::$app->request->isPost) {
+        if ($model->load(Yii::$app->request->post())) {
+            $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
+            if ($uploadForm->imageFile && $uploadForm->validate()) {
+                $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
+                $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                    $model->imagem = $fileName;
                 }
-
+            }
+            if ($model->destaque == 1) {
+                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+            }
+            if ($model->save(false)) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
         }
+    }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+    return $this->render('create', [
+        'model' => $model,
+        'uploadForm' => $uploadForm,
+    ]);
     }
 
     /**
@@ -110,19 +119,38 @@ class NoticiaController extends Controller
     public function actionUpdate($id)
     {
         
-        $model = new UploadForm($this->findModel($id));
+        $model = $this->findModel($id);
+        $uploadForm = new UploadForm();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->destaque == 1) {
-                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        // Optional: remove old image
+                        if ($model->imagem) {
+                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->imagem;
+                            if (file_exists($oldPath)) {
+                                unlink($oldPath);
+                            }
+                        }
+                        $model->imagem = $fileName;
+                    }
                 }
-            return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->destaque == 1) {
+                    \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                }
+                if ($model->save(false)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
