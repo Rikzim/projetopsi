@@ -2,9 +2,15 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
+/* @var $searchModel backend\models\LocalCulturalSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = 'Locais Culturais';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
     <div class="row">
@@ -19,9 +25,88 @@ use yii\grid\GridView;
                         <?= Html::a('<i class="fas fa-plus"></i> Criar Local Cultural', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
                     </div>
                 </div>
+
+                <!-- Filtros e Pesquisa -->
+                <div class="card-body border-bottom">
+                    <?php $form = \yii\widgets\ActiveForm::begin([
+                        'action' => ['index'],
+                        'method' => 'get',
+                        'options' => [
+                            'data-pjax' => true,
+                            'id' => 'local-filter-form'
+                        ],
+                    ]); ?>
+                    
+                    <div class="row w-100">
+                        <!-- Campo de Pesquisa Geral -->
+                        <div class="col-md-4 mb-2">
+                            <div class="input-group input-group-sm w-100">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <?= Html::activeTextInput($searchModel, 'globalSearch', [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Pesquisar por nome ou morada...'
+                                ]) ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Filtro por Tipo -->
+                        <div class="col-md-3 mb-2">
+                            <?= Html::activeDropDownList($searchModel, 'tipo_id', 
+                                $TipoLocais,
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'prompt' => 'Todos os Tipos',
+                                    'onchange' => '$("#local-filter-form").submit()'
+                                ]
+                            ) ?>
+                        </div>
+                        
+                        <!-- Filtro por Distrito -->
+                        <div class="col-md-2 mb-2">
+                            <?= Html::activeDropDownList($searchModel, 'distrito_id', 
+                                $distritos,
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'prompt' => 'Todos os Distritos',
+                                    'onchange' => '$("#local-filter-form").submit()'
+                                ]
+                            ) ?>
+                        </div>
+                        
+                        <!-- Filtro por Estado -->
+                        <div class="col-md-2 mb-2">
+                            <?= Html::activeDropDownList($searchModel, 'ativo', 
+                                [
+                                    1 => 'Ativo',
+                                    0 => 'Inativo',
+                                ],
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'prompt' => 'Todos os Estados',
+                                    'onchange' => '$("#local-filter-form").submit()'
+                                ]
+                            ) ?>
+                        </div>
+                        
+                        <!-- Botão Limpar -->
+                        <div class="col-md-1 mb-2">
+                            <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
+                                'class' => 'btn btn-secondary btn-sm w-100',
+                                'title' => 'Limpar Filtros'
+                            ]) ?>
+                        </div>
+                    </div>
+                    
+                    <?php \yii\widgets\ActiveForm::end(); ?>
+                </div>
+
                 <div class="card-body p-0">
+                    <?php Pjax::begin(['id' => 'local-pjax']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
+                        'filterModel' => false,
                         'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                         'headerRowOptions' => ['class' => 'bg-light'],
                         'columns' => [
@@ -199,7 +284,7 @@ use yii\grid\GridView;
                             'options' => ['class' => 'pagination pagination-sm justify-content-center mb-0'],
                         ]
                     ]); ?>
-
+                    <?php Pjax::end(); ?>
                 </div>
                 <!--.card-body-->
             </div>

@@ -114,12 +114,25 @@ class AvaliacaoController extends Controller
     {
         $model = $this->findModel($id);
 
+        $locaisAtivos = ArrayHelper::map(
+            LocalCultural::find()->where(['ativo' => 1])->orderBy('nome')->all(),
+            'id',
+            'nome'
+        );
+        $utilizadoresAtivos = ArrayHelper::map(
+            User::find()->where(['status' => 10])->orderBy('username')->all(),
+            'id',
+            'username'
+        );
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'locaisAtivos' => $locaisAtivos,
+            'utilizadoresAtivos' => $utilizadoresAtivos,
         ]);
     }
 
