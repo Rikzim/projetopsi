@@ -5,12 +5,16 @@ namespace backend\controllers;
 use Yii;
 use common\models\LocalCultural;
 use common\models\Horario;
+use common\models\Distrito;
+use common\models\TipoLocal;
+use backend\models\LocalCulturalSearch;
 use backend\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
 
 class LocalCulturalController extends Controller
 {
@@ -35,12 +39,19 @@ class LocalCulturalController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => LocalCultural::find(),
-        ]);
+        $searchModel = new LocalCulturalSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $locais = LocalCultural::find()->all();
+        $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
+        $TipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
+
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'locais' => $locais,
+            'distritos' => $distritos,
+            'TipoLocais' => $TipoLocais,
         ]);
     }
 
@@ -101,7 +112,7 @@ class LocalCulturalController extends Controller
     {
         $model = $this->findModel($id);
         $uploadForm = new UploadForm();
-        $horario = new \common\models\Horario();
+        $horario = $model->getHorarios()->one();
 
         if (Yii::$app->request->isPost) {
             if (
