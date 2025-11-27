@@ -21,9 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         <i class="fas fa-calendar-check mr-2"></i>
                         Gestão de Reservas
                     </h3>
-                    <div class="card-tools">
-                        <?= Html::a('<i class="fas fa-plus"></i> Criar Reserva', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
-                    </div>
                 </div>
                 <div class="card-body p-0">
                     <?= GridView::widget([
