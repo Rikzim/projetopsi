@@ -7,7 +7,6 @@ use common\models\TipoLocal;
 use common\models\Distrito;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\LocalCulturalForm */
 /* @var $form yii\bootstrap4\ActiveForm */
 
 $tipos = \common\models\TipoLocal::find()->select(['nome', 'id'])->indexBy('id')->column();
@@ -91,27 +90,27 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <?= $form->field($model, 'segunda')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'segunda')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($model, 'terca')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'terca')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($model, 'quarta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'quarta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($model, 'quinta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'quinta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <?= $form->field($model, 'sexta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'sexta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($model, 'sabado')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 10:00 - 13:00']) ?>
+                    <?= $form->field($horario, 'sabado')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 10:00 - 13:00']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($model, 'domingo')->textInput(['maxlength' => true, 'placeholder' => 'Ex: Encerrado']) ?>
+                    <?= $form->field($horario, 'domingo')->textInput(['maxlength' => true, 'placeholder' => 'Ex: Encerrado']) ?>
                 </div>
                 <div class="col-md-3">
                     <small class="text-muted d-block mt-4">
@@ -128,11 +127,11 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Mídia e Status</h5>
     <div class="row align-items-center">
         <div class="col-md-6">
-            <?php if ($model->imageFile): ?>
+            <?php if ($model->imagem_principal): ?>
                 <div class="card mb-3">
                     <div class="card-header p-2">Imagem Atual</div>
                     <div class="card-body text-center p-2">
-                        <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $model->imageFile, [
+                        <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $model->imagem_principal, [
                             'style' => 'max-height: 150px; width: auto;', 
                             'class' => 'img-fluid rounded'
                         ]) ?>
@@ -140,7 +139,7 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
                 </div>
             <?php endif; ?>
             
-            <?= $form->field($model, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
+            <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
             <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
         </div>
         
