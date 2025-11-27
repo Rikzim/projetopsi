@@ -15,7 +15,7 @@ class UploadForm extends Model
     public function rules()
     {
         return [
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, webp'],
         ];
     }
 
@@ -26,7 +26,6 @@ class UploadForm extends Model
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
-            $fileName = uniqid('noticia_') . '.' . $this->imageFile->extension;
             $this->imageFile->saveAs($uploadPath . $fileName);
             return $fileName;
         }

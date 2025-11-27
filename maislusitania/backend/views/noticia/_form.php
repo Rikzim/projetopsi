@@ -39,18 +39,18 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Mídia e Publicação</h5>
     <div class="row align-items-center">
         <div class="col-md-6">
-            <?php if ($model->imageFile) : ?>
+            <?php if ($uploadForm->imageFile) : ?>
                 <div class="card mb-3">
                     <div class="card-header p-2">Imagem Atual</div>
                     <div class="card-body text-center p-2">
-                        <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $model->imageFile, [
+                        <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $uploadForm->imageFile, [
                             'style' => 'max-height: 150px; width: auto;',
                             'class' => 'img-fluid rounded'
                         ]) ?>
                     </div>
                 </div>
             <?php endif; ?>
-            <?= $form->field($model, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
+            <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
             <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
         </div>
         <div class="col-md-3">
