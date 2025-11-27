@@ -12,6 +12,9 @@ use yii\filters\VerbFilter;
 
 class LocalCulturalController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         return [
@@ -24,6 +27,10 @@ class LocalCulturalController extends Controller
         ];
     }
 
+    /**
+     * Lists all LocalCultural models.
+     * @return mixed
+     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -35,6 +42,12 @@ class LocalCulturalController extends Controller
         ]);
     }
 
+    /**
+     * Displays a single LocalCultural model.
+     * @param int $id ID
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     public function actionView($id)
     {
         $horario = $this->findModel($id)->getHorarios()->all();
