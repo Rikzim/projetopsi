@@ -53,6 +53,7 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                         'icon' => 'folder',
                         'items' => [
                             ['label' => 'Locais Culturais', 'icon' => 'landmark', 'iconStyle' => 'fas', 'url' => ['local-cultural/index']],
+                            ['label' => 'Tipos de Locais', 'icon' => 'tags', 'iconStyle' => 'fas', 'url' => ['tipo-local/index']],
                             ['label' => 'Eventos', 'icon' => 'calendar-alt', 'iconStyle' => 'fas', 'url' => ['evento/index']],
                             ['label' => 'Notícias', 'icon' => 'newspaper', 'iconStyle' => 'far', 'url' => ['noticia/index']],
                         ]
@@ -74,7 +75,7 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                         ])
                     ],
                     ['label' => 'MEU PERFIL', 'header' => true],
-                    ['label' => 'Gerir Perfil', 'icon' => 'user-cog', 'iconStyle' => 'fas', 'url' => ['site/profile']],
+                    ['label' => 'Gerir Perfil', 'icon' => 'user-cog', 'iconStyle' => 'fas', 'url' => ['user/update', 'id' => $identity->id]],
                     ['label' => 'Sair', 'icon' => 'sign-out-alt', 'url' => ['site/logout'], 'template' => '<a class="nav-link" href="{url}" data-method="post">{icon} {label}</a>'],
                 ],
             ]);

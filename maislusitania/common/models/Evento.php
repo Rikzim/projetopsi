@@ -80,4 +80,13 @@ class Evento extends \yii\db\ActiveRecord
         return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
+
+    /**
+     * Obter a imagem atual do evento
+     * @return string|null
+     */
+    public function getCurrentImage()
+    {
+        return $this->imagem;
+    }
 }

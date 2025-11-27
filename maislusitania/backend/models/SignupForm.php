@@ -138,7 +138,7 @@ class SignupForm extends Model
                     mkdir($uploadPath, 0777, true);
                 }
                 
-                $imageName = uniqid() . '_' . $imageFile->name;
+                $imageName = uniqid() . 'user_' . $imageFile->name;
                 $filePath = $uploadPath . $imageName;
                 
                 if (!$imageFile->saveAs($filePath)) {

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Noticia;
 use backend\models\UploadForm;
 use yii\data\ActiveDataProvider;
@@ -15,42 +16,28 @@ use yii\filters\VerbFilter;
 class NoticiaController extends Controller
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
     /**
      * Lists all Noticia models.
-     *
-     * @return string
+     * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Noticia::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
         ]);
 
         return $this->render('index', [
@@ -61,7 +48,7 @@ class NoticiaController extends Controller
     /**
      * Displays a single Noticia model.
      * @param int $id ID
-     * @return string
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
@@ -74,55 +61,82 @@ class NoticiaController extends Controller
     /**
      * Creates a new Noticia model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return mixed
      */
     public function actionCreate()
     {
-        $model = new UploadForm();
+        $model = new Noticia();
+        $uploadForm = new UploadForm();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                
-                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-
-                if ($model->destaque == 1) {
-                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        $model->imagem = $fileName;
+                    }
                 }
-
-                return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->destaque == 1) {
+                    \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                }
+                if ($model->save(false)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            } else {
+                $model->loadDefaultValues();
             }
-        } else {
-            $model->loadDefaultValues();
-        }
+    }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+    return $this->render('create', [
+        'model' => $model,
+        'uploadForm' => $uploadForm,
+    ]);
     }
 
     /**
      * Updates an existing Noticia model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         
-        $model = new UploadForm($this->findModel($id));
+        $model = $this->findModel($id);
+        $uploadForm = new UploadForm();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->destaque == 1) {
-                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        // Optional: remove old image
+                        if ($model->imagem) {
+                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->imagem;
+                            if (file_exists($oldPath)) {
+                                unlink($oldPath);
+                            }
+                        }
+                        $model->imagem = $fileName;
+                    }
                 }
-            return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->destaque == 1) {
+                    \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                }
+                if ($model->save(false)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
@@ -130,7 +144,7 @@ class NoticiaController extends Controller
      * Deletes an existing Noticia model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
@@ -149,7 +163,7 @@ class NoticiaController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Noticia::findOne(['id' => $id])) !== null) {
+        if (($model = Noticia::findOne($id)) !== null) {
             return $model;
         }
 
