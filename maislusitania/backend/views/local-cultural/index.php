@@ -38,7 +38,7 @@ use yii\grid\GridView;
                                 'value' => function($model) {
                                     if ($model->imagem_principal) {
                                         return Html::img(
-                                            Yii::getAlias('@web') . '/uploads/' . $model->imagem_principal,
+                                            Yii::getAlias('@uploadsUrl') . '/' . $model->imagem_principal,
                                             [
                                                 'style' => 'width: 80px; height: 60px; object-fit: cover; border-radius: 4px;',
                                                 'class' => 'img-thumbnail'

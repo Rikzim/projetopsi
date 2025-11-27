@@ -2,32 +2,36 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\LocalCultural;
+use common\models\Horario;
 use backend\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
-use Yii;
 
 class LocalCulturalController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
+    /**
+     * Lists all LocalCultural models.
+     * @return mixed
+     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -39,10 +43,18 @@ class LocalCulturalController extends Controller
         ]);
     }
 
+    /**
+     * Displays a single LocalCultural model.
+     * @param int $id ID
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     public function actionView($id)
     {
+        $horario = $this->findModel($id)->getHorarios()->all();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'horario' => $horario,
         ]);
     }
 
@@ -50,7 +62,7 @@ class LocalCulturalController extends Controller
     {
         $model = new LocalCultural();
         $uploadForm = new UploadForm();
-        $horario = new \common\models\Horario();
+        $horario = new Horario();
 
         if (Yii::$app->request->isPost) {
             if (
@@ -66,7 +78,7 @@ class LocalCulturalController extends Controller
                     }
                 }
                 if ($model->save(false)) {
-                    $horario->local_cultural_id = $model->id;
+                    $horario->local_id = $model->id;
                     $horario->save(false);
 
                     Yii::$app->session->setFlash('success', 'Local Cultural criado com sucesso!');
@@ -111,7 +123,7 @@ class LocalCulturalController extends Controller
                     }
                 }
                 if ($model->save(false)) {
-                    $horario->local_cultural_id = $model->id;
+                    $horario->local_id = $model->id;
                     $horario->save(false);
 
                     Yii::$app->session->setFlash('success', 'Local Cultural atualizado com sucesso!');
@@ -142,6 +154,12 @@ class LocalCulturalController extends Controller
             }
         }
 
+        // Delete associated horario
+        $horario = $model->getHorarios()->one();
+        if ($horario) {
+            $horario->delete();
+        }
+
         $model->delete();
         Yii::$app->session->setFlash('success', 'Local Cultural deletado com sucesso!');
 
@@ -150,7 +168,7 @@ class LocalCulturalController extends Controller
 
     protected function findModel($id)
     {
-        if (($model = LocalCultural::findOne(['id' => $id])) !== null) {
+        if (($model = LocalCultural::findOne($id)) !== null) {
             return $model;
         }
         throw new NotFoundHttpException('The requested page does not exist.');

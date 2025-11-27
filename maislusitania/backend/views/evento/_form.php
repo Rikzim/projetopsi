@@ -2,10 +2,13 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
+use yii\helpers\ArrayHelper;
+use common\models\LocalCultural;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Evento */
+/* @var $model backend\models\EventoForm */
 /* @var $form yii\bootstrap4\ActiveForm */
+
 ?>
 
 <div class="evento-form">
@@ -18,13 +21,20 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'descricao')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'data_inicio')->textInput() ?>
+    <?= $form->field($model, 'data_inicio')->input('date') ?>
 
-    <?= $form->field($model, 'data_fim')->textInput() ?>
+    <?php if ($model->getCurrentImage()): ?>
+        <div class="form-group">
+            <label>Imagem Atual:</label>
+            <div>
+                <?= Html::img('@web/uploads/' . $model->getCurrentImage(), ['style' => 'max-width: 200px;', 'class' => 'img-thumbnail']) ?>
+            </div>
+        </div>
+    <?php endif; ?>
 
-    <?= $form->field($model, 'imagem')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'imagem')->fileInput(['accept' => 'image/*']) ?>
 
-    <?= $form->field($model, 'ativo')->textInput() ?>
+    <?= $form->field($model, 'ativo')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
