@@ -35,19 +35,15 @@ class InfiniteCarousel extends Widget
     {
         $this->registerAssets();
 
-        // Process items to build full image URLs
         $processedItems = array_map(function($item) {
             if (isset($item['image'])) {
-                // If image is just a filename (from backend uploads)
                 if (strpos($item['image'], '/') === false) {
-                    $item['image'] = 'http://localhost/projetopsi/maislusitania/backend/web/uploads/' . $item['image'];
+                    $item['image'] = Yii::getAlias('@uploadsUrl') . '/' . $item['image'];
                 }
-                // Otherwise keep the full path/URL as is
             }
             return $item;
         }, $this->items);
 
-        // resolve arrow URLs
         $prevUrl = Url::to($this->prevArrow);
         $nextUrl = Url::to($this->nextArrow);
 

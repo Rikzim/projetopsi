@@ -13,7 +13,7 @@ $this->registerCssFile('@web/css/noticia/noticia-view.css');
 
 <div class="site-index">
     <?= HeroSection::widget([
-            'backgroundImage' => $model->imagem,
+            'backgroundImage' => Yii::getAlias('@uploadsUrl') . '/' . $model->imagem,
             'title' => $model->titulo,
             'subtitle' => $model->resumo,
             'showOverlay' => false,

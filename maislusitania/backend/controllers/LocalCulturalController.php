@@ -4,14 +4,12 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\LocalCultural;
+use backend\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * LocalCulturalController implements the CRUD actions for LocalCultural model.
- */
 class LocalCulturalController extends Controller
 {
     /**
@@ -52,76 +50,120 @@ class LocalCulturalController extends Controller
      */
     public function actionView($id)
     {
+        $horario = $this->findModel($id)->getHorarios()->all();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'horario' => $horario,
         ]);
     }
 
-    /**
-     * Creates a new LocalCultural model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $model = new LocalCultural();
+        $uploadForm = new UploadForm();
+        $horario = new \common\models\Horario();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if (
+                $model->load(Yii::$app->request->post()) &&
+                $horario->load(Yii::$app->request->post())
+            ) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        $model->imagem_principal = $fileName;
+                    }
+                }
+                if ($model->save(false)) {
+                    $horario->local_cultural_id = $model->id;
+                    $horario->save(false);
+
+                    Yii::$app->session->setFlash('success', 'Local Cultural criado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao criar Local Cultural.');
+                }
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
+            'horario' => $horario,
         ]);
     }
 
-    /**
-     * Updates an existing LocalCultural model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $uploadForm = new UploadForm();
+        $horario = new \common\models\Horario();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if (
+                $model->load(Yii::$app->request->post()) &&
+                $horario->load(Yii::$app->request->post())
+            ) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        // Remove old image if exists
+                        if ($model->imagem_principal) {
+                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->imagem_principal;
+                            if (file_exists($oldPath)) {
+                                unlink($oldPath);
+                            }
+                        }
+                        $model->imagem_principal = $fileName;
+                    }
+                }
+                if ($model->save(false)) {
+                    $horario->local_cultural_id = $model->id;
+                    $horario->save(false);
+
+                    Yii::$app->session->setFlash('success', 'Local Cultural atualizado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao atualizar Local Cultural.');
+                }
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
+            'horario' => $horario,
         ]);
     }
 
-    /**
-     * Deletes an existing LocalCultural model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        // Delete image if exists
+        if ($model->imagem_principal) {
+            $uploadPath = Yii::getAlias('@backend/web/uploads/');
+            $imagePath = $uploadPath . $model->imagem_principal;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        $model->delete();
+        Yii::$app->session->setFlash('success', 'Local Cultural deletado com sucesso!');
 
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the LocalCultural model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return LocalCultural the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = LocalCultural::findOne($id)) !== null) {
             return $model;
         }
-
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
