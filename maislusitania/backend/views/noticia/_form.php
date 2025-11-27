@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 use common\models\LocalCultural;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\NoticiaForm */
@@ -21,10 +22,13 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
             <?= $form->field($model, 'titulo')->textInput(['maxlength' => true, 'placeholder' => 'Título da notícia']) ?>
         </div>
         <div class="col-md-4">
-            <?= $form->field($model, 'local_id')->dropDownList(
-                $locais,
-                ['prompt' => 'Selecione o Local Cultural...']
-            ) ?>
+            <?= $form->field($model, 'local_id')->widget(Select2::class, [
+            'data' => $locais,
+            'options' => ['placeholder' => 'Selecione o local cultural...'],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
         </div>
         <div class="col-md-12">
             <?= $form->field($model, 'resumo')->textInput(['maxlength' => true, 'placeholder' => 'Resumo da notícia']) ?>
