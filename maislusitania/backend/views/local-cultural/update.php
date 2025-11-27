@@ -1,13 +1,16 @@
 <?php
 
+use yii\helpers\Html;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\LocalCultural */
 /* @var $uploadForm backend\models\UploadForm */
 /* @var $horario common\models\Horario */
 
-$this->title = 'Update Local Cultural: ' . $model->id;
+
+$this->title = 'Update Local Cultural: ' . $model->getLocalCultural()->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->getLocalCultural()->nome, 'url' => ['view', 'id' => $model->getLocalCultural()->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 
@@ -20,11 +23,15 @@ $this->params['breadcrumbs'][] = 'Update';
                         'model' => $model,
                         'uploadForm' => $uploadForm,
                         'horario' => $horario,
+
                     ]) ?>
+
                 </div>
+                <!--.card-body-->
             </div>
+            <!--.card-->
         </div>
-        <!--.card-body-->
+        <!--.col-md-12-->
     </div>
-    <!--.card-->
+    <!--.row-->
 </div>

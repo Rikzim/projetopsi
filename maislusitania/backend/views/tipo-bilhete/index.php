@@ -11,6 +11,7 @@ use yii\grid\GridView;
 
 $this->title = 'Tipo Bilhetes';
 $this->params['breadcrumbs'][] = $this->title;
+$this->registerCssFile('@web/css/local-cultural/index.css');
 ?>
 <div class="tipo-bilhete-index">
 
