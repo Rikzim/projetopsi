@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\models;
+namespace backend\controllers;
 
 use Yii;
 use common\models\Noticia;
@@ -9,7 +9,6 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use Yii;
 
 /**
  * NoticiaController implements the CRUD actions for Noticia model.
@@ -67,27 +66,27 @@ class NoticiaController extends Controller
     public function actionCreate()
     {
         $model = new Noticia();
-    $uploadForm = new UploadForm();
+        $uploadForm = new UploadForm();
 
-    if (Yii::$app->request->isPost) {
-        if ($model->load(Yii::$app->request->post())) {
-            $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
-            if ($uploadForm->imageFile && $uploadForm->validate()) {
-                $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
-                $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
-                if ($uploadForm->imageFile->saveAs($uploadPath)) {
-                    $model->imagem = $fileName;
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post())) {
+                $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        $model->imagem = $fileName;
+                    }
                 }
+                if ($model->destaque == 1) {
+                    \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                }
+                if ($model->save(false)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            } else {
+                $model->loadDefaultValues();
             }
-            if ($model->destaque == 1) {
-                \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
-            }
-            if ($model->save(false)) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
     }
 
     return $this->render('create', [
