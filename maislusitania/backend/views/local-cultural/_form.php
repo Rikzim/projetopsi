@@ -14,7 +14,7 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
 ?>
 
 <div class="local-cultural-form">
-
+    
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <!-- Seção: Informações Principais -->
