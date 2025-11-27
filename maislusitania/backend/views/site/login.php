@@ -73,9 +73,10 @@ $this->title = 'Login - Back Office';
                             <?= Html::activeCheckbox($model, 'rememberMe', [
                                 'class' => 'custom-control-input',
                                 'id' => 'rememberMe',
+                                'label' => 'Lembrar-me',
                                 'uncheck' => null
                             ]) ?>
-                            <label class="custom-control-label" for="rememberMe">Lembrar-me</label>
+                            <label class="custom-control-label" for="rememberMe"></label>
                         </div>
                     </div>
 

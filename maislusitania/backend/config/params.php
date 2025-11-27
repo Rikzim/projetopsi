@@ -12,5 +12,8 @@ return [
                 'js' => ['toastr/toastr.min.js']
             ],
         ]
-    ]
+        ],
+
+
+    'bsVersion' => '5.x',  
 ];

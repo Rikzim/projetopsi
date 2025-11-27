@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 use common\models\LocalCultural;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\NoticiaForm */
@@ -21,10 +22,13 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
             <?= $form->field($model, 'titulo')->textInput(['maxlength' => true, 'placeholder' => 'Título da notícia']) ?>
         </div>
         <div class="col-md-4">
-            <?= $form->field($model, 'local_id')->dropDownList(
-                $locais,
-                ['prompt' => 'Selecione o Local Cultural...']
-            ) ?>
+            <?= $form->field($model, 'local_id')->widget(Select2::class, [
+            'data' => $locais,
+            'options' => ['placeholder' => 'Selecione o local cultural...'],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
         </div>
         <div class="col-md-12">
             <?= $form->field($model, 'resumo')->textInput(['maxlength' => true, 'placeholder' => 'Resumo da notícia']) ?>
@@ -65,14 +69,21 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
     </div>
 
     <hr>
-
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-toggle-on"></i> Status</h5>
     <div class="row">
-        <div class="col-md-4">
-            <?= $form->field($model, 'ativo')->dropDownList(
-                [0 => 'Inativo', 1 => 'Ativo'],
-                ['prompt' => 'Selecione o status...']
-            ) ?>
+        <div class="col-md-6">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <?= $form->field($model, 'ativo')->checkbox([
+                        'template' => "<div class=\"custom-control custom-switch\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+                        'class' => 'custom-control-input',
+                        'labelOptions' => ['class' => 'custom-control-label']
+                    ]) ?>
+                    <small class="text-muted d-block mt-2">
+                        <i class="fas fa-info-circle"></i> Se desativado, a notícia não aparecerá no frontend.
+                    </small>
+                </div>
+            </div>
         </div>
     </div>
 

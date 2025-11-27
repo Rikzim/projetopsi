@@ -7,6 +7,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use common\models\User;
+use common\models\LocalCultural;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.
@@ -69,29 +72,7 @@ class ReservaController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-
-    /**
-     * Creates a new Reserva model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Reserva();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
+     
     /**
      * Updates an existing Reserva model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -103,12 +84,25 @@ class ReservaController extends Controller
     {
         $model = $this->findModel($id);
 
+        $utilizadores = ArrayHelper::map(
+            User::find()->where(['status' => User::STATUS_ACTIVE])->all(),
+            'id',
+            'username'
+        );
+        $locais = ArrayHelper::map(
+            LocalCultural::find()->all(),
+            'id',
+            'nome'
+        );
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'utilizadores' => $utilizadores,
+            'locais' => $locais,
         ]);
     }
 
