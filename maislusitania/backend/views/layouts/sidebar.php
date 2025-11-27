@@ -59,11 +59,10 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                         ]
                     ],
                     [
-                        'label' => 'Reservas e Bilhetes',
+                        'label' => 'Reservas',
                         'icon' => 'ticket-alt',
                         'items' => [
                             ['label' => 'Reservas', 'icon' => 'calendar-check', 'iconStyle' => 'far', 'url' => ['reserva/index']],
-                            ['label' => 'Tipos de Bilhetes', 'icon' => 'tags', 'iconStyle' => 'fas', 'url' => ['tipo-bilhete/index']],
                         ]
                     ],
                     [
