@@ -9,7 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
-
+use backend\models\UploadForm;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * EventoController implements the CRUD actions for Evento model.
@@ -67,13 +68,35 @@ class EventoController extends Controller
     public function actionCreate()
     {
         $model = new Evento();
+        $uploadForm = new UploadForm();
+        
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if (
+                $model->load(Yii::$app->request->post()) 
+            ) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        $model->imagem = $fileName;
+                    }
+                }
+                if ($model->save(false)) {
+                   
+
+                    Yii::$app->session->setFlash('success', 'Evento criado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao criar Evento.');
+                }
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
@@ -87,13 +110,41 @@ class EventoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $uploadForm = new UploadForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if (
+                $model->load(Yii::$app->request->post())
+               
+            ) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        // Remove old image if exists
+                        if ($model->imagem) {
+                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->imagem;
+                            if (file_exists($oldPath)) {
+                                unlink($oldPath);
+                            }
+                        }
+                        $model->imagem= $fileName;
+                    }
+                }
+                if ($model->save(false)) {
+
+                    Yii::$app->session->setFlash('success', 'Evento atualizado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao atualizar Evento.');
+                }
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
