@@ -65,4 +65,12 @@ class UserProfile extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
+    /**
+     * Obter a imagem atual do evento
+     * @return string|null
+     */
+    public function getCurrentImage()
+    {
+        return $this->imagem_perfil;
+    }
 }

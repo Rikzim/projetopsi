@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <?=$this->render('_form', [
+                    <?= $this->render('_form', [
                         'model' => $model
                     ]) ?>
                 </div>
@@ -24,4 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <!--.card-body-->
     </div>
     <!--.card-->
+
+
 </div>
