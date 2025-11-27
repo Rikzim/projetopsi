@@ -1,26 +1,33 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $model common\models\LocalCultural */
+use yii\helpers\Html;
 
-$this->title = 'Update Local Cultural: ' . $model->id;
+/* @var $this yii\web\View */
+/* @var $model backend\models\LocalCulturalForm */
+
+$this->title = 'Update Local Cultural: ' . $model->getLocalCultural()->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->getLocalCultural()->nome, 'url' => ['view', 'id' => $model->getLocalCultural()->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 
 <div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <?=$this->render('_form', [
-                        'model' => $model
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1><?= Html::encode($this->title) ?></h1>
+
+                    <?= $this->render('_form', [
+                        'model' => $model,
                     ]) ?>
+
                 </div>
+                <!--.card-body-->
             </div>
+            <!--.card-->
         </div>
-        <!--.card-body-->
+        <!--.col-md-12-->
     </div>
-    <!--.card-->
+    <!--.row-->
 </div>

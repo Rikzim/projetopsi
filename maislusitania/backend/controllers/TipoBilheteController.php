@@ -2,7 +2,8 @@
 
 namespace backend\controllers;
 
-use common\Models\TipoBilhete;
+use common\models\TipoBilhete;
+use common\models\LocalCultural;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -36,24 +37,26 @@ class TipoBilheteController extends Controller
      *
      * @return string
      */
-    public function actionIndex($id)
+    public function actionIndex($local_id)
     {
+        // Verificar se o local existe
+        $localCultural = LocalCultural::findOne($local_id);
+        if ($localCultural === null) {
+            throw new NotFoundHttpException('Local Cultural não encontrado.');
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => TipoBilhete::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
+            'query' => TipoBilhete::find()->where(['local_id' => $local_id]),
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_DESC,
+                    'preco' => SORT_DESC,
                 ]
             ],
-            */
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'localCultural' => $localCultural,
         ]);
     }
 
