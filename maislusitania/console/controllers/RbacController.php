@@ -249,6 +249,7 @@ class RbacController extends Controller
         $auth->addChild($gestor, $editSchedule);
         $auth->addChild($gestor, $deleteSchedule);
         
+        
         // Role: Admin (Sys Admin)
         $admin = $auth->createRole('admin');
         $admin->description = 'Administrador - Acesso total ao sistema';

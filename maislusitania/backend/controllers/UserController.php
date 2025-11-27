@@ -59,12 +59,22 @@ class UserController extends Controller
             return false;
         }
 
-        // Verificação adicional: apenas admin pode gerir utilizadores
-        if (!Yii::$app->user->can('admin')) {
-            throw new ForbiddenHttpException('Acesso negado. Apenas administradores podem gerir utilizadores.');
+        // Permitir admin em tudo
+        if (Yii::$app->user->can('admin')) {
+            return true;
         }
 
-        return true;
+        // Permitir gestor editar só o próprio perfil
+        if (
+            $action->id === 'update' &&
+            Yii::$app->user->can('gestor') &&
+            Yii::$app->request->get('id') == Yii::$app->user->id
+        ) {
+            return true;
+        }
+
+        // Bloquear tudo o resto
+        throw new ForbiddenHttpException('Acesso negado.');
     }
     /**
      * Lists all User models.
@@ -109,7 +119,7 @@ class UserController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $user = $model->signup();
-                
+
                 if ($user) {
                     Yii::$app->session->setFlash('success', 'Utilizador criado com sucesso!');
                     return $this->redirect(['view', 'id' => $user->id]);
@@ -133,8 +143,13 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
+        // Se não for admin, só pode editar o próprio perfil
+        if (!Yii::$app->user->can('admin') && Yii::$app->user->id != $id) {
+            throw new \yii\web\ForbiddenHttpException('Não tem permissão para editar este utilizador.');
+        }
+
         $model = new UpdateForm();
-        
+
         if (!$model->loadUser($id)) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
@@ -165,36 +180,35 @@ class UserController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        
+
         try {
             // Buscar o perfil do utilizador
             $userProfile = $model->userProfile;
-            
+
             // Deletar imagem de perfil se existir
             if ($userProfile && $userProfile->imagem_perfil) {
                 $uploadPath = Yii::getAlias('@backend/web/uploads/');
                 $imagePath = $uploadPath . $userProfile->imagem_perfil;
-                
+
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
                 }
             }
-            
+
             // Deletar perfil do utilizador
             if ($userProfile) {
                 $userProfile->delete();
             }
-            
+
             // Remover todas as roles do utilizador
             $auth = Yii::$app->authManager;
             $auth->revokeAll($model->id);
-            
+
             // Deletar utilizador
             if (!$model->delete()) {
                 throw new \Exception('Erro ao deletar utilizador');
             }
             Yii::$app->session->setFlash('success', 'Utilizador deletado com sucesso!');
-            
         } catch (\Exception $e) {
             Yii::$app->session->setFlash('error', 'Erro ao deletar utilizador: ' . $e->getMessage());
         }

@@ -75,7 +75,7 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                         ])
                     ],
                     ['label' => 'MEU PERFIL', 'header' => true],
-                    ['label' => 'Gerir Perfil', 'icon' => 'user-cog', 'iconStyle' => 'fas', 'url' => ['user-profile/update', 'id' => $identity->id]],
+                    ['label' => 'Gerir Perfil', 'icon' => 'user-cog', 'iconStyle' => 'fas', 'url' => ['user/update', 'id' => $identity->id]],
                     ['label' => 'Sair', 'icon' => 'sign-out-alt', 'url' => ['site/logout'], 'template' => '<a class="nav-link" href="{url}" data-method="post">{icon} {label}</a>'],
                 ],
             ]);
