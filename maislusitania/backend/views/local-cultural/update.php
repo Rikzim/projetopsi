@@ -8,10 +8,7 @@ use yii\helpers\Html;
 /* @var $horario common\models\Horario */
 
 
-$this->title = 'Update Local Cultural: ' . $model->getLocalCultural()->nome;
-$this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->getLocalCultural()->nome, 'url' => ['view', 'id' => $model->getLocalCultural()->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Update Local Cultural: ' . $model->nome;
 ?>
 
 <div class="container-fluid">
