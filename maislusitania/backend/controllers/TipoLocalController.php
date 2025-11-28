@@ -10,6 +10,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
+use backend\models\UploadForm;
+use Yii;
 
 /**
  * TipoLocalController implements the CRUD actions for TipoLocal model.
@@ -94,8 +97,6 @@ class TipoLocalController extends Controller
                 }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-        } else {
-            $model->loadDefaultValues();
         }
 
         return $this->render('create', [
