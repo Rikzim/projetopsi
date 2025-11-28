@@ -217,7 +217,7 @@ $this->title = 'Mapa de Locais Culturais';
                     <h3>Legendas</h3>
                     <?php foreach ($types as $type): ?>
                         <div class="legenda-item">
-                            <img class="legenda-icon" src="<?= Html::encode($type['icone']) ?>" alt="">
+                        <img class="legenda-icon" src="<?= Html::encode(Yii::getAlias('@uploadsUrl') . '/' . $type['icone']) ?>" alt="">
                             <span class="legenda-nome"><?= Html::encode($type['nome']) ?></span>
                         </div>
                     <?php endforeach; ?>

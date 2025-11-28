@@ -7,6 +7,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
+use backend\models\UploadForm;
+use Yii;
 
 /**
  * TipoLocalController implements the CRUD actions for TipoLocal model.
@@ -78,17 +81,35 @@ class TipoLocalController extends Controller
     public function actionCreate()
     {
         $model = new TipoLocal();
+        $uploadForm = new UploadForm();
+        
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if (
+                $model->load(Yii::$app->request->post()) 
+            ) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        $model->icone = $fileName;
+                    }
+                }
+                if ($model->save(false)) {
+                   
+
+                    Yii::$app->session->setFlash('success', 'TipoLocal criado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao criar TipoLocal.');
+                }
             }
-        } else {
-            $model->loadDefaultValues();
         }
 
         return $this->render('create', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
@@ -102,13 +123,41 @@ class TipoLocalController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $uploadForm = new UploadForm();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if (
+                $model->load(Yii::$app->request->post())
+               
+            ) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
+                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
+                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                        // Remove old image if exists
+                        if ($model->icone) {
+                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->icone;
+                            if (file_exists($oldPath)) {
+                                unlink($oldPath);
+                            }
+                        }
+                        $model->icone = $fileName;
+                    }
+                }
+                if ($model->save(false)) {
+
+                    Yii::$app->session->setFlash('success', 'TipoLocal atualizado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao atualizar TipoLocal.');
+                }
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
