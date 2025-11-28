@@ -36,32 +36,36 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'contentOptions' => ['class' => 'text-center align-middle'],
                             ],
 
-                            // Coluna de Ícone (Visualização gráfica)
+                            // Coluna de Imagem
                             [
                                 'attribute' => 'icone',
-                                'label' => 'Ícone',
+                                'label' => 'Imagem',
                                 'format' => 'raw',
-                                'value' => function($model) {
-                                    // Assume que o campo 'icone' guarda uma classe do FontAwesome (ex: 'fas fa-landmark')
-                                    // Se estiver vazio, mostra um ícone genérico
-                                    $iconClass = $model->icone ? $model->icone : 'fas fa-tag';
-                                    return Html::tag('div', 
-                                        Html::tag('i', '', ['class' => $iconClass . ' fa-lg']), 
-                                        [
-                                            'class' => 'text-center text-primary',
-                                            'title' => $iconClass
-                                        ]
+                                'value' => function ($model) {
+                                    if ($model->icone) {
+                                        // Ajuste o caminho '@uploadsUrl' conforme a sua configuração real
+                                        return Html::img(
+                                            Yii::getAlias('@uploadsUrl') . '/' . $model->icone,
+                                            [
+                                                'style' => 'width: 80px; height: 60px; object-fit: cover; border-radius: 4px;',
+                                                'class' => 'img-thumbnail'
+                                            ]
+                                        );
+                                    }
+                                    return Html::tag(
+                                        'div',
+                                        '<i class="fas fa-calendar-day fa-2x text-muted"></i>',
+                                        ['style' => 'width: 80px; height: 60px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px;']
                                     );
                                 },
-                                'headerOptions' => ['style' => 'width: 80px; text-align: center;'],
+                                'headerOptions' => ['style' => 'width: 100px; text-align: center;'],
                                 'contentOptions' => ['class' => 'text-center align-middle'],
                             ],
-
                             // Coluna de Nome
                             [
                                 'attribute' => 'nome',
                                 'format' => 'raw',
-                                'value' => function($model) {
+                                'value' => function ($model) {
                                     return Html::tag('strong', Html::encode($model->nome), ['class' => 'text-dark']);
                                 },
                                 'contentOptions' => ['class' => 'align-middle'],

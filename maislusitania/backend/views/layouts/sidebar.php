@@ -38,7 +38,7 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                 <?php endif; ?>
             </div>
             <div class="info">
-                <a href="site/profile" class="d-block"><?= Html::encode($name) ?></a>
+                <a href="<?= \yii\helpers\Url::to(['user/update', 'id' => $identity->id]) ?>" class="d-block"><?= Html::encode($name) ?></a>
             </div>
         </div>
 
