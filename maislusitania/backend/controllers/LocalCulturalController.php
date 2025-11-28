@@ -113,6 +113,11 @@ class LocalCulturalController extends Controller
         $model = $this->findModel($id);
         $uploadForm = new UploadForm();
         $horario = $model->getHorarios()->one();
+        
+        if (!$horario) {
+            $horario = new Horario();
+        }
+
 
         if (Yii::$app->request->isPost) {
             if (

@@ -173,6 +173,9 @@ $this->registerCss("
                                 Sem avaliações
                             <?php endif; ?>
                         </div>
+                        <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="favorite-link">
+                            <img src="<?= Yii::getAlias('@web/images/icons/blue/icon-favorite.svg') ?>" alt="">
+                        </a>
                         <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
                             Ver Detalhes →
                         </a>
