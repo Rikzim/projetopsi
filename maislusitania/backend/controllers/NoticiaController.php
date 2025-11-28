@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Noticia;
-use backend\models\UploadForm;
+use common\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

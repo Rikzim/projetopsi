@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'value' => function($model) {
                                     if ($model->imagem) {
                                         return Html::img(
-                                            Yii::getAlias('@uploadsUrl') . '/' . $model->imagem,
+                                            '/uploads/' . $model->imagem,
                                             [
                                                 'style' => 'width: 80px; height: 60px; object-fit: cover; border-radius: 4px;',
                                                 'class' => 'img-thumbnail'

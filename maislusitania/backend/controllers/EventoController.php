@@ -9,7 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
-use backend\models\UploadForm;
+use common\models\UploadForm;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

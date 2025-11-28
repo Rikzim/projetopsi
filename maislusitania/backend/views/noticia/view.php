@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="text-center">
                                 <?php if ($model->imagem): ?>
                                     <?= Html::img(
-                                        Yii::getAlias('@uploadsUrl') . '/' . $model->imagem,
+                                        '/uploads/' . $model->imagem,
                                         [
                                             'class' => 'img-fluid rounded shadow-sm',
                                             'style' => 'width: 100%; max-height: 400px; object-fit: cover;',

@@ -8,7 +8,7 @@ use common\models\Horario;
 use common\models\Distrito;
 use common\models\TipoLocal;
 use backend\models\LocalCulturalSearch;
-use backend\models\UploadForm;
+use common\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -113,6 +113,10 @@ class LocalCulturalController extends Controller
         $model = $this->findModel($id);
         $uploadForm = new UploadForm();
         $horario = $model->getHorarios()->one();
+
+        if(!$horario) {
+            $horario = new Horario();
+        }
 
         if (Yii::$app->request->isPost) {
             if (

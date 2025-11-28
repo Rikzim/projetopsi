@@ -52,7 +52,7 @@ use yii\bootstrap4\ActiveForm;
                 <div class="card mb-3">
                     <div class="card-header p-2">Imagem Atual</div>
                     <div class="card-body text-center p-2">
-                        <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $model->imagem, [
+                        <?= Html::img('/uploads/' . $model->imagem, [
                             'style' => 'max-height: 150px; width: auto;', 
                             'class' => 'img-fluid rounded'
                         ]) ?>

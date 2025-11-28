@@ -86,7 +86,7 @@ class CustomNavBar extends Widget
             
             if ($profile && !empty($profile->imagem_perfil)) {
                 // Use the backend URL path for uploaded images
-                $userImage = Yii::getAlias('@uploadsUrl') . '/' . $profile->imagem_perfil;
+                $userImage = '/uploads/' . $profile->imagem_perfil;
             }
         }
 

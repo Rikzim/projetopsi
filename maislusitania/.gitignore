@@ -41,3 +41,11 @@ phpunit.phar
 /backend/web/index.php
 /backend/web/index-test.php
 /backend/web/robots.txt
+
+# Ignore the real files in frontend
+frontend/web/uploads/*
+!frontend/web/uploads/.gitkeep
+
+# COMPLETELY IGNORE the backend symlink and its contents
+backend/web/uploads
+backend/web/uploads/*
