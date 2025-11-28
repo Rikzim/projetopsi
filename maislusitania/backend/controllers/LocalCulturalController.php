@@ -82,10 +82,9 @@ class LocalCulturalController extends Controller
                 $horario->load(Yii::$app->request->post())
             ) {
                 $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
-                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                if ($uploadForm->imageFile) {
                     $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
-                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
-                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                    if ($uploadForm->upload($fileName)) {
                         $model->imagem_principal = $fileName;
                     }
                 }
@@ -124,20 +123,15 @@ class LocalCulturalController extends Controller
                 $horario->load(Yii::$app->request->post())
             ) {
                 $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
-                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                if ($uploadForm->imageFile) {
                     $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
-                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
-                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
-                        // Remove old image if exists
-                        if ($model->imagem_principal) {
-                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->imagem_principal;
-                            if (file_exists($oldPath)) {
-                                unlink($oldPath);
-                            }
-                        }
+                    if ($uploadForm->upload($fileName)) {
                         $model->imagem_principal = $fileName;
                     }
+
+                    //FALTA REMOVER IMAGEM ANTIGA
                 }
+
                 if ($model->save(false)) {
                     $horario->local_id = $model->id;
                     $horario->save(false);
@@ -161,10 +155,12 @@ class LocalCulturalController extends Controller
     {
         $model = $this->findModel($id);
 
-        // Delete image if exists
+        //ISTO NAO ME PARECE ESTAR A FUNCIONAR CORRETAMENTE
+        // Delete associated image file
         if ($model->imagem_principal) {
-            $uploadPath = Yii::getAlias('@backend/web/uploads/');
-            $imagePath = $uploadPath . $model->imagem_principal;
+            $uploadPath = Yii::getAlias('@uploadPath');
+            $imagePath = $uploadPath . DIRECTORY_SEPARATOR . $model->imagem_principal;
+            
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
@@ -177,7 +173,7 @@ class LocalCulturalController extends Controller
         }
 
         $model->delete();
-        Yii::$app->session->setFlash('success', 'Local Cultural deletado com sucesso!');
+        Yii::$app->session->setFlash('success', 'Local Cultural apagado com sucesso!');
 
         return $this->redirect(['index']);
     }

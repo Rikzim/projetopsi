@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\web\UploadedFile;
 use common\models\User;
 use common\models\UserProfile;
+use common\models\UploadForm;
 
 /**
  * Update form
@@ -175,30 +176,6 @@ class UpdateForm extends Model
             } else {
                 throw new \Exception('Role não encontrada: ' . $this->role);
             }
-
-            // Upload da nova imagem
-            $imageFile = UploadedFile::getInstance($this, 'imagem_perfil');
-            $imageName = $this->current_image;
-            
-            if ($imageFile) {
-                $uploadPath = Yii::getAlias('@backend/web/uploads/');
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                
-                // Deletar imagem antiga se existir
-                if ($this->current_image && file_exists($uploadPath . $this->current_image)) {
-                    unlink($uploadPath . $this->current_image);
-                }
-                
-                $imageName = uniqid() . '_' . $imageFile->name;
-                $filePath = $uploadPath . $imageName;
-                
-                if (!$imageFile->saveAs($filePath)) {
-                    throw new \Exception('Erro ao fazer upload da imagem');
-                }
-            }
-
             // Atualizar ou criar perfil do utilizador
             if ($this->_userProfile === null) {
                 $this->_userProfile = new UserProfile();
@@ -207,7 +184,7 @@ class UpdateForm extends Model
 
             $this->_userProfile->primeiro_nome = $this->primeiro_nome;
             $this->_userProfile->ultimo_nome = $this->ultimo_nome;
-            $this->_userProfile->imagem_perfil = $imageName;
+            $this->_userProfile->imagem_perfil = $this->imagem_perfil ?: $this->current_image;
 
             if (!$this->_userProfile->save()) {
                 throw new \Exception('Erro ao atualizar perfil: ' . json_encode($this->_userProfile->errors));
@@ -218,5 +195,13 @@ class UpdateForm extends Model
             $this->addError('username', $e->getMessage());
             return false;
         }
+    }
+
+    public function getImage(){
+        if (empty($this->imagem_perfil)) {
+            return null;
+        }
+
+        return '/uploads/' . $this->imagem_perfil;
     }
 }

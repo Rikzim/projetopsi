@@ -16,19 +16,21 @@ class UploadForm extends Model
     public function rules()
     {
         return [
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, webp'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, webp, svg'],
         ];
     }
 
-    public function upload()
+    public function upload($fileName)
     {
-        if ($this->validate()) {
-            $uploadPath = \Yii::getAlias('@uploadPath') ;
+        if ($this->validate()) 
+        {
+            $uploadPath = \Yii::getAlias('@uploadPath');
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
-            $this->imageFile->saveAs($uploadPath . '/' . $fileName);
-            return $fileName;
+            if ($this->imageFile->saveAs($uploadPath . '/' . $fileName)) {
+                return $fileName;
+            }
         }
         return false;
     }

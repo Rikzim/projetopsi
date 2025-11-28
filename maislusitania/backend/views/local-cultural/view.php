@@ -41,7 +41,7 @@ $this->title = $model->nome;
                             <div class="text-center">
                                 <?php if ($model->imagem_principal): ?>
                                     <?= Html::img(
-                                        '/uploads/' . $model->imagem_principal,
+                                        $model->getImage(),
                                         [
                                             'class' => 'img-fluid rounded shadow-sm',
                                             'style' => 'width: 100%; max-height: 400px; object-fit: cover;',

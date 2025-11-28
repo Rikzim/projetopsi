@@ -42,21 +42,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'label' => 'Ícone',
                                 'format' => 'raw',
                                 'value' => function($model) {
-                                    // Assume que o campo 'icone' guarda uma classe do FontAwesome (ex: 'fas fa-landmark')
-                                    // Se estiver vazio, mostra um ícone genérico
-                                    $iconClass = $model->icone ? $model->icone : 'fas fa-tag';
-                                    return Html::tag('div', 
-                                        Html::tag('i', '', ['class' => $iconClass . ' fa-lg']), 
-                                        [
-                                            'class' => 'text-center text-primary',
-                                            'title' => $iconClass
-                                        ]
-                                    );
+                                    return Html::img($model->getImage(), [
+                                        'style' => 'max-height: 40px; max-width: 40px; object-fit: contain;', 
+                                        'class' => 'img-thumbnail shadow-sm'
+                                    ]); 
                                 },
                                 'headerOptions' => ['style' => 'width: 80px; text-align: center;'],
                                 'contentOptions' => ['class' => 'text-center align-middle'],
                             ],
-
                             // Coluna de Nome
                             [
                                 'attribute' => 'nome',

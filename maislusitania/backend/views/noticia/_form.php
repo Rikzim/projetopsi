@@ -43,11 +43,11 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Mídia e Publicação</h5>
     <div class="row align-items-center">
         <div class="col-md-6">
-            <?php if ($uploadForm->imageFile) : ?>
+            <?php if ($model->imagem) : ?>
                 <div class="card mb-3">
                     <div class="card-header p-2">Imagem Atual</div>
                     <div class="card-body text-center p-2">
-                        <?= Html::img('/uploads/' . $uploadForm->imageFile, [
+                        <?= Html::img('/uploads/' . $model->getImage(), [
                             'style' => 'max-height: 150px; width: auto;',
                             'class' => 'img-fluid rounded'
                         ]) ?>

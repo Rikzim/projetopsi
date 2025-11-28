@@ -41,28 +41,25 @@ use yii\widgets\ActiveForm;
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'icone')->fileInput([
-                                    'accept' => 'image/*',
-                                    'class' => 'form-control-file mt-2'
+                                <?= $form->field($uploadForm, 'imageFile')->fileInput([
+                                    (['class' => 'form-control-file'])
                                 ])->label('Ícone / Imagem') ?>
                                 <small class="text-muted">
                                     <i class="fas fa-info-circle mr-1"></i> Carregue uma imagem para representar este tipo (PNG, JPG).
                                 </small>
                             </div>
 
-                            <?php if (method_exists($model, 'getCurrentImage') && $model->getCurrentImage()): ?>
                                 <div class="col-md-6">
                                     <div class="card bg-light mb-0">
                                         <div class="card-body text-center p-2">
                                             <label class="d-block text-muted small mb-2">Imagem Atual</label>
-                                            <?= Html::img('@web/uploads/' . $model->getCurrentImage(), [
+                                            <?= Html::img($model->getImage(), [
                                                 'style' => 'max-height: 100px; max-width: 100%; object-fit: contain;', 
                                                 'class' => 'img-thumbnail shadow-sm'
                                             ]) ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

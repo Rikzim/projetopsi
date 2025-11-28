@@ -62,13 +62,12 @@ class TipoLocal extends \yii\db\ActiveRecord
     {
         return $this->hasMany(LocalCultural::class, ['tipo_id' => 'id']);
     }
-
-    /**
-     * Obter a imagem atual do evento
-     * @return string|null
-     */
-    public function getCurrentImage()
+    public function getImage()
     {
-        return $this->icone;
+        if (empty($this->icone)) {
+            return null;
+        }
+
+        return '/uploads/' . $this->icone;
     }
 }

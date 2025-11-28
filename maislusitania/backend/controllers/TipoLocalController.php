@@ -2,7 +2,10 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\TipoLocal;
+use common\models\UploadForm;
+use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -78,9 +81,17 @@ class TipoLocalController extends Controller
     public function actionCreate()
     {
         $model = new TipoLocal();
+        $uploadForm = new UploadForm();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile) {
+                    $fileName = uniqid('marker_') . '.' . $uploadForm->imageFile->extension;
+                    if ($uploadForm->upload($fileName)) {
+                        $model->icone = $fileName;
+                    }
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -89,6 +100,7 @@ class TipoLocalController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
@@ -102,13 +114,28 @@ class TipoLocalController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $uploadForm = new UploadForm();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post()) && $model->save()) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile) {
+                    $fileName = uniqid('marker_') . '.' . $uploadForm->imageFile->extension;
+                    if ($uploadForm->upload($fileName)) {
+                        $model->icone = $fileName;
+                    }
+
+                    //FALTA REMOVER IMAGEM ANTIGA
+
+                    $model->save(false);
+                }
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
@@ -122,6 +149,8 @@ class TipoLocalController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        //FALTA REMOVER IMAGEM ASSOCIADA
 
         return $this->redirect(['index']);
     }

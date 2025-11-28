@@ -76,10 +76,9 @@ class EventoController extends Controller
                 $model->load(Yii::$app->request->post()) 
             ) {
                 $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
-                if ($uploadForm->imageFile && $uploadForm->validate()) {
-                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
-                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
-                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                if ($uploadForm->imageFile) {
+                    $fileName = uniqid('evento_') . '.' . $uploadForm->imageFile->extension;
+                    if ($uploadForm->upload($fileName)) {
                         $model->imagem = $fileName;
                     }
                 }
@@ -118,18 +117,10 @@ class EventoController extends Controller
                
             ) {
                 $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
-                if ($uploadForm->imageFile && $uploadForm->validate()) {
-                    $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
-                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
-                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
-                        // Remove old image if exists
-                        if ($model->imagem) {
-                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->imagem;
-                            if (file_exists($oldPath)) {
-                                unlink($oldPath);
-                            }
-                        }
-                        $model->imagem= $fileName;
+                if ($uploadForm->imageFile) {
+                    $fileName = uniqid('evento_') . '.' . $uploadForm->imageFile->extension;
+                    if ($uploadForm->upload($fileName)) {
+                        $model->imagem = $fileName;
                     }
                 }
                 if ($model->save(false)) {

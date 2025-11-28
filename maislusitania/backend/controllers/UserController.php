@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\UploadForm;
 use common\models\User;
 use backend\models\SignupForm;
 use backend\models\UserSearch;
@@ -115,11 +116,18 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new SignupForm();
+        $uploadForm = new UploadForm();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile) {
+                    $fileName = uniqid('userimage_') . '.' . $uploadForm->imageFile->extension;
+                    if ($uploadForm->upload($fileName)) {
+                        $model->imagem_perfil = $fileName;
+                    }
+                }
                 $user = $model->signup();
-
                 if ($user) {
                     Yii::$app->session->setFlash('success', 'Utilizador criado com sucesso!');
                     return $this->redirect(['view', 'id' => $user->id]);
@@ -131,6 +139,7 @@ class UserController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
@@ -149,6 +158,7 @@ class UserController extends Controller
         }
 
         $model = new UpdateForm();
+        $uploadForm = new UploadForm();
 
         if (!$model->loadUser($id)) {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -156,6 +166,14 @@ class UserController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
+                $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile) {
+                    $fileName = uniqid('userimage_') . '.' . $uploadForm->imageFile->extension;
+                    if ($uploadForm->upload($fileName)) {
+                        $model->imagem_perfil = $fileName;
+                    }
+                    //FALTA REMOVER IMAGEM ANTIGA
+                }
                 if ($model->update()) {
                     Yii::$app->session->setFlash('success', 'Utilizador atualizado com sucesso!');
                     return $this->redirect(['view', 'id' => $id]);
@@ -167,6 +185,7 @@ class UserController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 
@@ -185,10 +204,10 @@ class UserController extends Controller
             // Buscar o perfil do utilizador
             $userProfile = $model->userProfile;
 
-            // Deletar imagem de perfil se existir
+            // ISTO NAO PARECE ESTAR A FUNCIONAR, ACHO EU
             if ($userProfile && $userProfile->imagem_perfil) {
-                $uploadPath = Yii::getAlias('@backend/web/uploads/');
-                $imagePath = $uploadPath . $userProfile->imagem_perfil;
+                $uploadPath = Yii::getAlias('@uploadPath');
+                $imagePath = $uploadPath . DIRECTORY_SEPARATOR . $userProfile->imagem_perfil;
 
                 if (file_exists($imagePath)) {
                     unlink($imagePath);

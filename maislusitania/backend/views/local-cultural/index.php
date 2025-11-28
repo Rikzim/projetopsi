@@ -123,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'value' => function($model) {
                                     if ($model->imagem_principal) {
                                         return Html::img(
-                                            '/uploads/' . $model->imagem_principal,
+                                            $model->getImage(),
                                             [
                                                 'style' => 'width: 80px; height: 60px; object-fit: cover; border-radius: 4px;',
                                                 'class' => 'img-thumbnail'

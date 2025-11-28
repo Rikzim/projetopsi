@@ -45,8 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'value' => function ($model) {
                                     $profile = $model->userProfile;
                                     if ($profile && !empty($profile->imagem_perfil)) {
-                                        $imageUrl = Yii::getAlias('@web') . '/uploads/' . Html::encode($profile->imagem_perfil);
-                                        return Html::img($imageUrl, [
+                                        return Html::img($profile->getImage(), [
                                             'width' => '50', 
                                             'height' => '50', 
                                             'style' => 'object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;'

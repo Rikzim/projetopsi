@@ -70,16 +70,15 @@ class NoticiaController extends Controller
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
-                $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
-                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile) {
                     $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
-                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
-                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
+                    if ($uploadForm->upload($fileName)) {
                         $model->imagem = $fileName;
                     }
                 }
                 if ($model->destaque == 1) {
-                    \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                    Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
                 }
                 if ($model->save(false)) {
                     return $this->redirect(['view', 'id' => $model->id]);
@@ -104,20 +103,18 @@ class NoticiaController extends Controller
      */
     public function actionUpdate($id)
     {
-        
         $model = $this->findModel($id);
         $uploadForm = new UploadForm();
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
                 $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
-                if ($uploadForm->imageFile && $uploadForm->validate()) {
+                if ($uploadForm->imageFile) {
                     $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
-                    $uploadPath = Yii::getAlias('@backend/web/uploads/') . $fileName;
-                    if ($uploadForm->imageFile->saveAs($uploadPath)) {
-                        // Optional: remove old image
+                    if ($uploadForm->upload($fileName)) {
+                        // ACHO Q ISTO N FUNCIONA - VERIFICAR
                         if ($model->imagem) {
-                            $oldPath = Yii::getAlias('@backend/web/uploads/') . $model->imagem;
+                            $oldPath = Yii::getAlias('@uploadPath') . DIRECTORY_SEPARATOR . $model->imagem;
                             if (file_exists($oldPath)) {
                                 unlink($oldPath);
                             }
@@ -126,7 +123,7 @@ class NoticiaController extends Controller
                     }
                 }
                 if ($model->destaque == 1) {
-                    \common\models\Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
+                    Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
                 }
                 if ($model->save(false)) {
                     return $this->redirect(['view', 'id' => $model->id]);

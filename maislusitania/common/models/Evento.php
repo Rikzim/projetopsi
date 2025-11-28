@@ -85,8 +85,12 @@ class Evento extends \yii\db\ActiveRecord
      * Obter a imagem atual do evento
      * @return string|null
      */
-    public function getCurrentImage()
+    public function getImage()
     {
-        return $this->imagem;
+        if (empty($this->imagem)) {
+            return null;
+        }
+
+        return '/uploads/' . $this->imagem;
     }
 }
