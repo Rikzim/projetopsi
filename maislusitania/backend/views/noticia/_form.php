@@ -47,7 +47,7 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
                 <div class="card mb-3">
                     <div class="card-header p-2">Imagem Atual</div>
                     <div class="card-body text-center p-2">
-                        <?= Html::img('/uploads/' . $model->getImage(), [
+                        <?= Html::img($model->getImage(), [
                             'style' => 'max-height: 150px; width: auto;',
                             'class' => 'img-fluid rounded'
                         ]) ?>
