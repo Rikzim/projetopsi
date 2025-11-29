@@ -11,7 +11,7 @@ $this->registerCssFile('@web/css/noticia/noticia-view.css');
 ?>
 <div class="site-index">
     <?= HeroSection::widget([
-            'backgroundImage' => '/uploads/' . $model->imagem,
+            'backgroundImage' => $model->getImage(),
             'title' => $model->titulo,
             'subtitle' => $model->data_fim
                     ? Yii::$app->formatter->asDatetime($model->data_inicio, "dd MMM 'de' yyyy 'às' HH:mm") . ' - ' . Yii::$app->formatter->asDatetime($model->data_fim, "dd MMM 'de' yyyy 'às' HH:mm")

@@ -14,6 +14,12 @@ use frontend\widgets\CustomFooter;
 
 AppAsset::register($this);
 
+$this->registerLinkTag([
+    'rel' => 'icon',
+    'type' => 'image/svg+xml', // Change to 'image/x-icon' if using a .ico file
+    'href' => Yii::getAlias('@web/images/logo/logo-only.svg'), // Path to your image
+]);
+
 // Definir ações que não devem mostrar header/footer
 $currentAction = Yii::$app->controller->action->id;
 $authActions = ['login', 'signup', 'request-password-reset', 'reset-password', 'resend-verification-email'];
