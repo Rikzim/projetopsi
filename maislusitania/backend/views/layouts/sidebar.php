@@ -35,7 +35,7 @@ $hasImage = !empty($image);
                 <?php endif; ?>
             </div>
             <div class="info">
-                <a href="site/profile" class="d-block"><?= Html::encode($name) ?></a>
+                <a href="<?= $identity ? \yii\helpers\Url::to(['user/update', 'id' => $identity->id]) : '#' ?>" class="d-block"><?= Html::encode($name) ?></a>
             </div>
         </div>
 
