@@ -13,10 +13,10 @@ $this->title = 'Login - Back Office';
     <div class="row justify-content-center align-items-center min-vh-100">
         <div class="col-md-4">
             <div class="text-center mb-4">
-                <?= Html::img('@web/../../frontend/web/images/logo/logo.svg', [
+                <?= Html::img('@web/images/logo/alt-logo.svg', [
                     'alt' => 'Mais Lusitânia',
                     'class' => 'img-fluid',
-                    'style' => 'max-width: 200px;'
+                    'style' => 'width: 350px; max-width: 100%; height: auto;'
                 ]) ?>
             </div>
 
@@ -25,9 +25,10 @@ $this->title = 'Login - Back Office';
                     <?php if (!empty($error)): ?>
                         <div class="alert alert-danger mb-3">
                             <?= Html::encode($error) ?>
-                            <?= Html::a('Ir para Login Front', '../../../frontend/web/site/login', [
-    'class' => 'btn btn-outline-secondary btn-sm ml-2'
-]) ?>
+                            <?= Html::a('Ir para Login Front', '../../../frontend/web/site/login', 
+                                    [
+                                        'class' => 'btn btn-outline-secondary btn-sm ml-2'
+                                    ]) ?>
                         </div>
                     <?php endif; ?>
 
@@ -55,7 +56,7 @@ $this->title = 'Login - Back Office';
                     <?= $form->field($model, 'username', [
                         'template' => '{label}{input}{error}',
                     ])->textInput([
-                        'placeholder' => 'Digite seu utilizador',
+                        'placeholder' => 'Utilizador',
                         'class' => 'form-control form-control-lg',
                         'autocomplete' => 'username'
                     ])->label('Utilizador', ['class' => 'font-weight-bold']) ?>
@@ -63,12 +64,12 @@ $this->title = 'Login - Back Office';
                     <?= $form->field($model, 'password', [
                         'template' => '{label}{input}{error}',
                     ])->passwordInput([
-                        'placeholder' => 'Digite sua password',
+                        'placeholder' => 'Password',
                         'class' => 'form-control form-control-lg',
                         'autocomplete' => 'current-password'
                     ])->label('Password', ['class' => 'font-weight-bold']) ?>
 
-                    <div class="form-group">
+                    <div class="form-group mb-3 mt-3">
                         <div class="custom-control custom-checkbox">
                             <?= Html::activeCheckbox($model, 'rememberMe', [
                                 'class' => 'custom-control-input',
