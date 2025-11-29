@@ -16,7 +16,13 @@ class UploadForm extends Model
     public function rules()
     {
         return [
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, webp, svg'],
+            [
+            ['imageFile'], 'file', 'skipOnEmpty' => true, 
+                        'extensions' => 'png, jpg, jpeg, webp, svg',
+                        'checkExtensionByMimeType' => false, 
+                        'maxSize' => 2 * 1024 * 1024, 
+                        'tooBig' => 'O ficheiro não pode exceder 2MB.'
+                    ],
         ];
     }
 

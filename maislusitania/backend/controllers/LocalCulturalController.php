@@ -111,35 +111,35 @@ class LocalCulturalController extends Controller
     {
         $model = $this->findModel($id);
         $uploadForm = new UploadForm();
-        $horario = $model->getHorarios()->one();
-
-        if(!$horario) {
-            $horario = new Horario();
-        }
+        $horario = $model->getHorarios()->one() ?: new Horario();
 
         if (Yii::$app->request->isPost) {
-            if (
-                $model->load(Yii::$app->request->post()) &&
-                $horario->load(Yii::$app->request->post())
-            ) {
+            if ($model->load(Yii::$app->request->post())) {
+                
+                $horario->load(Yii::$app->request->post());
+
                 $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
                 if ($uploadForm->imageFile) {
+                    $oldImage = $model->imagem_principal; // Save old name
                     $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
+
                     if ($uploadForm->upload($fileName)) {
                         $model->imagem_principal = $fileName;
-                    }
 
-                    //FALTA REMOVER IMAGEM ANTIGA
+                        // APAGAR A IMAGEM ANTIGA
+                        $path = Yii::getAlias('/uploads/' . $oldImage);
+                        if ($oldImage && file_exists($path)) {
+                            unlink($path);
+                        }
+                    }
                 }
 
                 if ($model->save(false)) {
                     $horario->local_id = $model->id;
                     $horario->save(false);
 
-                    Yii::$app->session->setFlash('success', 'Local Cultural atualizado com sucesso!');
+                    Yii::$app->session->setFlash('success', 'Local Cultural atualizado!');
                     return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Erro ao atualizar Local Cultural.');
                 }
             }
         }

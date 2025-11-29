@@ -143,7 +143,7 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
             <?php endif; ?>
             
             <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
-            <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
+            <small class="text-muted">Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.</small>
         </div>
         
         <div class="col-md-6">
