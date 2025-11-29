@@ -132,6 +132,7 @@ class UpdateForm extends Model
             $this->primeiro_nome = $this->_userProfile->primeiro_nome;
             $this->ultimo_nome = $this->_userProfile->ultimo_nome;
             $this->current_image = $this->_userProfile->imagem_perfil;
+            $this->imagem_perfil = $this->_userProfile->imagem_perfil;
         }
 
         return true;
