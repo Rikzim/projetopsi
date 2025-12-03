@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="text-center">
                                 <?php if ($model->imagem): ?>
                                     <?= Html::img(
-                                        '/uploads/' . $model->imagem,
+                                        $model->getImage(),
                                         [
                                             'class' => 'img-fluid rounded shadow-sm',
                                             'style' => 'width: 100%; max-height: 400px; object-fit: cover;',
@@ -86,11 +86,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ],
                                     [
                                         'attribute' => 'data_inicio',
-                                        'format' => ['date', 'php:d/m/Y H:i'],
-                                        'value' => function($model) {
-                                            return '<i class="far fa-clock mr-2 text-muted"></i>' . Yii::$app->formatter->asDate($model->data_inicio, 'php:d/m/Y H:i');
-                                        },
                                         'format' => 'raw',
+                                        'value' => $model->data_inicio ? '<i class="far fa-clock mr-2 text-muted"></i>' . Yii::$app->formatter->asDate($model->data_inicio, 'php:d/m/Y H:i') : '<span class="text-muted">-</span>',
                                     ],
                                     [
                                         'attribute' => 'data_fim',
