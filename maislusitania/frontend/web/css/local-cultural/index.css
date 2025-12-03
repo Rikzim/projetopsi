@@ -312,6 +312,16 @@ body > .wrap > .container {
     font-size: 16px;
 }
 
+.favorite-link img {
+    border: 2px solid var(--lusiazul);
+    padding: 10px;
+    border-radius: 50%;
+}
+.favorite-link::hover {
+    background: var(--lusiazul);
+    filter: brightness(0) invert(1);
+}
+
 .view-details {
     color: var(--lusiazul);
     font-weight: 600;
