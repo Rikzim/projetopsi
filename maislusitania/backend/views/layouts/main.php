@@ -9,11 +9,6 @@ use yii\helpers\Html;
 \hail812\adminlte3\assets\AdminLteAsset::register($this);
 $this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
 
-$this->registerLinkTag([
-    'rel' => 'icon',
-    'type' => 'image/svg+xml', // Change to 'image/x-icon' if using a .ico file
-    'href' => Yii::getAlias('@web/images/logo/logo-only-back.svg'), // Path to your image
-]);
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 

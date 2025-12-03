@@ -45,7 +45,7 @@ use yii\widgets\ActiveForm;
                                     (['class' => 'form-control-file'])
                                 ])->label('Ícone / Imagem') ?>
                                 <small class="text-muted">
-                                    <i class="fas fa-info-circle mr-1"></i> Carregue uma imagem para representar este tipo (PNG, JPG).
+                                    <i class="fas fa-info-circle mr-1"></i> Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.
                                 </small>
                             </div>
 

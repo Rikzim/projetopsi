@@ -61,7 +61,7 @@ use yii\bootstrap4\ActiveForm;
             <?php endif; ?>
             
             <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
-            <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
+            <small class="text-muted">Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.</small>
         </div>
 
 

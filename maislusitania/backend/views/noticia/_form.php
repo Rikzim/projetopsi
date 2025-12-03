@@ -55,7 +55,7 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
                 </div>
             <?php endif; ?>
             <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
-            <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
+            <small class="text-muted">Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.</small>
         </div>
         <div class="col-md-3">
             <?= $form->field($model, 'data_publicacao')->input('date') ?>
