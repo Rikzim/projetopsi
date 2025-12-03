@@ -132,7 +132,7 @@ $this->registerCss("
         <?php else: ?>
             <?php foreach ($dataProvider->models as $local): ?>
             <div class="local-card">
-                <img src="<?= '/uploads/' . Html::encode($local->imagem_principal) ?>" 
+                <img src="<?= Html::encode($local->getImage()) ?>"
                     alt="<?= Html::encode($local->nome) ?>"
                     class="local-image">
                 
