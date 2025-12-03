@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ],
                                     [
                                         'attribute' => 'conteudo',
-                                        'format' => 'ntext',
+                                        'format' => 'raw',
                                         'value' => $model->conteudo ? Html::tag('div', nl2br(Html::encode($model->conteudo)), ['class' => 'mb-0']) : '<span class="text-muted">-</span>',
                                     ],
                                     [
