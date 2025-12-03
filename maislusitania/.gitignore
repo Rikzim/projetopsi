@@ -41,3 +41,13 @@ phpunit.phar
 /backend/web/index.php
 /backend/web/index-test.php
 /backend/web/robots.txt
+
+# --- Uploads Configuration ---
+
+# 1. Frontend: Ignore all files, but keep the folder structure
+frontend/web/uploads/*
+!frontend/web/uploads/.gitkeep
+
+# 2. Backend: Ignore the symlink AND any contents Git thinks are there
+backend/web/uploads
+backend/web/uploads/*

@@ -42,21 +42,25 @@ use Yii;
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-6">
-                                <?php if ($model->icone): ?>
-                                    <div class="card mb-3">
-                                        <div class="card-header p-2">Imagem Atual</div>
+                                <?= $form->field($uploadForm, 'imageFile')->fileInput([
+                                    (['class' => 'form-control-file'])
+                                ])->label('Ícone / Imagem') ?>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle mr-1"></i> Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.
+                                </small>
+                            </div>
+
+                                <div class="col-md-6">
+                                    <div class="card bg-light mb-0">
                                         <div class="card-body text-center p-2">
-                                            <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $model->icone, [
-                                                'style' => 'max-height: 150px; width: auto;',
-                                                'class' => 'img-fluid rounded'
+                                            <label class="d-block text-muted small mb-2">Imagem Atual</label>
+                                            <?= Html::img($model->getImage(), [
+                                                'style' => 'max-height: 100px; max-width: 100%; object-fit: contain;', 
+                                                'class' => 'img-thumbnail shadow-sm'
                                             ]) ?>
                                         </div>
                                     </div>
-                                <?php endif; ?>
-
-                                <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
-                                <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
-                            </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -76,3 +80,4 @@ use Yii;
             </div>
         </div>
     </div>
+</div>

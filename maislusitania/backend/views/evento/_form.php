@@ -52,7 +52,7 @@ use yii\bootstrap4\ActiveForm;
                 <div class="card mb-3">
                     <div class="card-header p-2">Imagem Atual</div>
                     <div class="card-body text-center p-2">
-                        <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $model->imagem, [
+                        <?= Html::img($model->getImage(), [
                             'style' => 'max-height: 150px; width: auto;', 
                             'class' => 'img-fluid rounded'
                         ]) ?>
@@ -61,7 +61,7 @@ use yii\bootstrap4\ActiveForm;
             <?php endif; ?>
             
             <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
-            <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
+            <small class="text-muted">Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.</small>
         </div>
 
 

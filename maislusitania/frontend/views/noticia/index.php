@@ -31,7 +31,7 @@ $this->registerCssFile('@web/css/noticia/index.css', ['depends' => [\yii\web\Yii
 <?php if ($destaqueNoticia): ?>
     <div class="featured-wrapper">
         <a href="<?= Url::to(['view', 'id' => $destaqueNoticia->id]) ?>" class="featured-card">
-            <div class="featured-image" style="background-image: url('<?= Yii::getAlias('@uploadsUrl') . '/' . Html::encode($destaqueNoticia->imagem) ?>');">
+            <div class="featured-image" style="background-image: url('/uploads/<?= Html::encode($destaqueNoticia->imagem) ?>');">
                 <div class="featured-overlay">
                 <span class="featured-category">
                     <?= Html::encode($destaqueNoticia->localCultural->tipoLocal->nome ?? 'Monumentos') ?>
@@ -155,7 +155,7 @@ $this->registerCssFile('@web/css/noticia/index.css', ['depends' => [\yii\web\Yii
             <?php else: ?>
                 <?php foreach ($dataProvider->models as $noticia): ?>
                     <a href="<?= Url::to(['view', 'id' => $noticia->id]) ?>" class="noticia-list-card">
-                        <div class="noticia-list-image" style="background-image: url('<?= Yii::getAlias('@uploadsUrl') . '/' . Html::encode($noticia->imagem) ?>');">
+                        <div class="noticia-list-image" style="background-image: url('/uploads/<?= Html::encode($noticia->imagem) ?>');">
                             <span class="noticia-list-category">
                                 <?= Html::encode($noticia->localCultural->tipoLocal->nome ?? 'Monumentos') ?>
                             </span>

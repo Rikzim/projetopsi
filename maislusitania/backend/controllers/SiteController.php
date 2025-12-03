@@ -8,7 +8,12 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
-
+use common\models\User;
+use common\models\Noticia;
+use common\models\LocalCultural;
+use common\models\Evento;
+use common\models\Reserva;
+use common\models\Avaliacao;
 /**
  * Site controller
  */
@@ -51,7 +56,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -74,22 +78,22 @@ class SiteController extends Controller
         if (!Yii::$app->user->can('accessBackoffice')) {
             return $this->redirect(['site/login']);
         }
+        
+        $locaisCount = LocalCultural::find()->count();
+        $eventosCount = Evento::find()->count();
+        $noticiasCount = Noticia::find()->count();
+        $usersCount = User::find()->count();
 
-        $locaisCount = \common\models\LocalCultural::find()->count();
-        $eventosCount = \common\models\Evento::find()->count();
-        $noticiasCount = \common\models\Noticia::find()->count();
-        $usersCount = \common\models\User::find()->count();
-
-        $reservasMesCount = \common\models\Reserva::find()
+        $reservasMesCount = Reserva::find()
             ->where(['between', 'data_visita', date('Y-m-01'), date('Y-m-t')])
             ->count();
 
-        $ultimasReservas = \common\models\Reserva::find()
+        $ultimasReservas = Reserva::find()
             ->orderBy(['data_visita' => SORT_DESC])
             ->limit(5)
             ->all();
 
-        $ultimasAvaliacoes = \common\models\Avaliacao::find()
+        $ultimasAvaliacoes = Avaliacao::find()
             ->orderBy(['data_avaliacao' => SORT_DESC])
             ->limit(5)
             ->all();
@@ -101,7 +105,7 @@ class SiteController extends Controller
             $start = $month . '-01';
             $end = date('Y-m-t', strtotime($start));
             $labels[] = Yii::$app->formatter->asDate($start, 'MMMM'); // e.g., 'Maio'
-            $salesData[] = (float)\common\models\Reserva::find()
+            $salesData[] = (float)Reserva::find()
                 ->where(['between', 'data_visita', $start, $end])
                 ->sum('preco_total') ?: 0;
 }

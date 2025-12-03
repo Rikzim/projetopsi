@@ -233,5 +233,12 @@ class LocalCultural extends \yii\db\ActiveRecord
             ->count();
     }
 
+    public function getImage()
+    {
+        if (empty($this->imagem_principal)) {
+            return null;
+        }
 
+        return '/uploads/' . $this->imagem_principal;
+    }
 }

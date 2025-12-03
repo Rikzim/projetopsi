@@ -82,5 +82,13 @@ class Noticia extends \yii\db\ActiveRecord
     {
         return $this->hasOne(LocalCultural::class, ['id' => 'local_id']);
     }
+    public function getImage()
+    {
+        if (empty($this->imagem)) {
+            return null;
+        }
+
+        return '/uploads/' . $this->imagem;
+    }
 
 }

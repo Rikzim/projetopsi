@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
+use common\models\UploadForm;
 use common\models\User;
 use common\models\UserProfile;
 
@@ -127,31 +128,12 @@ class SignupForm extends Model
             } else {
                 throw new \Exception('Role não encontrada: ' . $this->role);
             }
-
-            // Upload da imagem
-            $imageFile = UploadedFile::getInstance($this, 'imagem_perfil');
-            $imageName = null;
-            
-            if ($imageFile) {
-                $uploadPath = Yii::getAlias('@backend/web/uploads/');
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-                
-                $imageName = uniqid() . 'user_' . $imageFile->name;
-                $filePath = $uploadPath . $imageName;
-                
-                if (!$imageFile->saveAs($filePath)) {
-                    throw new \Exception('Erro ao fazer upload da imagem');
-                }
-            }
-
             // Criar perfil do utilizador
             $userProfile = new UserProfile();
             $userProfile->user_id = $user->id;
             $userProfile->primeiro_nome = $this->primeiro_nome;
             $userProfile->ultimo_nome = $this->ultimo_nome;
-            $userProfile->imagem_perfil = $imageName;
+            $userProfile->imagem_perfil = $this->imagem_perfil;
 
             if (!$userProfile->save()) {
                 throw new \Exception('Erro ao salvar perfil');

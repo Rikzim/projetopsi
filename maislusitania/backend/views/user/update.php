@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var backend\models\UpdateForm $model */
+/** @var common\models\UploadForm $uploadForm */
 
 $this->title = 'Atualizar Utilizador: ' . $model->primeiro_nome . ' ' . $model->ultimo_nome;
 $this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = 'Atualizar';
 
     <?= $this->render('_form', [
         'model' => $model,
-        'isUpdate' => true,
+        'uploadForm' => $uploadForm,
     ]) ?>
 
 </div>

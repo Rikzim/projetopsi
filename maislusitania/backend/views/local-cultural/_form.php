@@ -134,7 +134,7 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
                 <div class="card mb-3">
                     <div class="card-header p-2">Imagem Atual</div>
                     <div class="card-body text-center p-2">
-                        <?= Html::img(Yii::getAlias('@uploadsUrl') . '/' . $model->imagem_principal, [
+                        <?= Html::img($model->getImage(), [
                             'style' => 'max-height: 150px; width: auto;', 
                             'class' => 'img-fluid rounded'
                         ]) ?>
@@ -143,7 +143,7 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
             <?php endif; ?>
             
             <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
-            <small class="text-muted">Formatos aceites: JPG, PNG. Máx: 2MB.</small>
+            <small class="text-muted">Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.</small>
         </div>
         
         <div class="col-md-6">

@@ -9,7 +9,7 @@ use frontend\widgets\InfiniteCarousel;
 use frontend\widgets\CuriosidadesSection;
 use yii\helpers\Url;
 
-$this->title = 'My Yii Application';
+$this->title = 'Mais Lusitânia - Página Inicial';
 $this->registerCssFile('@web/css/homepage.css');
 ?>
 

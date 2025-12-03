@@ -5,17 +5,14 @@ $identity = Yii::$app->user->identity;
 $profile = $identity ? $identity->userProfile : null;
 
 $name = 'Guest';
-if ($profile) {
+if ($profile && ($profile->primeiro_nome || $profile->ultimo_nome)) {
     $name = trim(($profile->primeiro_nome ?? '') . ' ' . ($profile->ultimo_nome ?? ''));
-    if (empty($name) && $identity) {
-        $name = $identity->username ?? 'User';
-    }
 } elseif ($identity) {
     $name = $identity->username ?? 'User';
 }
 
-$hasImage = $profile && !empty($profile->imagem_perfil);
-$image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perfil : null;
+$image = $profile ? $profile->getImage() : null;
+$hasImage = !empty($image);
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -38,7 +35,7 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                 <?php endif; ?>
             </div>
             <div class="info">
-                <a href="<?= \yii\helpers\Url::to(['user/update', 'id' => $identity->id]) ?>" class="d-block"><?= Html::encode($name) ?></a>
+                <a href="<?= $identity ? \yii\helpers\Url::to(['user/update', 'id' => $identity->id]) : '#' ?>" class="d-block"><?= Html::encode($name) ?></a>
             </div>
         </div>
 
@@ -47,7 +44,11 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-                    ['label' => 'Dashboard', 'icon' => 'tachometer-alt', 'url' => ['site/index']],
+                    [
+                        'label' => 'Dashboard', 
+                        'icon' => 'tachometer-alt', 
+                        'url' => ['site/index']
+                    ],
                     [
                         'label' => 'Gestão de Conteúdo',
                         'icon' => 'folder',
@@ -56,12 +57,6 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                             ['label' => 'Tipos de Locais', 'icon' => 'tags', 'iconStyle' => 'fas', 'url' => ['tipo-local/index']],
                             ['label' => 'Eventos', 'icon' => 'calendar-alt', 'iconStyle' => 'fas', 'url' => ['evento/index']],
                             ['label' => 'Notícias', 'icon' => 'newspaper', 'iconStyle' => 'far', 'url' => ['noticia/index']],
-                        ]
-                    ],
-                    [
-                        'label' => 'Reservas',
-                        'icon' => 'ticket-alt',
-                        'items' => [
                             ['label' => 'Reservas', 'icon' => 'calendar-check', 'iconStyle' => 'far', 'url' => ['reserva/index']],
                         ]
                     ],
@@ -74,8 +69,19 @@ $image = $hasImage ? Yii::getAlias('@web') . '/uploads/' . $profile->imagem_perf
                         ])
                     ],
                     ['label' => 'MEU PERFIL', 'header' => true],
-                    ['label' => 'Gerir Perfil', 'icon' => 'user-cog', 'iconStyle' => 'fas', 'url' => ['user/update', 'id' => $identity->id]],
-                    ['label' => 'Sair', 'icon' => 'sign-out-alt', 'url' => ['site/logout'], 'template' => '<a class="nav-link" href="{url}" data-method="post">{icon} {label}</a>'],
+                    [
+                        'label' => 'Gerir Perfil',
+                        'icon' => 'user-cog',
+                        'iconStyle' => 'fas',
+                        'url' => $identity ? ['user/update', 'id' => $identity->id] : '#',
+                        'visible' => $identity !== null,
+                    ],
+                    [
+                        'label' => 'Sair',
+                        'icon' => 'sign-out-alt',
+                        'url' => ['site/logout'],
+                        'template' => '<a class="nav-link" href="{url}" data-method="post">{icon} {label}</a>',
+                    ],
                 ],
             ]);
             ?>

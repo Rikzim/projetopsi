@@ -24,7 +24,7 @@ class MapaController extends Controller
                 'lng' => (float)$local->longitude,
                 'popup' => $this->buildPopupHtml($local),
                 'type' => $local->tipo->nome,
-                'icone' => $local->tipo->icone // Mudado de tipoLocal para tipo
+                'icone' => $local->tipo->getImage()
             ];
         }
 
@@ -33,7 +33,7 @@ class MapaController extends Controller
             $types[] = 
             [
                 'nome' => $tipo->nome,
-                'icone' => $tipo->icone
+                'icone' => $tipo->getImage()
             ];
         }
         
@@ -46,7 +46,7 @@ class MapaController extends Controller
     private function buildPopupHtml($local)
     {
         $baseurl = \yii\helpers\Url::base(true);
-        $imagemUrl = $local->imagem_principal ?: 'https://via.placeholder.com/320x180?text=Sem+Imagem';
+        $imagemUrl = $local->getImage();
         
         return <<<HTML
         <div class="custom-popup">

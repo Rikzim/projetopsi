@@ -41,22 +41,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'attribute' => 'icone',
                                 'label' => 'Imagem',
                                 'format' => 'raw',
-                                'value' => function ($model) {
-                                    if ($model->icone) {
-                                        // Ajuste o caminho '@uploadsUrl' conforme a sua configuração real
-                                        return Html::img(
-                                            Yii::getAlias('@uploadsUrl') . '/' . $model->icone,
-                                            [
-                                                'style' => 'width: 80px; height: 60px; object-fit: cover; border-radius: 4px;',
-                                                'class' => 'img-thumbnail'
-                                            ]
-                                        );
-                                    }
-                                    return Html::tag(
-                                        'div',
-                                        '<i class="fas fa-calendar-day fa-2x text-muted"></i>',
-                                        ['style' => 'width: 80px; height: 60px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px;']
-                                    );
+                                'value' => function($model) {
+                                    return Html::img($model->getImage(), [
+                                        'style' => 'max-height: 40px; max-width: 40px; object-fit: contain;', 
+                                        'class' => 'img-thumbnail shadow-sm'
+                                    ]); 
                                 },
                                 'headerOptions' => ['style' => 'width: 100px; text-align: center;'],
                                 'contentOptions' => ['class' => 'text-center align-middle'],

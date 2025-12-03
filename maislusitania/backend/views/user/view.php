@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="col-md-4 mb-4">
                             <div class="text-center">
                                 <?php if ($userProfile && $userProfile->imagem_perfil): ?>
-                                    <?= Html::img('@web/uploads/' . $userProfile->imagem_perfil, [
+                                    <?= Html::img($userProfile->getImage(), [
                                         'class' => 'img-fluid rounded shadow-sm img-thumbnail',
                                         // Increased max-width and max-height for a bigger image
                                         'style' => 'width: 100%; max-width: 350px; max-height: 450px; object-fit: cover;',

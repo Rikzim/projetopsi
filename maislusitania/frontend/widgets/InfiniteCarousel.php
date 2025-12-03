@@ -38,7 +38,7 @@ class InfiniteCarousel extends Widget
         $processedItems = array_map(function($item) {
             if (isset($item['image'])) {
                 if (strpos($item['image'], '/') === false) {
-                    $item['image'] = Yii::getAlias('@uploadsUrl') . '/' . $item['image'];
+                    $item['image'] = '/uploads/' . $item['image'];
                 }
             }
             return $item;

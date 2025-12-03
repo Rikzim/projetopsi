@@ -66,11 +66,15 @@ class UserProfile extends \yii\db\ActiveRecord
     }
 
     /**
-     * Obter a imagem atual do evento
+     * Obter a imagem atual do perfil do utilizador
      * @return string|null
      */
-    public function getCurrentImage()
+    public function getImage()
     {
-        return $this->imagem_perfil;
+        if (empty($this->imagem_perfil)) {
+            return null;
+        }
+
+        return '/uploads/' . $this->imagem_perfil;
     }
 }
