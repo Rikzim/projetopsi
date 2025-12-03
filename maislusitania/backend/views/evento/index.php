@@ -99,11 +99,25 @@ $this->params['breadcrumbs'][] = $this->title;
                             // Coluna de Data de Início
                             [
                                 'attribute' => 'data_inicio',
-                                'label' => 'Data',
+                                'label' => 'Data Início',
                                 'format' => ['date', 'php:d/m/Y H:i'], // Formato de data
                                 'value' => function($model) {
                                      
                                     return $model->data_inicio;
+                                },
+                                'contentOptions' => function ($model) {
+                                    return ['class' => 'text-center align-middle font-weight-bold text-secondary'];
+                                },
+                                'headerOptions' => ['style' => 'width: 150px; text-align: center;'],
+                            ],
+                            // Coluna de Data de Fim
+                            [
+                                'attribute' => 'data_fim',
+                                'label' => 'Data Fim',
+                                'format' => ['date', 'php:d/m/Y H:i'], // Formato de data
+                                'value' => function($model) {
+                                     
+                                    return $model->data_fim;
                                 },
                                 'contentOptions' => function ($model) {
                                     return ['class' => 'text-center align-middle font-weight-bold text-secondary'];
