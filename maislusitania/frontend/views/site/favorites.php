@@ -45,8 +45,7 @@ $this->registerCssFile('@web/css/site/favorites.css', ['depends' => [\yii\web\Yi
             <div class="favorites-grid">
                 <?php foreach ($favorites as $favorite): ?>
                     <div class="favorite-card">
-                        <?= Html::a(Html::img(
-                            Yii::getAlias('@uploadsUrl') . '/' . $favorite->local->imagem_principal,
+                        <?= Html::a(Html::img($favorite->local->getImage(),
                             ['alt' => $favorite->local->nome, 'class' => 'card-image']
                         ), ['/local-cultural/view', 'id' => $favorite->local->id], ['class' => 'card-image-link']) ?>
                         
