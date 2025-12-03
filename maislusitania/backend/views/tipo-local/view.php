@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?php if ($model->icone): ?>
                                     <!-- Assume-se que é um upload de imagem, ajustando o path -->
                                     <?= Html::img(
-                                        '@web/uploads/' . $model->icone,
+                                        $model->getImage(),
                                         [
                                             'class' => 'img-fluid rounded shadow-sm',
                                             'style' => 'width: 100%; max-height: 300px; object-fit: contain;',
