@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * NoticiaController implements the CRUD actions for Noticia model.
@@ -80,6 +81,9 @@ class NoticiaController extends Controller
                 if ($model->destaque == 1) {
                     Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
                 }
+
+                $model->data_publicacao = date('Y-m-d H:i:s');
+                
                 if ($model->save(false)) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 }

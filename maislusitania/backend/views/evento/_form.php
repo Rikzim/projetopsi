@@ -35,10 +35,10 @@ use yii\bootstrap4\ActiveForm;
     <h5 class="text-primary mb-3 mt-4"><i class="far fa-calendar-alt"></i> Datas</h5>
     <div class="row">
         <div class="col-md-6">
-            <?= $form->field($model, 'data_inicio')->input('date') ?>
+            <?= $form->field($model, 'data_inicio')->input('datetime-local') ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'data_fim')->input('date') ?>
+            <?= $form->field($model, 'data_fim')->input('datetime-local') ?>
         </div>
     </div>
 

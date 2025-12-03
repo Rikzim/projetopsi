@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute' => 'data_publicacao',
                                 'label' => 'Data',
-                                'format' => ['date', 'php:d/m/Y'],
+                                'format' => ['date', 'php:d/m/Y H:i'],
                                 'headerOptions' => ['style' => 'width: 120px; text-align: center;'],
                                 'contentOptions' => ['class' => 'text-center align-middle'],
                             ],
