@@ -62,8 +62,9 @@ use kartik\select2\Select2;
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-calendar-alt"></i> Data e Status</h5>
     <div class="row">
         <div class="col-md-6">
-            <?= $form->field($model, 'data_avaliacao')->input('date', [
-                'value' => $model->isNewRecord ? date('Y-m-d') : $model->data_avaliacao
+            <?= $form->field($model, 'data_avaliacao')->input('datetime-local', [
+                'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : $model->data_avaliacao,
+                'readonly' => true,
             ]) ?>
         </div>
         <div class="col-md-6">
