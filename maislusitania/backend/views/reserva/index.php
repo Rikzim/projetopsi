@@ -34,11 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'contentOptions' => ['class' => 'text-center align-middle'],
                             ],
                             [
-                                'attribute' => 'id',
-                                'headerOptions' => ['style' => 'width: 60px; text-align: center;'],
-                                'contentOptions' => ['class' => 'text-center align-middle'],
-                            ],
-                            [
                                 'attribute' => 'utilizador_id',
                                 'label' => 'Utilizador',
                                 'value' => function($model) {
