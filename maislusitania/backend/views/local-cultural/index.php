@@ -111,7 +111,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php Pjax::begin(['id' => 'local-pjax']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
-                        'filterModel' => false,
                         'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                         'headerRowOptions' => ['class' => 'bg-light'],
                         'columns' => [

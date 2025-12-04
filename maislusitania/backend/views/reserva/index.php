@@ -7,7 +7,9 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
+/** @var backend\models\ReservaSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var array $locais */
 
 $this->title = 'Reservas';
 $this->params['breadcrumbs'][] = $this->title;
@@ -22,6 +24,86 @@ $this->params['breadcrumbs'][] = $this->title;
                         Gestão de Reservas
                     </h3>
                 </div>
+                
+                <!-- Filtros e Pesquisa -->
+                <div class="card-body border-bottom">
+                    <?php $form = \yii\widgets\ActiveForm::begin([
+                        'action' => ['index'],
+                        'method' => 'get',
+                        'options' => [
+                            'data-pjax' => true,
+                            'id' => 'reserva-filter-form'
+                        ],
+                    ]); ?>
+                    
+                    <div class="row align-items-center">
+                        <!-- Campo de Pesquisa Geral -->
+                        <div class="col-lg-3 col-md-6 mb-2">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <?= Html::activeTextInput($searchModel, 'globalSearch', [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Pesquisar por estado, data...'
+                                ]) ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Filtro por Local -->
+                        <div class="col-lg-3 col-md-3 mb-2">
+                            <?= Html::activeDropDownList($searchModel, 'local_id', 
+                                $locais,
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'prompt' => 'Todos os Locais',
+                                    'onchange' => '$("#reserva-filter-form").submit()'
+                                ]
+                            ) ?>
+                        </div>
+                        
+                        <!-- Filtro por Estado -->
+                        <div class="col-lg-2 col-md-3 mb-2">
+                            <?= Html::activeDropDownList($searchModel, 'estado', 
+                                [
+                                    Reserva::ESTADO_CONFIRMADA => 'Confirmada',
+                                    Reserva::ESTADO_EXPIRADO => 'Pendente',
+                                    Reserva::ESTADO_CANCELADA => 'Cancelada',
+                                ],
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'prompt' => 'Todos os Estados',
+                                    'onchange' => '$("#reserva-filter-form").submit()'
+                                ]
+                            ) ?>
+                        </div>
+                        
+                        <!-- Filtro por Data -->
+                        <div class="col-lg-2 col-md-3 mb-2">
+                            <?= Html::activeInput('date', $searchModel, 'data_visita', [
+                                'class' => 'form-control form-control-sm',
+                                'onchange' => '$("#reserva-filter-form").submit()'
+                            ]) ?>
+                        </div>
+                        
+                        <!-- Botões -->
+                        <div class="col-lg-2 col-md-3 mb-2">
+                            <div class="btn-group w-100">
+                                <?= Html::submitButton('<i class="fas fa-search"></i>', [
+                                    'class' => 'btn btn-primary btn-sm',
+                                    'title' => 'Pesquisar'
+                                ]) ?>
+                                <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
+                                    'class' => 'btn btn-secondary btn-sm',
+                                    'title' => 'Limpar Filtros'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <?php \yii\widgets\ActiveForm::end(); ?>
+                </div>
+                
                 <div class="card-body p-0">
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,

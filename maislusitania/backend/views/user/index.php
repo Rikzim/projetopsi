@@ -26,11 +26,69 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= Html::a('<i class="fas fa-plus"></i> Criar Utilizador', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
                     </div>
                 </div>
+
+                <!-- Filtros e Pesquisa -->
+                <div class="card-body border-bottom">
+                    <?php $form = \yii\widgets\ActiveForm::begin([
+                        'action' => ['index'],
+                        'method' => 'get',
+                        'options' => [
+                            'data-pjax' => true,
+                            'id' => 'user-filter-form'
+                        ],
+                    ]); ?>
+                    
+                    <div class="row align-items-center">
+                        <!-- Campo de Pesquisa Geral -->
+                        <div class="col-lg-6 col-md-6 mb-2">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <?= Html::activeTextInput($searchModel, 'globalSearch', [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Pesquisar por username ou email...'
+                                ]) ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Filtro por Estado -->
+                        <div class="col-lg-3 col-md-3 mb-2">
+                            <?= Html::activeDropDownList($searchModel, 'status', 
+                                [
+                                    User::STATUS_ACTIVE => 'Ativo',
+                                    User::STATUS_INACTIVE => 'Inativo',
+                                ],
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'prompt' => 'Todos os Estados',
+                                    'onchange' => '$("#user-filter-form").submit()'
+                                ]
+                            ) ?>
+                        </div>
+                        
+                        <!-- Botões -->
+                        <div class="col-lg-3 col-md-3 mb-2">
+                            <div class="btn-group w-100">
+                                <?= Html::submitButton('<i class="fas fa-search"></i>', [
+                                    'class' => 'btn btn-primary btn-sm',
+                                    'title' => 'Pesquisar'
+                                ]) ?>
+                                <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
+                                    'class' => 'btn btn-secondary btn-sm',
+                                    'title' => 'Limpar Filtros'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <?php \yii\widgets\ActiveForm::end(); ?>
+                </div>
+                
                 <div class="card-body p-0">
                     <?php Pjax::begin(); ?>
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
                         'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                         'headerRowOptions' => ['class' => 'bg-light'],
                         'columns' => [

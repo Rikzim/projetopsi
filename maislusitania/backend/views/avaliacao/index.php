@@ -42,10 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ]); ?>
                     
-                    <div class="row w-100">
+                    <div class="row align-items-center">
                         <!-- Campo de Pesquisa Geral -->
-                        <div class="col-md-4 mb-2">
-                            <div class="input-group input-group-sm w-100">
+                        <div class="col-lg-3 col-md-6 mb-2">
+                            <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                                 </div>
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         
                         <!-- Filtro por Local -->
-                        <div class="col-md-3 mb-2">
+                        <div class="col-lg-3 col-md-3 mb-2">
                             <?= Html::activeDropDownList($searchModel, 'local_id', 
                                 $locaisAtivos,
                                 [
@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         
                         <!-- Filtro por Classificação -->
-                        <div class="col-md-2 mb-2">
+                        <div class="col-lg-2 col-md-3 mb-2">
                             <?= Html::activeDropDownList($searchModel, 'classificacao', 
                                 [
                                     1 => '1 Estrela',
@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         
                         <!-- Filtro por Estado -->
-                        <div class="col-md-2 mb-2">
+                        <div class="col-lg-2 col-md-3 mb-2">
                             <?= Html::activeDropDownList($searchModel, 'ativo', 
                                 [
                                     1 => 'Ativo',
@@ -123,7 +123,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php Pjax::begin(['id' => 'avaliacao-pjax']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
-                        'filterModel' => false,
                         'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                         'headerRowOptions' => ['class' => 'bg-light'],
                         'columns' => [
