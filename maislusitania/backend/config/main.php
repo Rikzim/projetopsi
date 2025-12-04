@@ -61,6 +61,7 @@ return [
                     'api/linha-reserva',
                     'api/local-cultural',
                     'api/login-form',
+                    'api/signup-form',
                     'api/noticia',
                     'api/reserva',
                     'api/tipo-bilhete',
