@@ -241,4 +241,19 @@ class LocalCultural extends \yii\db\ActiveRecord
 
         return '/uploads/' . $this->imagem_principal;
     }
+
+    public function getImageAPI()
+    {
+        if (empty($this->imagem_principal)) {
+            return null;
+        }
+        
+        /* 
+        Retorna a URL completa da imagem com o seguinte formato:
+        - hostInfo: Obtém o esquema (http/https) e o host (domínio) da aplicação atual.
+        - /projetopsi/maislusitania/frontend/web/uploads/: Caminho
+        - $this->imagem_principal: Nome do arquivo da imagem armazenado no banco de dados.
+        */
+        return Yii::$app->request->hostInfo . '/projetopsi/maislusitania/frontend/web/uploads/' . $this->imagem_principal; 
+    }
 }

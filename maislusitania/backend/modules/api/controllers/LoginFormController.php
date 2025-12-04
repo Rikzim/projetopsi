@@ -29,10 +29,11 @@ class LoginFormController extends Controller
     public function actionIndex()
     {
         $username = Yii::$app->request->post('username');
-        $passwordHash = Yii::$app->request->post('password_hash');
+        $password = Yii::$app->request->post('password');
+
 
         // Valida se campos estão vazios
-        if (empty($username) || empty($passwordHash)) {
+        if (empty($username) || empty($password)) {
             Yii::$app->response->statusCode = 400;
             return ['status' => 'error', 'message' => 'Username ou password vazios'];
         }
@@ -45,23 +46,22 @@ class LoginFormController extends Controller
             return ['status' => 'error', 'message' => 'Utilizador não encontrado'];
         }
 
-        // ✅ Compara os hashes diretamente
-        if ($user->password_hash !== $passwordHash) {
+        // Compara os hashes diretamente
+        if (!Yii::$app->getSecurity()->validatePassword($password, $user->password_hash)) {
             Yii::$app->response->statusCode = 401;
             return ['status' => 'error', 'message' => 'Palavra-passe incorreta'];
         }
 
         // Retorna o token
-        if (empty($user->access_token)) {
-            $user->generateAccessToken();
+        if (empty($user->auth_key)) {
+            $user->generateAuthKey();
             $user->save(false);
         }
 
         return [
-            'status' => 'success',
-            'access_token' => $user->access_token,
-            'user_id' => $user->id,
             'username' => $user->username,
+            'user_id' => $user->id,
+            'auth_key' => $user->auth_key,
         ];
     }
 }
