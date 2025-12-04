@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\Noticia;
 use common\models\UploadForm;
+use backend\models\NoticiaSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -37,12 +38,12 @@ class NoticiaController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Noticia::find(),
-        ]);
+        $searchModel = new NoticiaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 

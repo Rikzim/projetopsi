@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\TipoBilhete;
+use backend\models\TipoBilheteSearch;
 use common\models\LocalCultural;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -45,16 +46,12 @@ class TipoBilheteController extends Controller
             throw new NotFoundHttpException('Local Cultural não encontrado.');
         }
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => TipoBilhete::find()->where(['local_id' => $local_id]),
-            'sort' => [
-                'defaultOrder' => [
-                    'preco' => SORT_DESC,
-                ]
-            ],
-        ]);
+        $searchModel = new TipoBilheteSearch();
+        $searchModel->local_id = $local_id;
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'localCultural' => $localCultural,
         ]);
@@ -92,6 +89,7 @@ class TipoBilheteController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'locais' => $locais,
         ]);
     }
 

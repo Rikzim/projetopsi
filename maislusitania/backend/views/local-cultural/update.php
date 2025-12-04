@@ -20,6 +20,8 @@ $this->title = 'Update Local Cultural: ' . $model->nome;
                         'model' => $model,
                         'uploadForm' => $uploadForm,
                         'horario' => $horario,
+                        'tipoLocais' => $tipoLocais,
+                        'distritos' => $distritos,
                     ]) ?>
 
                 </div>

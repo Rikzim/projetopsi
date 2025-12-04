@@ -6,6 +6,7 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $searchModel backend\models\TipoLocalSearch */
 
 $this->title = 'Tipos de Locais';
 $this->params['breadcrumbs'][] = $this->title;
@@ -22,6 +23,49 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="card-tools">
                         <?= Html::a('<i class="fas fa-plus"></i> Criar Tipo de Local', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
                     </div>
+                </div>
+
+                <!-- Filtros e Pesquisa -->
+                <div class="card-body border-bottom">
+                    <?php $form = \yii\widgets\ActiveForm::begin([
+                        'action' => ['index'],
+                        'method' => 'get',
+                        'options' => [
+                            'data-pjax' => true,
+                            'id' => 'local-filter-form'
+                        ],
+                    ]); ?>
+                    
+                    <div class="row w-100">
+                        <!-- Campo de Pesquisa Geral -->
+                        <div class="col-md-4 mb-2">
+                            <div class="input-group input-group-sm w-100">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <?= Html::activeTextInput($searchModel, 'globalSearch', [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Pesquisar por nome ou morada...'
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="col-lg-2 col-md-3 mb-2">
+                            <div class="btn-group w-100">
+                                <?= Html::submitButton('<i class="fas fa-search"></i>', [
+                                    'class' => 'btn btn-primary btn-sm',
+                                    'title' => 'Pesquisar'
+                                ]) ?>
+                                <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
+                                    'class' => 'btn btn-secondary btn-sm',
+                                    'title' => 'Limpar Filtros'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <?php \yii\widgets\ActiveForm::end(); ?>
                 </div>
                 <div class="card-body p-0">
                     <?= GridView::widget([

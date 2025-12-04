@@ -76,9 +76,9 @@ class LocalCultural extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'tipo_id' => 'Tipo ID',
+            'tipo_id' => 'Tipo Local',
             'morada' => 'Morada',
-            'distrito_id' => 'Distrito ID',
+            'distrito_id' => 'Distrito',
             'descricao' => 'Descricao',
             'horario_funcionamento' => 'Horario Funcionamento',
             'contacto_telefone' => 'Contacto Telefone',
