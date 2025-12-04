@@ -43,7 +43,7 @@ class LocalCulturalController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
         $locais = LocalCultural::find()->all();
         $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
-        $TipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
+        $tipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
 
 
         return $this->render('index', [
@@ -51,7 +51,7 @@ class LocalCulturalController extends Controller
             'dataProvider' => $dataProvider,
             'locais' => $locais,
             'distritos' => $distritos,
-            'TipoLocais' => $TipoLocais,
+            'tipoLocais' => $tipoLocais,
         ]);
     }
 
@@ -110,6 +110,8 @@ class LocalCulturalController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $tipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
+        $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
         $uploadForm = new UploadForm();
         $horario = $model->getHorarios()->one() ?: new Horario();
 
@@ -152,6 +154,8 @@ class LocalCulturalController extends Controller
             'model' => $model,
             'uploadForm' => $uploadForm,
             'horario' => $horario,
+            'tipoLocais' => $tipoLocais,
+            'distritos' => $distritos,
         ]);
     }
 

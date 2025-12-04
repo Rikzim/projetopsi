@@ -5,6 +5,7 @@ use yii\bootstrap4\ActiveForm;
 use yii\helpers\ArrayHelper;
 use common\models\TipoLocal;
 use common\models\Distrito;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap4\ActiveForm */
@@ -23,10 +24,13 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
             <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'placeholder' => 'Nome do local cultural']) ?>
         </div>
         <div class="col-md-4">
-            <?= $form->field($model, 'tipo_id')->dropDownList(
-                $tipos,
-                ['prompt' => 'Selecione o Tipo...']
-            ) ?>
+            <?= $form->field($model, 'tipo_id')->widget(Select2::class, [
+                'data' => $tipoLocais,    
+                'options' => ['placeholder' => 'Selecione o tipo de local...'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ]) ?>
         </div>
         <div class="col-md-12">
             <?= $form->field($model, 'descricao')->textarea(['rows' => 4, 'placeholder' => 'Descrição detalhada do local...']) ?>
@@ -41,10 +45,13 @@ $distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('i
             <?= $form->field($model, 'morada')->textInput(['maxlength' => true, 'placeholder' => 'Rua, Número, Andar...']) ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'distrito_id')->dropDownList(
-                $distritos,
-                ['prompt' => 'Selecione o Distrito...']
-            ) ?>
+            <?= $form->field($model, 'distrito_id')->widget(Select2::class, [
+                'data' => $distritos,    
+                'options' => ['placeholder' => 'Selecione o distrito...'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ]) ?>
         </div>
         
         <div class="col-md-6">

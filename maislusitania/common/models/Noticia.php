@@ -64,7 +64,7 @@ class Noticia extends \yii\db\ActiveRecord
             'imagem' => 'Imagem',
             'data_publicacao' => 'Data Publicacao',
             'ativo' => 'Ativo',
-            'local_id' => 'Local ID',
+            'local_id' => 'Local',
             'destaque' => 'Destaque',
         ];
     }

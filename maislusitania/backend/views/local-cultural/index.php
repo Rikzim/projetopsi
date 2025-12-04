@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <!-- Filtro por Tipo -->
                         <div class="col-lg-2 col-md-3 mb-2">
                             <?= Html::activeDropDownList($searchModel, 'tipo_id', 
-                                $TipoLocais,
+                                $tipoLocais,
                                 [
                                     'class' => 'form-control form-control-sm',
                                     'prompt' => 'Todos os Tipos',

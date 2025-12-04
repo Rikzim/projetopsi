@@ -114,6 +114,7 @@ class EventoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $locais = ArrayHelper::map(LocalCultural::find()->all(), 'id', 'nome');
         $uploadForm = new UploadForm();
 
         if (Yii::$app->request->isPost) {
@@ -140,6 +141,7 @@ class EventoController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'locais' => $locais,
             'uploadForm' => $uploadForm,
         ]);
     }
