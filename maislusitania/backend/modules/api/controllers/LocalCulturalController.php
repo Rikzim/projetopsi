@@ -5,6 +5,7 @@ use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
+use yii\filters\Cors;
 use Yii;
 
 class LocalCulturalController extends ActiveController
@@ -21,10 +22,35 @@ class LocalCulturalController extends ActiveController
     {
         $actions = parent::actions();
         unset($actions['view']); // Remover ação view padrão
+        unset($actions['index']); // Remover ação index padrão
         return $actions;
     }
 
+    // Lista todos os locais culturais ativos
+    public function actionIndex()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
+        $modelClass = $this->modelClass;
+        $locais = $modelClass::find()
+            ->where(['ativo' => true])
+            ->with(['distrito', 'tipo'])
+            ->all();
+
+        $data = array_map(function($local) {
+            return [
+                'id' => $local->id,
+                'nome' => $local->nome,
+                'morada' => $local->morada,
+                'distrito' => $local->distrito->nome ?? null,
+                'descricao' => $local->descricao,
+                'imagem' => $local->getImageAPI(),
+                'avaliacao_media' => $local->getAverageRating(),
+            ];
+        }, $locais);
+
+        return ['data' => $data];
+    }
     // Visualiza um local específico por ID
     public function actionView($id)
     {
@@ -63,7 +89,7 @@ class LocalCulturalController extends ActiveController
             'nome' => $local->nome,
             'tipo' => $local->tipo->nome ?? null,
             'distrito' => $local->distrito->nome ?? null,
-            'imagem' => $local->imagem_principal,
+            'imagem' => $local->getImageAPI(),
             'morada' => $local->morada,
             'descricao' => $local->descricao,
             'horario_funcionamento' => $local->horario_funcionamento,
@@ -87,10 +113,9 @@ class LocalCulturalController extends ActiveController
                 return [
                     'id' => $noticia->id,
                     'titulo' => $noticia->titulo,
-                    'descricao' => $noticia->descricao,
-                    'data_inicio' => date('Y-m-d', strtotime($noticia->data_inicio)),
-                    'data_fim' => date('Y-m-d', strtotime($noticia->data_fim)),
-                    'imagem' => $noticia->imagem,
+                    'descricao' => $noticia->resumo,
+                    'data_publicacao' => date('Y-m-d H:i', strtotime($noticia->data_publicacao)),
+                    'imagem' => $noticia->getImageAPI(),
                 ];
             }, $local->noticias),
             'eventos' => array_map(function($evento) {
@@ -100,7 +125,7 @@ class LocalCulturalController extends ActiveController
                     'descricao' => $evento->descricao,
                     'data_inicio' => date('Y-m-d\TH:i:s', strtotime($evento->data_inicio)),
                     'data_fim' => date('Y-m-d\TH:i:s', strtotime($evento->data_fim)),
-                    'imagem' => $evento->imagem,
+                    'imagem' => $evento->getImageAPI(),
                 ];
             }, $local->eventos),
             'tipos-bilhete' => array_map(function($tipo) {  // ALTERADO: array_map para iterar todos
