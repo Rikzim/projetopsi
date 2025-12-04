@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= Html::a('<i class="fas fa-plus"></i> Criar Local Cultural', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
                     </div>
                 </div>
-
                 <!-- Filtros e Pesquisa -->
                 <div class="card-body border-bottom">
                     <?php $form = \yii\widgets\ActiveForm::begin([
@@ -37,10 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ]); ?>
                     
-                    <div class="row w-100">
+                    <div class="row align-items-center">
                         <!-- Campo de Pesquisa Geral -->
-                        <div class="col-md-4 mb-2">
-                            <div class="input-group input-group-sm w-100">
+                        <div class="col-lg-4 col-md-6 mb-2">
+                            <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                                 </div>
@@ -52,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         
                         <!-- Filtro por Tipo -->
-                        <div class="col-md-3 mb-2">
+                        <div class="col-lg-2 col-md-3 mb-2">
                             <?= Html::activeDropDownList($searchModel, 'tipo_id', 
                                 $TipoLocais,
                                 [
@@ -64,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         
                         <!-- Filtro por Distrito -->
-                        <div class="col-md-2 mb-2">
+                        <div class="col-lg-2 col-md-3 mb-2">
                             <?= Html::activeDropDownList($searchModel, 'distrito_id', 
                                 $distritos,
                                 [
@@ -76,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         
                         <!-- Filtro por Estado -->
-                        <div class="col-md-2 mb-2">
+                        <div class="col-lg-2 col-md-3 mb-2">
                             <?= Html::activeDropDownList($searchModel, 'ativo', 
                                 [
                                     1 => 'Ativo',
@@ -90,12 +89,18 @@ $this->params['breadcrumbs'][] = $this->title;
                             ) ?>
                         </div>
                         
-                        <!-- Botão Limpar -->
-                        <div class="col-md-1 mb-2">
-                            <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
-                                'class' => 'btn btn-secondary btn-sm w-100',
-                                'title' => 'Limpar Filtros'
-                            ]) ?>
+                        <!-- Botões -->
+                        <div class="col-lg-2 col-md-3 mb-2">
+                            <div class="btn-group w-100">
+                                <?= Html::submitButton('<i class="fas fa-search"></i>', [
+                                    'class' => 'btn btn-primary btn-sm',
+                                    'title' => 'Pesquisar'
+                                ]) ?>
+                                <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
+                                    'class' => 'btn btn-secondary btn-sm',
+                                    'title' => 'Limpar Filtros'
+                                ]) ?>
+                            </div>
                         </div>
                     </div>
                     

@@ -49,12 +49,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]) ?>
                             </div>
                         </div>
-                        <!-- Botão Limpar -->
-                        <div class="col-md-1 mb-2">
-                            <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
-                                'class' => 'btn btn-secondary btn-sm w-100',
-                                'title' => 'Limpar Filtros'
-                            ]) ?>
+
+                        <!-- Botões -->
+                        <div class="col-lg-2 col-md-3 mb-2">
+                            <div class="btn-group w-100">
+                                <?= Html::submitButton('<i class="fas fa-search"></i>', [
+                                    'class' => 'btn btn-primary btn-sm',
+                                    'title' => 'Pesquisar'
+                                ]) ?>
+                                <?= Html::a('<i class="fas fa-redo"></i>', ['index'], [
+                                    'class' => 'btn btn-secondary btn-sm',
+                                    'title' => 'Limpar Filtros'
+                                ]) ?>
+                            </div>
                         </div>
                     </div>
                     
