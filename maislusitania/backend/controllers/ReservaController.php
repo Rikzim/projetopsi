@@ -3,13 +3,14 @@
 namespace backend\controllers;
 
 use common\models\Reserva;
+use common\models\LocalCultural;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use common\models\User;
-use common\models\LocalCultural;
+use backend\models\ReservaSearch;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.
@@ -41,22 +42,18 @@ class ReservaController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Reserva::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $searchModel = new ReservaSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $locais = ArrayHelper::map(
+            LocalCultural::find()->all(),
+            'id',
+            'nome'
+        );        
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'locais' => $locais,
         ]);
     }
 

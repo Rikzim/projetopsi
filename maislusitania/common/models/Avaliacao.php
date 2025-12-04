@@ -55,8 +55,8 @@ class Avaliacao extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'local_id' => 'Local ID',
-            'utilizador_id' => 'Utilizador ID',
+            'local_id' => 'Local',
+            'utilizador_id' => 'Utilizador',
             'classificacao' => 'Classificacao',
             'comentario' => 'Comentario',
             'data_avaliacao' => 'Data Avaliacao',

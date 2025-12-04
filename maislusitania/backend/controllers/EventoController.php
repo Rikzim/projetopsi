@@ -4,6 +4,9 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Evento;
+use backend\models\EventoSearch;
+use common\models\LocalCultural;
+use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -38,12 +41,14 @@ class EventoController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Evento::find(),
-        ]);
+        $searchModel = new EventoSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $locais = ArrayHelper::map(LocalCultural::find()->all(), 'id', 'nome');
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'locais' => $locais,
         ]);
     }
 
@@ -109,6 +114,7 @@ class EventoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $locais = ArrayHelper::map(LocalCultural::find()->all(), 'id', 'nome');
         $uploadForm = new UploadForm();
 
         if (Yii::$app->request->isPost) {
@@ -135,6 +141,7 @@ class EventoController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'locais' => $locais,
             'uploadForm' => $uploadForm,
         ]);
     }

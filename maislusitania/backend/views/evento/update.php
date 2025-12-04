@@ -3,7 +3,6 @@
 /* @var $this yii\web\View */
 /* @var $model common\models\Evento */
 
-$this->title = 'Update Evento: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Eventos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -17,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
                     <?=$this->render('_form', [
                         'model' => $model,
                         'uploadForm' => $uploadForm,
+                        'locais' => $locais,
                     ]) ?>
                 </div>
             </div>

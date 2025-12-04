@@ -7,7 +7,6 @@ use yii\helpers\Html;
 /** @var array $utilizadores */
 /** @var array $locais */
 
-$this->title = 'Update Reserva: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Reservas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
