@@ -1,17 +1,14 @@
 <?php
 
 use yii\helpers\Html;
-use yii\bootstrap4\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 use yii\helpers\ArrayHelper;
 use common\models\TipoLocal;
 use common\models\Distrito;
 use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
-/* @var $form yii\bootstrap4\ActiveForm */
-
-$tipos = \common\models\TipoLocal::find()->select(['nome', 'id'])->indexBy('id')->column();
-$distritos = \common\models\Distrito::find()->select(['nome', 'id'])->indexBy('id')->column();
+/* @var $form yii\bootstrap5\ActiveForm */
 ?>
 
 <div class="local-cultural-form">
