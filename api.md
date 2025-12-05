@@ -1,12 +1,12 @@
-# 📚 Documentação da API - MaisLusitânia
+# Documentação da API - MaisLusitânia
 
 API RESTful para gestão de locais culturais (Museus e Monumentos), notícias, eventos, reservas e avaliações em Portugal.
 
-**Base URL:** `https://api.maislusitania.pt/v1`
+**Base URL:** `http://172.22.21.218/projetopsi/maislusitania/backend/web/api`
 
 ---
 
-## 📋 Índice
+## Índice
 
 - [Autenticação](#autenticação)
 - [Locais Culturais](#locais-culturais)
@@ -20,11 +20,11 @@ API RESTful para gestão de locais culturais (Museus e Monumentos), notícias, e
 
 ---
 
-## 🔐 Autenticação
+## Autenticação
 
 A API utiliza **tokens de acesso** para autenticar utilizadores. O token deve ser enviado como parâmetro de query `access-token` ou no header `Authorization: Bearer {token}`.
 
-### POST `/login`
+### POST `/login-form`
 
 Autentica um utilizador e retorna um token de acesso.
 
@@ -33,17 +33,16 @@ Autentica um utilizador e retorna um token de acesso.
 | Campo | Tipo | Obrigatório | Descrição |
 |-------|------|-------------|-----------|
 | `username` | string | Sim | Nome de utilizador |
-| `password` | string | Sim | Password (hash bcrypt) |
+| `password` | string | Sim | Password (PlainText) |
 
 **Exemplo de Request:**
 
 ```json
-POST /login
+POST /login-form
 Content-Type: application/json
-
 {
-  "username": "maria",
-  "password": "$2y$13$TmxhQ..."
+  "username": "user",
+  "password": "12345678"
 }
 ```
 
@@ -51,16 +50,15 @@ Content-Type: application/json
 
 ```json
 {
-  "success": true,
-  "message": "Utilizador maria autenticado com sucesso!",
-  "auth_key": "$2y$13$TmxhQ$2y$13$TmxhQ",
-  "id": 2
+  "username": "admin",
+  "user_id": 8,
+  "auth_key": "MhmeNGvy7wibfDGcik_kfq2RW8Tjx5bN"
 }
 ```
 
 ---
 
-### POST `/register`
+### POST `/signup-form`
 
 Regista um novo utilizador na plataforma.
 
@@ -70,18 +68,21 @@ Regista um novo utilizador na plataforma.
 |-------|------|-------------|-----------|
 | `username` | string | Sim | Nome de utilizador único |
 | `email` | string | Sim | Email válido |
-| `password` | string | Sim | Password (hash bcrypt) |
+| `password` | string | Sim | Password (PlainText) |
+| `primeiro_nome` | string | Sim | Password (PlainText) |
+| `ultimo_nome` | string | Sim | Password (PlainText) |
 
 **Exemplo de Request:**
 
 ```json
 POST /register
 Content-Type: application/json
-
 {
-  "username": "maria",
+  "username": "mari123",
   "email": "maria@gmail.com",
-  "password": "$2y$13$TmxhQ..."
+  "password": "12345678",
+  "primeiro_nome": "ana",
+  "ultimo_nome": "maria"
 }
 ```
 
@@ -90,46 +91,17 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "Utilizador criado com sucesso!",
-  "auth_key": "$2y$13$TmxhQ$2y$13$TmxhQ",
-  "id": 2
+  "message": "Utilizador criado com sucesso!"
 }
 ```
 
 ---
 
-### POST `/logout`
+## Locais Culturais
 
-Termina a sessão do utilizador autenticado.
+### GET `/local-culturals`
 
-**Parâmetros:**
-
-| Campo | Tipo | Obrigatório | Descrição |
-|-------|------|-------------|-----------|
-| `access-token` | string | Sim | Token de acesso (query param) |
-
-**Exemplo de Request:**
-
-```http
-POST /logout?access-token=123456
-```
-
-**Exemplo de Response (200 OK):**
-
-```json
-{
-  "success": true,
-  "message": "Sessão terminada com sucesso"
-}
-```
-
----
-
-## 🏛️ Locais Culturais
-
-### GET `/locais-culturais`
-
-Lista todos os locais culturais ativos (Museus e Monumentos).
+Lista todos os locais culturais ativos.
 
 **Parâmetros de Query (Opcionais):**
 
@@ -141,7 +113,7 @@ Lista todos os locais culturais ativos (Museus e Monumentos).
 **Exemplo de Request:**
 
 ```http
-GET /locais-culturais?tipo=Museu&distrito=Lisboa
+GET /locais-culturais
 ```
 
 **Exemplo de Response (200 OK):**
@@ -149,22 +121,55 @@ GET /locais-culturais?tipo=Museu&distrito=Lisboa
 ```json
 [
   {
-    "id": 61,
-    "nome": "Museu Nacional de Arte Antiga",
-    "tipo": "Museu",
-    "distrito": "Lisboa",
-    "imagem": "https://picsum.photos/500/300?random=61",
-    "morada": "R. das Janelas Verdes, Lisboa",
-    "ativo": true,
-    "latitude": 38.7069,
-    "longitude": -9.1604
+    "id":	1,
+    "nome":	"Museu Nacional de Arte Antiga",
+    "morada": "Rua das Janelas Verdes, 1249-017 Lisboa",
+    "distrito":	"Lisboa",
+    "descricao":	"O mais importante museu de arte antiga em Portugal, com coleções de pintura, escultura, artes decorativas e desenho.",
+    "imagem":	"http://localhost/projetopsi/maislusitania/frontend/web/uploads/local_693176e91dd34.jpg",
+    "avaliacao_media":	4
   }
 ]
 ```
 
 ---
 
-### GET `/locais-culturais/{id}`
+### GET `/local-culturals/distrito`
+
+Lista todos os locais culturais ativos.
+
+**Parâmetros de Query (Opcionais):**
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `tipo` | string | Filtrar por tipo de local (ex: "Museu", "Monumento") |
+| `distrito` | string | Filtrar por distrito (ex: "Lisboa", "Porto") |
+
+**Exemplo de Request:**
+
+```http
+GET /locais-culturais
+```
+
+**Exemplo de Response (200 OK):**
+
+```json
+[
+  {
+    "id":	1,
+    "nome":	"Museu Nacional de Arte Antiga",
+    "morada": "Rua das Janelas Verdes, 1249-017 Lisboa",
+    "distrito":	"Lisboa",
+    "descricao":	"O mais importante museu de arte antiga em Portugal, com coleções de pintura, escultura, artes decorativas e desenho.",
+    "imagem":	"http://localhost/projetopsi/maislusitania/frontend/web/uploads/local_693176e91dd34.jpg",
+    "avaliacao_media":	4
+  }
+]
+```
+
+---
+
+### GET `/local-culturals/{id}`
 
 Obtém detalhes completos de um local cultural específico, incluindo notícias, eventos, avaliações, bilhetes e horários.
 
