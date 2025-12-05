@@ -12,7 +12,6 @@ use yii\widgets\Pjax;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 /** @var common\models\LocalCultural $localCultural */
 
-$this->title = 'Tipos de Bilhete - ' . $localCultural->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Locais Culturais', 'url' => ['local-cultural/index']];
 $this->params['breadcrumbs'][] = ['label' => $localCultural->nome, 'url' => ['local-cultural/view', 'id' => $localCultural->id]];
 $this->params['breadcrumbs'][] = 'Tipos de Bilhete';
