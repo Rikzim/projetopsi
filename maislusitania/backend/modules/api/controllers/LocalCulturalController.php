@@ -6,6 +6,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\filters\Cors;
+use common\models\Distrito;
+use common\models\LocalCultural;
+use common\models\TipoLocal;
 use Yii;
 
 class LocalCulturalController extends ActiveController
@@ -79,6 +82,53 @@ class LocalCulturalController extends ActiveController
         }
 
         return ['data' => $this->formatLocalData($local)];
+    }
+
+    public function actionDistritos($nome)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        // Procura o distrito pelo nome (case-insensitive)
+        $distrito = Distrito::find()
+            ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
+            ->one();
+
+        // Retorna os locais culturais desse distrito
+        $locais = LocalCultural::find()
+            ->where(['distrito_id' => $distrito->id])
+            ->all();
+
+        if (!$locais) {
+            throw new NotFoundHttpException("Distrito '$nome' não encontrado.");
+        }
+
+        return [
+            'distrito' => $distrito->nome,
+            'total' => count($locais),
+            'locais' => $locais,
+        ];
+    }
+    public function actionTipos($nome)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        // Procura o distrito pelo nome (case-insensitive)
+        $tipolocal = TipoLocal::find()
+            ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
+            ->one();
+
+        // Retorna os locais culturais desse distrito
+        $locais = LocalCultural::find()
+            ->where(['tipo_id' => $tipolocal->id])
+            ->all();
+
+        if (!$locais) {
+            throw new NotFoundHttpException("Tipo Local '$nome' não encontrado.");
+        }
+
+        return [
+            'tipo_local' => $tipolocal->nome,
+            'total' => count($locais),
+            'locais' => $locais,
+        ];
     }
 
     // Método auxiliar para formatar os dados do local

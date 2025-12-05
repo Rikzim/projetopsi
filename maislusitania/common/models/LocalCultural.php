@@ -239,7 +239,7 @@ class LocalCultural extends \yii\db\ActiveRecord
             return null;
         }
 
-        return '/uploads/' . $this->imagem_principal;
+        return '/uploads/' . $this->imagem_principal; 
     }
 
     public function getImageAPI()
