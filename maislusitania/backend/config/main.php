@@ -51,6 +51,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'GET api/local-culturals/distritos/<nome:\w+>' => 'api/local-cultural/distritos',
+                'GET api/local-culturals/tipos/<nome:\w+>' => 'api/local-cultural/tipos',
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => [
@@ -71,7 +73,11 @@ return [
                     ],
                     'pluralize' => true,
                     'extraPatterns' => [
+                        'GET distrito/{nome}' => 'distritos',
                         //'GET locais-culturais' => 'actionLocaisCulturais',
+                    ],
+                    'tokens' => [
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
                     ],
                 ],
             ],

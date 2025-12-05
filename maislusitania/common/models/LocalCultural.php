@@ -232,6 +232,12 @@ class LocalCultural extends \yii\db\ActiveRecord
             ->where(['ativo' => 1])
             ->count();
     }
+    public function isFavoritedByUser($userId)
+    {
+        return Favorito::find()
+            ->where(['utilizador_id' => $userId, 'local_id' => $this->id])
+            ->exists();
+    }
 
     public function getImage()
     {
@@ -239,7 +245,7 @@ class LocalCultural extends \yii\db\ActiveRecord
             return null;
         }
 
-        return '/uploads/' . $this->imagem_principal;
+        return '/uploads/' . $this->imagem_principal; 
     }
 
     public function getImageAPI()

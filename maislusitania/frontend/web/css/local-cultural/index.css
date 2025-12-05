@@ -150,11 +150,13 @@ body > .wrap > .container {
 
 .filter-buttons .form-group {
     margin: 0;
+    flex: 1;
+    min-width: 150px;
 }
 
 /* ===== DROPDOWNS ===== */
 .filter-dropdown {
-    padding: 14px 25px 14px 24px;
+    padding: 14px 24px;
     border: none;
     border-radius: 50px;
     font-size: 16px;
@@ -163,23 +165,11 @@ body > .wrap > .container {
     background: var(--lusiazul);
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 200px;
+    width: 100%;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     box-shadow: 0 2px 8px var(--lusiazul-shadow);
-
-    /* Seta branca customizada */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 20px center;
-    background-size: 14px;
-}
-
-.filter-dropdown:hover {
-    background: var(--lusiazul-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--lusiazul-shadow-hover);
 }
 
 .filter-dropdown:focus {
@@ -188,9 +178,29 @@ body > .wrap > .container {
     box-shadow: 0 0 0 4px var(--lusiazul-shadow);
 }
 
+.filter-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 150px;
+}
+
+.dropdown-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.filter-wrapper:focus-within .dropdown-icon {
+    transform: translateY(-50%) rotate(180deg);
+}
+
 .filter-dropdown option {
-    padding: 12px;
-    font-size: 14px;
+    padding: 12px 16px;
+    font-size: 15px;
     color: var(--gray-700);
     background: white;
     font-weight: 500;
@@ -296,20 +306,67 @@ body > .wrap > .container {
     -webkit-box-orient: vertical;
 }
 
+
+
 .local-footer {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-top: 1px solid var(--gray-200);
-    padding-top: 15px;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .local-rating {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
     color: var(--lusiazul);
-    font-size: 16px;
+    font-size: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100%;
+}
+
+.local-rating .no-ratings {
+    font-size: 18px;
+    color: var(--lusiazul);
+    margin: 0;
+}
+
+.local-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-favorite {
+    background-color: white;
+    border: 2px solid var(--lusiazul);
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #2E5AAC;
+}
+
+.btn-favorite:hover {
+    color: white;
+    border-color: #2E5AAC;
+    background-color: #2E5AAC;
+}
+
+.btn-favorite.favorited {
+    color: white;
+    border-color: #2E5AAC;
+    background-color: #2E5AAC;
+}
+
+.btn-favorite.favorited:hover {
+    background-color: white;
+    border: 2px solid #2E5AAC;
+    color: #2E5AAC;
 }
 
 .favorite-link img {

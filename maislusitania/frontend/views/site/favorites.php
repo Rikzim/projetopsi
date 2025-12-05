@@ -13,35 +13,37 @@ $this->registerCssFile('@web/css/site/favorites.css', ['depends' => [\yii\web\Yi
 <div class="favorites-page">
     <!-- Header Section -->
     <div class="favorites-header">
-        <div class="header-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-            </svg>
-        </div>
-        <h1>Meus Favoritos</h1>
-        <p>Os seus locais e monumentos preferidos, guardados num só lugar</p>
         <?php if (!empty($favorites)): ?>
-            <div class="favorites-count">
-                <?= count($favorites) ?> <?= count($favorites) === 1 ? 'Local Favorito' : 'Locais Favoritos' ?>
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                </svg>
             </div>
-        <?php endif; ?>
-    </div>
-
-    <div class="favorites-container">
-        <?php if (empty($favorites)): ?>
+            <h1>Meus Favoritos</h1>
+            <p>Os seus locais e monumentos preferidos, guardados num só lugar</p>
+            <?php if (!empty($favorites)): ?>
+                <div class="favorites-count">
+                    <?= count($favorites) ?> <?= count($favorites) === 1 ? 'Local Favorito' : 'Locais Favoritos' ?>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
             <!-- Empty State -->
             <div class="empty-favorites">
-                <div class="empty-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 2.748-.717 9.373A5.482 5.482 0 0 0 4.5 14.5a5.482 5.482 0 0 0 5.207-4.887A5.484 5.484 0 0 0 14.5 14.5a5.482 5.482 0 0 0 5.207-5.127L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                <div class="header-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                     </svg>
                 </div>
                 <h2>Ainda sem favoritos</h2>
                 <p>Explore os nossos locais culturais e adicione os que mais gostar aos seus favoritos.</p>
                 <?= Html::a('Explorar Locais', ['/local-cultural/index'], ['class' => 'btn-explore']) ?>
             </div>
-        <?php else: ?>
-            <!-- Grid of favorite cards -->
+        <?php endif; ?>
+    </div>
+
+    <div class="favorites-container">
+        <!-- Grid of favorite cards -->
+        <?php if (!empty($favorites)): ?>
             <div class="favorites-grid">
                 <?php foreach ($favorites as $favorite): ?>
                     <div class="favorite-card">
@@ -72,7 +74,7 @@ $this->registerCssFile('@web/css/site/favorites.css', ['depends' => [\yii\web\Yi
                             <?= Html::a('Ver Mais', ['/local-cultural/view', 'id' => $favorite->local->id], ['class' => 'btn-details']) ?>
                             <?= Html::a(
                                 '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>',
-                                ['/local-cultural/toggle-favorite', 'id' => $favorite->local->id],
+                                ['local-cultural/toggle-favorite', 'id' => $favorite->local->id],
                                 [
                                     'class' => 'btn-unfavorite',
                                     'title' => 'Remover dos Favoritos',
