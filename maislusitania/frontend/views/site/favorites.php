@@ -72,7 +72,7 @@ $this->registerCssFile('@web/css/site/favorites.css', ['depends' => [\yii\web\Yi
                             <?= Html::a('Ver Mais', ['/local-cultural/view', 'id' => $favorite->local->id], ['class' => 'btn-details']) ?>
                             <?= Html::a(
                                 '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>',
-                                ['/local-cultural/toggle-favorite', 'id' => $favorite->local->id],
+                                ['local-cultural/toggle-favorite', 'id' => $favorite->local->id],
                                 [
                                     'class' => 'btn-unfavorite',
                                     'title' => 'Remover dos Favoritos',

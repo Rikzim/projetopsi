@@ -2,6 +2,9 @@
 
 namespace frontend\controllers;
 
+use Yii;
+
+use common\models\Favorito;
 use common\models\LocalCultural;
 use common\models\TipoLocal;
 use common\models\Distrito;
@@ -73,6 +76,40 @@ class LocalCulturalController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    public function actionToggleFavorite($id)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+
+        $local = $this->findModel($id);
+        $userId = Yii::$app->user->id;
+
+        // Verificar se já existe
+        $favorito = Favorito::findOne([
+            'utilizador_id' => $userId,
+            'local_id' => $id
+        ]);
+
+        if ($favorito) {
+            // Se existe, remover
+            $favorito->delete();
+            Yii::$app->session->setFlash('success', 'Removido dos favoritos!');
+        } else {
+            // Se não existe, adicionar
+            $favorito = new Favorito();
+            $favorito->utilizador_id = $userId;
+            $favorito->local_id = $id;
+            $favorito->data_adicao = date('Y-m-d H:i:s');
+            
+            if ($favorito->save()) {
+                Yii::$app->session->setFlash('success', 'Adicionado aos favoritos!');
+            }
+        }
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['view', 'id' => $id]);
     }
     protected function findModel($id)
     {

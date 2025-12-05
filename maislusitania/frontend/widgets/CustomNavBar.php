@@ -345,11 +345,13 @@ class CustomNavBar extends Widget
 
     .custom-navbar .logout-item {
         color: #dc3545;
+        border-radius: 0 0 15px 15px;
     }
 
     .custom-navbar .logout-item:hover {
-        background: #fff5f5;
+        background: #f8f9fa;
         color: #dc3545;
+        border-radius: 0 0 15px 15px;
     }
 
     .custom-navbar .mobile-toggle {

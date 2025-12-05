@@ -66,45 +66,60 @@ $this->registerCss("
         
         <div class="filter-buttons">
             <!-- Dropdown Categorias (Yii2) -->
-            <?= $form->field($searchModel, 'tipo', [
-                'template' => '{input}',
-            ])->dropDownList(
-                ArrayHelper::merge(['' => 'Todas as Categorias'], $tiposLocal),
-                [
-                    'class' => 'filter-dropdown',
-                    'id' => 'filter-tipo',
-                    'onchange' => '$("#filter-form").submit()',
-                ]
-            ) ?>
+            <div class="filter-wrapper">
+                <?= $form->field($searchModel, 'tipo', [
+                    'template' => '{input}',
+                ])->dropDownList(
+                    ArrayHelper::merge(['' => 'Por Categoria'], $tiposLocal),
+                    [
+                        'class' => 'filter-dropdown',
+                        'id' => 'filter-tipo',
+                        'onchange' => '$("#filter-form").submit()',
+                    ]
+                ) ?>
+                <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 11L3 6h10z"/>
+                </svg>
+            </div>
 
             <!-- Dropdown Regiões (Yii2) -->
-            <?= $form->field($searchModel, 'distrito', [
-                'template' => '{input}',
-            ])->dropDownList(
-                ArrayHelper::merge(['' => 'Todas as Regiões'], $distritos),
-                [
-                    'class' => 'filter-dropdown',
-                    'id' => 'filter-distrito',
-                    'onchange' => '$("#filter-form").submit()',
-                ]
-            ) ?>
+            <div class="filter-wrapper">
+                <?= $form->field($searchModel, 'distrito', [
+                    'template' => '{input}',
+                ])->dropDownList(
+                    ArrayHelper::merge(['' => 'Por Região'], $distritos),
+                    [
+                        'class' => 'filter-dropdown',
+                        'id' => 'filter-distrito',
+                        'onchange' => '$("#filter-form").submit()',
+                    ]
+                ) ?>
+                <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 11L3 6h10z"/>
+                </svg>
+            </div>
 
             <!-- Dropdown Ordenar (Yii2) -->
-            <?= $form->field($searchModel, 'order', [
-                'template' => '{input}',
-            ])->dropDownList(
-                [
-                    '' => 'Relevância',
-                    'nome' => 'Nome A-Z',
-                    'nome-desc' => 'Nome Z-A',
-                    'rating' => 'Melhor Avaliação',
-                ],
-                [
-                    'class' => 'filter-dropdown',
-                    'id' => 'filter-order',
-                    'onchange' => '$("#filter-form").submit()',
-                ]
-            ) ?>
+            <div class="filter-wrapper">
+                <?= $form->field($searchModel, 'order', [
+                    'template' => '{input}',
+                ])->dropDownList(
+                    [
+                        '' => 'Por Relevância',
+                        'nome' => 'Nome A-Z',
+                        'nome-desc' => 'Nome Z-A',
+                        'rating' => 'Melhor Avaliação',
+                    ],
+                    [
+                        'class' => 'filter-dropdown',
+                        'id' => 'filter-order',
+                        'onchange' => '$("#filter-form").submit()',
+                    ]
+                ) ?>
+                <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 11L3 6h10z"/>
+                </svg>
+            </div>
         </div>
         
         <?php ActiveForm::end(); ?>
@@ -158,24 +173,33 @@ $this->registerCss("
                         $hasHalfStar = ($avgRating - $fullStars) >= 0.5;
                         ?>
                         <div class="local-rating">
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <?php if ($i <= $fullStars): ?>
-                                    ★
-                                <?php elseif ($i == $fullStars + 1 && $hasHalfStar): ?>
-                                    ☆
-                                <?php else: ?>
-                                    ☆
-                                <?php endif; ?>
-                            <?php endfor; ?>
                             <?php if ($ratingCount > 0): ?>
-                                <?= number_format($avgRating, 1) ?> (<?= $ratingCount ?>)
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <?php if ($i <= $fullStars): ?>
+                                        ★
+                                    <?php else: ?>
+                                        ☆
+                                <?php endif; ?>
+                                <?php endfor; ?>
+                                <?= number_format($avgRating, 1) ?>
                             <?php else: ?>
-                                Sem avaliações
+                                <p class="no-ratings">Sem avaliações</p>
                             <?php endif; ?>
                         </div>
-                        <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
-                            Ver Detalhes →
-                        </a>
+                        <div class="local-controls">
+                            <?php $isFavorite = $local->isFavoritedByUser(Yii::$app->user->id); ?>
+                            <?= Html::a(
+                                '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>',
+                                ['/local-cultural/toggle-favorite', 'id' => $local->id],
+                                [
+                                    'class' => 'btn-favorite ' . ($isFavorite ? 'favorited' : ''),
+                                    'title' => $isFavorite ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos',
+                                ]
+                            ) ?>
+                            <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
+                                Ver Detalhes →
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
