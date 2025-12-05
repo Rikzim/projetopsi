@@ -20,7 +20,7 @@ use kartik\select2\Select2;
     <div class="row">
         <div class="col-md-6">
             <?= $form->field($model, 'local_id')->widget(Select2::class, [
-                'data' => $locaisAtivos,
+                'data' => $locaisAtivos,    
                 'options' => ['placeholder' => 'Selecione o local...'],
                 'pluginOptions' => [
                     'allowClear' => true,

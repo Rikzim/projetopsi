@@ -11,6 +11,7 @@ use common\models\User;
  */
 class UserSearch extends User
 {
+    public $globalSearch;
     /**
      * {@inheritdoc}
      */
@@ -18,7 +19,7 @@ class UserSearch extends User
     {
         return [
             [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'safe'],
+            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'status', 'verification_token', 'globalSearch'], 'safe'],
         ];
     }
 
@@ -55,6 +56,11 @@ class UserSearch extends User
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
+        }
+
+        if($this->globalSearch){
+            $query->orFilterWhere(['like', 'username', $this->globalSearch])
+                  ->orFilterWhere(['like', 'email', $this->globalSearch]);
         }
 
         // grid filtering conditions

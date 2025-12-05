@@ -3,11 +3,13 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
+use kartik\select2\Select2;
 
-/* @var $this yii\web\View */
-/* @var $model backend\models\Evento*/
-/* @var $form yii\bootstrap4\ActiveForm */
-/* @var $uploadForm backend\models\UploadForm */
+/** @var $this yii\web\View */
+/** @var $model backend\models\Evento */
+/** @var $form yii\bootstrap4\ActiveForm */
+/** @var $uploadForm backend\models\UploadForm */
+/** @var array $locais */
 
 ?>
 
@@ -21,9 +23,13 @@ use yii\bootstrap4\ActiveForm;
         <div class="col-md-8">
             <?= $form->field($model, 'titulo')->textInput(['maxlength' => true, 'placeholder' => 'Título do evento']) ?>
         </div>
-        <div class="col-md-4">
-            <?= $form->field($model, 'local_id')->textInput(['placeholder' => 'ID do Local Cultural']) ?>
-        </div>
+        <?= $form->field($model, 'local_id')->widget(Select2::class, [
+                'data' => $locais,
+                'options' => ['placeholder' => 'Selecione o local...'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ]) ?>
         <div class="col-md-12">
             <?= $form->field($model, 'descricao')->textarea(['rows' => 4, 'placeholder' => 'Descrição detalhada do evento...']) ?>
         </div>
