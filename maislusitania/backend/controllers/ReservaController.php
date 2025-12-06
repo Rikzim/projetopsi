@@ -83,65 +83,76 @@ class ReservaController extends Controller
     {
         $model = $this->findModel($id);
 
-        // Obter todos os tipos de bilhete possíveis para este local
+        // Dados auxiliares
         $tiposBilhete = TipoBilhete::find()
             ->where(['local_id' => $model->local_id])
-            ->indexBy('id') // Indexar por ID para acesso fácil
+            ->indexBy('id')
             ->all();
 
-        // Obter as linhas de reserva que já existem, indexadas por tipo_bilhete_id
         $linhasExistentes = LinhaReserva::find()
             ->where(['reserva_id' => $model->id])
             ->indexBy('tipo_bilhete_id')
             ->all();
 
+        // POST
         if ($this->request->isPost && $model->load($this->request->post())) {
             
-            $precoTotalFinal = 0;
             $linhasData = $this->request->post('LinhaReserva', []);
+            
+            $novoPrecoTotal = $this->processarLinhasReserva($model, $linhasData, $linhasExistentes, $tiposBilhete);
+            
+            $model->preco_total = $novoPrecoTotal;
 
-            foreach ($linhasData as $tipoBilheteId => $linhaData) {
-                $quantidade = (int)($linhaData['quantidade'] ?? 0);
-                
-                // Encontrar a linha de reserva existente usando o array pré-carregado
-                $linha = $linhasExistentes[$tipoBilheteId] ?? null;
-
-                if ($quantidade > 0) {
-                    // Se a linha não existir, criar uma nova
-                    if ($linha === null) {
-                        $linha = new LinhaReserva([
-                            'reserva_id' => $model->id,
-                            'tipo_bilhete_id' => $tipoBilheteId,
-                        ]);
-                    }
-                    $linha->quantidade = $quantidade;
-                    
-                    if ($linha->save()) {
-                        // Calcular preço usando o array de tipos de bilhete pré-carregado
-                        if (isset($tiposBilhete[$tipoBilheteId])) {
-                            $precoTotalFinal += $linha->quantidade * $tiposBilhete[$tipoBilheteId]->preco;
-                        }
-                    } else {
-                        $model->addError('preco_total', 'Erro ao guardar uma das linhas da reserva.');
-                    }
-                } elseif ($linha !== null) {
-                    // Se a quantidade for 0 e a linha existir, eliminá-la
-                    $linha->delete();
-                }
-            }
-
-            $model->preco_total = $precoTotalFinal;
-
-            if ($model->save() && !$model->hasErrors()) {
+            if (!$model->hasErrors() && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
 
         return $this->render('update', [
             'model' => $model,
-            'tiposBilhete' => $tiposBilhete,       // Passar todos os tipos de bilhete possíveis
-            'linhasExistentes' => $linhasExistentes, // Passar as linhas que já existem
+            'tiposBilhete' => $tiposBilhete,
+            'linhasExistentes' => $linhasExistentes,
         ]);
+    }
+
+    /**
+     * Processa a criação, atualização e remoção de linhas de reserva.
+     * Retorna o preço total calculado.
+     */
+    private function processarLinhasReserva($model, array $linhasData, array $linhasExistentes, array $tiposBilhete): float
+    {
+        $precoTotal = 0;
+
+        foreach ($linhasData as $tipoBilheteId => $linhaData) {
+            $quantidade = (int)($linhaData['quantidade'] ?? 0);
+            $linha = $linhasExistentes[$tipoBilheteId] ?? null;
+
+            // Se a quantidade for zero ou negativa -> Remover se existir e passar para o próximo
+            if ($quantidade <= 0) {
+                if ($linha) {
+                    $linha->delete();
+                }
+                continue; // Salta para a próxima iteração do loop
+            }
+
+            // Se a linha não existir, criar nova linha
+            if (!$linha) {
+                $linha = new LinhaReserva([
+                    'reserva_id' => $model->id,
+                    'tipo_bilhete_id' => $tipoBilheteId,
+                ]);
+            }
+
+            // Atualizar e Guardar
+            $linha->quantidade = $quantidade;
+            
+            if ($linha->save()) {
+                $precoUnitario = $tiposBilhete[$tipoBilheteId]->preco ?? 0;
+                $precoTotal += $linha->quantidade * $precoUnitario;
+            }
+        }
+
+        return $precoTotal;
     }
 
     /**
