@@ -15,11 +15,6 @@ class BilhetesWidget extends Widget
     public function init()
     {
         parent::init();
-        
-        if (empty($this->bilhetes) && $this->model !== null) {
-            // ✅ Widget pode chamar Model diretamente
-            $this->bilhetes = TipoBilhete::getBilhetesFormatados($this->model->id);
-        }
     }
 
     public function run()

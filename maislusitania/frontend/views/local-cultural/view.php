@@ -2,9 +2,6 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use frontend\widgets\LocalCulturalHeaderWidget;
-use frontend\widgets\HorarioFuncionamentoWidget;
-use frontend\widgets\InformacoesUteisWidget;
 use frontend\widgets\BilhetesWidget;
 use frontend\widgets\EventosRelacionadosWidget;
 use frontend\widgets\NoticiasRelacionadasWidget;
@@ -28,32 +25,144 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
     <?= HeroSection::widget([
             'backgroundImage' => Url::to($model->getImage()),
             'title' => $model->nome,
-            'subtitle' => $model->descricao,
             'showOverlay' => false,
     ]) ?>
 
     <div class="content-wrapper">
-        
-        <?= LocalCulturalHeaderWidget::widget([
-            'model' => $model,
-            'showBadge' => true,
-            'showRating' => true,
-        ]) ?>
-
-        <div class="info-cards-container">
+        <div class="lc-header-card">
             
-            <?= HorarioFuncionamentoWidget::widget([
-                'model' => $model,
-            ]) ?>
+            <?php if ($model->tipo): ?>
+                <span class="lc-type-badge">
+                    <?= Html::encode($model->tipo->nome ?? 'Local Cultural') ?>
+                </span>
+            <?php endif; ?>
+         
+            
+            <div class="lc-location-info">
+                <svg class="lc-location-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                </svg>
+                <span>
+                    <?= Html::encode($model->distrito ? $model->distrito->nome : 'Portugal') ?>, Portugal
+                </span>
+            </div>
 
-            <?= InformacoesUteisWidget::widget([
-                'model' => $model,
-                'showPreco' => true,
-                'precoText' => 'Consultar Bilhetes',
-            ]) ?>
+            <div class="lc-rating-container">
+                <div class="lc-stars">
+                    <?php
+                    $fullStars = floor($averageRating);
+                    $hasHalfStar = ($averageRating - $fullStars) >= 0.5;
 
+                    // Estrelas cheias
+                    for ($i = 0; $i < $fullStars; $i++) {
+                        echo '★';
+                    }
+
+                    // Meia estrela
+                    if ($hasHalfStar) {
+                        echo '☆';
+                    }
+
+                    // Estrelas vazias
+                    $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
+                    for ($i = 0; $i < $emptyStars; $i++) {
+                        echo '<span class="lc-stars-empty">☆</span>';
+                    }
+                    ?>
+                </div>
+                <span class="lc-rating-text">
+                <?php if ($ratingCount > 0): ?>
+                    <?= number_format($averageRating, 1) ?> (<?= number_format($ratingCount) ?> Avaliações)
+                <?php else: ?>
+                    Sem avaliações
+                <?php endif; ?>
+                </span>
+            </div>
         </div>
 
+        <!-- Seção de Descrição -->
+        <div class="description-section">
+            <div class="description-card">
+                <div class="description-card-title">
+                    <span class="description-card-icon">
+                        <img src="<?= Url::to('@web/images/icons/icon-local.svg') ?>" alt="Descrição">
+                    </span>
+                    Descrição do Local
+                </div>
+                <div class="description-content">
+                    <p>
+                        <?= nl2br(Html::encode($model->descricao)) ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    
+        <div class="info-cards-container">
+            
+            <!-- Horário de Funcionamento Card -->
+            <div class="info-card">
+                <div class="info-card-title">
+                    <span class="info-card-icon">
+                        <img src="<?= Url::to('@web/images/icons/icon-horario.svg') ?>" alt="Horário">
+                    </span>
+                    Horário de Funcionamento
+                </div>
+                <div class="info-card-content">
+                        <ul class="info-list horario-list">
+                            <li><span>Segunda-feira</span> <span><?= Html::encode($horario->segunda ?: 'Fechado') ?></span></li>
+                            <li><span>Terça-feira</span> <span><?= Html::encode($horario->terca ?: 'Fechado') ?></span></li>
+                            <li><span>Quarta-feira</span> <span><?= Html::encode($horario->quarta ?: 'Fechado') ?></span></li>
+                            <li><span>Quinta-feira</span> <span><?= Html::encode($horario->quinta ?: 'Fechado') ?></span></li>
+                            <li><span>Sexta-feira</span> <span><?= Html::encode($horario->sexta ?: 'Fechado') ?></span></li>
+                            <li><span>Sábado</span> <span><?= Html::encode($horario->sabado ?: 'Fechado') ?></span></li>
+                            <li><span>Domingo</span> <span><?= Html::encode($horario->domingo ?: 'Fechado') ?></span></li>
+                        </ul>
+                </div>
+            </div>
+
+            <!-- Informações Uteis Card -->
+            <div class="info-card">
+                <div class="info-card-title">
+                    <span class="info-card-icon">
+                        <img src="<?= Url::to('@web/images/icons/icon-info.svg') ?>" alt="Informações">
+                    </span>
+                    Informações Úteis
+                </div>
+                <div class="info-card-content">
+                    <ul class="info-list uteis-list">
+                        <?php if (!empty($model->morada)): ?>
+                            <li>
+                                <strong>Morada</strong>
+                                <span><?= Html::encode($model->morada) ?></span>
+                            </li>
+                        <?php endif; ?>
+                        <li>
+                            <strong>Preço de Ingresso</strong>
+                            <span>Consultar Bilhetes</span>
+                        </li>
+                        <?php if (!empty($model->contacto_telefone)): ?>
+                            <li>
+                                <strong>Telefone</strong>
+                                <span><?= Html::encode($model->contacto_telefone) ?></span>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (!empty($model->contacto_email)): ?>
+                            <li>
+                                <strong>Email</strong>
+                                <span><?= Html::encode($model->contacto_email) ?></span>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (!empty($model->website)): ?>
+                             <li>
+                                <strong>Website</strong>
+                                <span><?= Html::a($model->website, $model->website, ['target' => '_blank']) ?></span>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
         <?= BilhetesWidget::widget([
             'model' => $model,
             'showComprar' => true,
@@ -62,17 +171,22 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
 
         <?= EventosRelacionadosWidget::widget([
             'localCulturalId' => $model->id,
+            'eventos' => $eventos,
             'limit' => 3,
         ]) ?>
 
+        
         <?= NoticiasRelacionadasWidget::widget([
             'localCulturalId' => $model->id,
+            'noticias' => $noticias,
             'limit' => 3,
         ]) ?>
 
-        <?= AvaliacoesWidget::widget([
+        <div class="avaliacoes-container">
+            <?= AvaliacoesWidget::widget([
                 'localCulturalId' => $model->id,
-        ]) ?>
+            ]) ?>
+        </div>
 
     </div>
 
