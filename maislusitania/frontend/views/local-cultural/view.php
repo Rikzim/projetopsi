@@ -7,6 +7,7 @@ use frontend\widgets\EventosRelacionadosWidget;
 use frontend\widgets\NoticiasRelacionadasWidget;
 use frontend\widgets\HeroSection;
 use frontend\widgets\AvaliacoesWidget;
+use yii\widgets\Pjax;
 
 
 /* @var $this yii\web\View */
@@ -183,9 +184,11 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
         ]) ?>
 
         <div class="avaliacoes-container">
-            <?= AvaliacoesWidget::widget([
-                'localCulturalId' => $model->id,
-            ]) ?>
+            <?php Pjax::begin(['id' => 'avaliacoes-pjax', 'enablePushState' => false]); ?>
+                <?= AvaliacoesWidget::widget([
+                    'localCulturalId' => $model->id,
+                ]) ?>
+            <?php Pjax::end(); ?>
         </div>
 
     </div>

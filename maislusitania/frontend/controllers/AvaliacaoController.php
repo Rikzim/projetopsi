@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use common\models\Avaliacao;
+use frontend\widgets\AvaliacoesWidget;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
@@ -59,28 +60,33 @@ class AvaliacaoController extends Controller
         $localId = Yii::$app->request->post('local_id');
         $utilizadorId = Yii::$app->user->id;
 
-        // Verificar se já existe uma avaliação (ativa ou inativa)
-        $avaliacaoExistente = Avaliacao::findOne([
+        //Procurar uma avaliação existente para ESTE local e ESTE utilizador.
+        $avaliacao = Avaliacao::findOne([
             'local_id' => $localId,
             'utilizador_id' => $utilizadorId
         ]);
 
-        if ($avaliacaoExistente) {
-            // Reativar e atualizar a avaliação existente
-            $avaliacao = $avaliacaoExistente;
-            $avaliacao->ativo = 1;
-        } else {
-            // Criar nova avaliação
-            $avaliacao = new Avaliacao();
-            $avaliacao->utilizador_id = $utilizadorId;
-            $avaliacao->local_id = $localId;
+        if (!$avaliacao) {
+            // Se não existir, criar uma nova instância.
+            $avaliacao = new Avaliacao([
+                'utilizador_id' => $utilizadorId,
+                'local_id' => $localId,
+            ]);
         }
-
-        $avaliacao->classificacao = Yii::$app->request->post('classificacao');
-        $avaliacao->comentario = Yii::$app->request->post('comentario');
+        
+        // Reativar a avaliação caso esteja inativa (soft delete)
+        $avaliacao->ativo = 1;
         $avaliacao->data_avaliacao = date('Y-m-d H:i:s');
 
-        $avaliacao->save();
+        // Usar load() para popular o modelo e verificar se save() foi bem-sucedido.
+        if (!($avaliacao->load(Yii::$app->request->post(), '') && $avaliacao->save())) {
+            // Se houver um erro, registe-o para depuração.
+            Yii::error($avaliacao->getErrors());
+        }
+
+        if (Yii::$app->request->isPjax) {
+            return AvaliacoesWidget::widget(['localCulturalId' => $localId]);
+        }
 
         return $this->redirect(['local-cultural/view', 'id' => $localId]);
     }
@@ -89,10 +95,15 @@ class AvaliacaoController extends Controller
     {
         $avaliacao = $this->findModel($id);
 
-        $avaliacao->classificacao = Yii::$app->request->post('classificacao');
-        $avaliacao->comentario = Yii::$app->request->post('comentario');
+        // Carregar e guardar, verificando o resultado
+        if (!($avaliacao->load(Yii::$app->request->post(), '') && $avaliacao->save())) {
+             // Registar quaisquer erros para depuração
+            Yii::error($avaliacao->getErrors());
+        }
 
-        $avaliacao->save();
+        if (Yii::$app->request->isPjax) {
+            return AvaliacoesWidget::widget(['localCulturalId' => $avaliacao->local_id]);
+        }
 
         return $this->redirect(['local-cultural/view', 'id' => $avaliacao->local_id]);
     }
@@ -105,6 +116,10 @@ class AvaliacaoController extends Controller
         $avaliacao->ativo = 0;
 
         $avaliacao->save(false);
+
+        if (Yii::$app->request->isPjax) {
+            return AvaliacoesWidget::widget(['localCulturalId' => $localId]);
+        }
 
         return $this->redirect(['local-cultural/view', 'id' => $localId]);
     }
