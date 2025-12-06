@@ -8,9 +8,11 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use common\models\User;
 use backend\models\ReservaSearch;
+use common\models\LinhaReserva;
+use common\models\TipoBilhete;
+use yii\helpers\ArrayHelper;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.
@@ -48,7 +50,7 @@ class ReservaController extends Controller
             LocalCultural::find()->all(),
             'id',
             'nome'
-        );        
+        );
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -69,7 +71,7 @@ class ReservaController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-     
+
     /**
      * Updates an existing Reserva model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -81,25 +83,64 @@ class ReservaController extends Controller
     {
         $model = $this->findModel($id);
 
-        $utilizadores = ArrayHelper::map(
-            User::find()->where(['status' => User::STATUS_ACTIVE])->all(),
-            'id',
-            'username'
-        );
-        $locais = ArrayHelper::map(
-            LocalCultural::find()->all(),
-            'id',
-            'nome'
-        );
+        // Obter todos os tipos de bilhete possíveis para este local
+        $tiposBilhete = TipoBilhete::find()
+            ->where(['local_id' => $model->local_id])
+            ->indexBy('id') // Indexar por ID para acesso fácil
+            ->all();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        // Obter as linhas de reserva que já existem, indexadas por tipo_bilhete_id
+        $linhasExistentes = LinhaReserva::find()
+            ->where(['reserva_id' => $model->id])
+            ->indexBy('tipo_bilhete_id')
+            ->all();
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            
+            $precoTotalFinal = 0;
+            $linhasData = $this->request->post('LinhaReserva', []);
+
+            foreach ($linhasData as $tipoBilheteId => $linhaData) {
+                $quantidade = (int)($linhaData['quantidade'] ?? 0);
+                
+                // Encontrar a linha de reserva existente usando o array pré-carregado
+                $linha = $linhasExistentes[$tipoBilheteId] ?? null;
+
+                if ($quantidade > 0) {
+                    // Se a linha não existir, criar uma nova
+                    if ($linha === null) {
+                        $linha = new LinhaReserva([
+                            'reserva_id' => $model->id,
+                            'tipo_bilhete_id' => $tipoBilheteId,
+                        ]);
+                    }
+                    $linha->quantidade = $quantidade;
+                    
+                    if ($linha->save()) {
+                        // Calcular preço usando o array de tipos de bilhete pré-carregado
+                        if (isset($tiposBilhete[$tipoBilheteId])) {
+                            $precoTotalFinal += $linha->quantidade * $tiposBilhete[$tipoBilheteId]->preco;
+                        }
+                    } else {
+                        $model->addError('preco_total', 'Erro ao guardar uma das linhas da reserva.');
+                    }
+                } elseif ($linha !== null) {
+                    // Se a quantidade for 0 e a linha existir, eliminá-la
+                    $linha->delete();
+                }
+            }
+
+            $model->preco_total = $precoTotalFinal;
+
+            if ($model->save() && !$model->hasErrors()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
-            'utilizadores' => $utilizadores,
-            'locais' => $locais,
+            'tiposBilhete' => $tiposBilhete,       // Passar todos os tipos de bilhete possíveis
+            'linhasExistentes' => $linhasExistentes, // Passar as linhas que já existem
         ]);
     }
 

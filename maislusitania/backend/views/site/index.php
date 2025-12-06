@@ -54,7 +54,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                 <div class="card-header">
                     <h3 class="card-title"><i class="fas fa-calendar-check"></i> Últimas Reservas</h3>
                     <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm">
+                        <a href="reserva/index" class="btn btn-tool btn-sm">
                             <i class="fas fa-eye"></i> Ver Todas
                         </a>
                     </div>
@@ -63,17 +63,16 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th style="width: 10px">ID</th>
                                 <th>Reservas</th>
                                 <th>Utilizador</th>
                                 <th>Data</th>
                                 <th>Estado</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($ultimasReservas as $reserva): ?>
                                 <tr>
-                                    <td><?= Html::encode($reserva->id) ?></td>
                                     <td><?= Html::encode($reserva->local->nome ?? '-') ?></td>
                                     <td><?= Html::encode($reserva->utilizador->username ?? '-') ?></td>
                                     <td><?= Yii::$app->formatter->asDate($reserva->data_visita) ?></td>
@@ -86,6 +85,9 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                                             elseif ($status == 'Cancelada') $badge = 'badge-danger';
                                         ?>
                                         <span class="badge <?= $badge ?>"><?= Html::encode($status) ?></span>
+                                    </td>
+                                    <td>
+                                        <?= Html::a('<i class="fas fa-eye"></i>', ['reserva/view', 'id' => $reserva->id], ['class' => 'btn btn-sm btn-info', 'title' => 'Ver Reserva']) ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -101,7 +103,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                 <div class="card-header">
                     <h3 class="card-title"><i class="fas fa-star"></i> Últimas Avaliações</h3>
                     <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm">
+                        <a href="avaliacao/index" class="btn btn-tool btn-sm">
                             <i class="fas fa-eye"></i> Ver Todas
                         </a>
                     </div>
@@ -110,17 +112,16 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th style="width: 10px">ID</th>
                                 <th>Local</th>
                                 <th>Utilizador</th>
                                 <th>Rating</th>
                                 <th>Data</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($ultimasAvaliacoes as $avaliacao): ?>
                                 <tr>
-                                    <td><?= Html::encode($avaliacao->id) ?></td>
                                     <td><?= Html::encode($avaliacao->local->nome ?? '-') ?></td>
                                     <td><?= Html::encode($avaliacao->utilizador->username ?? '-') ?></td>
                                     <td>
@@ -133,6 +134,9 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                                         <?php endfor; ?>
                                     </td>
                                     <td><?= Yii::$app->formatter->asDate($avaliacao->data_avaliacao) ?></td>
+                                    <td>
+                                        <?= Html::a('<i class="fas fa-eye"></i>', ['avaliacao/view', 'id' => $avaliacao->id], ['class' => 'btn btn-sm btn-info', 'title' => 'Ver Avaliação']) ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
