@@ -135,27 +135,35 @@ use yii\helpers\Url;
 </style>
 
 <div class="section-title-eventos">
-    <span class="section-icon-eventos"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-event.svg') ?>"></span>
+    <span class="section-icon-eventos"><img src="<?= Url::to('@web/images/icons/icon-event.svg') ?>"></span>
     Eventos Relacionados
 </div>
 
+    
+
 <div class="eventos-grid">
+    <?php if (empty($eventos)): ?>
+        <p style="text-align: center; color: #666; padding: 30px 15px; font-size: 15px; grid-column: 1 / -1;">
+            Nenhum evento relacionado disponível no momento.
+        </p>
+    <?php else: ?>
+
     <?php foreach ($eventos as $evento): ?>
         <div class="evento-card">
             <?php if (isset($evento['imagem']) && $evento['imagem']): ?>
-                <img src="<?= Url::to('@web/uploads/eventos/' . $evento['imagem']) ?>" 
+                <img src="<?= Url::to($evento->getImage()) ?>"
                      alt="<?= Html::encode($evento['titulo']) ?>" 
                      class="evento-card-image">
             <?php else: ?>
-                <div class="evento-card-image"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-event.svg') ?>"></div>
+                <div class="evento-card-image"><img src="<?= Url::to('@web/images/icons/icon-event.svg') ?>"></div>
             <?php endif; ?>
             
             <div class="evento-card-content">
                 <h3><?= Html::encode($evento['titulo']) ?></h3>
                 
                 <div class="evento-card-meta">
-                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($evento['data']) ?></span>
-                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-person.svg') ?>"> <?= Html::encode($evento['limite']) ?></span>
+                    <span><img src="<?= Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($evento['data_inicio']) ?></span>
+                    <span><img src="<?= Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($evento['data_fim']) ?></span>
                 </div>
                 
                 <p class="evento-card-description">
@@ -166,4 +174,6 @@ use yii\helpers\Url;
             </div>
         </div>
     <?php endforeach; ?>
+
+    <?php endif; ?>
 </div>
