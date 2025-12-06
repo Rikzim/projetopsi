@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= Html::encode($this->title) ?>
                     </h3>
                     <div class="card-tools">
+                        <?= Html::a('<i class="fas fa-ticket-alt mr-2"></i>Ver Bilhetes do local', ['tipo-bilhete/index', 'local_id' => $model->local_id], ['class' => 'btn btn-info btn-sm mr-2', 'title' => 'Ver todos os tipos de bilhete do local']) ?>
                         <?= Html::a('<i class="fas fa-edit mr-2"></i>Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-warning btn-sm mr-2']) ?>
                         <?= Html::a('<i class="fas fa-trash mr-2"></i>Eliminar', ['delete', 'id' => $model->id], [
                             'class' => 'btn btn-danger btn-sm',
@@ -126,14 +127,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <thead>
                                                 <tr>
                                                     <th>Tipo</th>
-                                                    <th>Qtd</th>
+                                                    <th class="text-center">Qtd</th>
+                                                    <th class="text-right">Preço Unit.</th>
+                                                    <th class="text-right">Subtotal</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($model->linhaReservas as $linha): ?>
                                                     <tr>
                                                         <td><?= Html::encode($linha->tipoBilhete ? $linha->tipoBilhete->nome : '-') ?></td>
-                                                        <td><?= Html::encode($linha->quantidade) ?></td>
+                                                        <td class="text-center"><?= Html::encode($linha->quantidade) ?></td>
+                                                        <td class="text-right"><?= number_format($linha->tipoBilhete ? $linha->tipoBilhete->preco : 0, 2, ',', ' ') ?> €</td>
+                                                        <td class="text-right font-weight-bold"><?= number_format(($linha->tipoBilhete ? $linha->tipoBilhete->preco : 0) * $linha->quantidade, 2, ',', ' ') ?> €</td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>

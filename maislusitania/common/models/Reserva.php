@@ -63,8 +63,8 @@ class Reserva extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'utilizador_id' => 'Utilizador ID',
-            'local_id' => 'Local ID',
+            'utilizador_id' => 'Utilizador',
+            'local_id' => 'Local',
             'data_visita' => 'Data Visita',
             'preco_total' => 'Preco Total',
             'estado' => 'Estado',
