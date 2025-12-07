@@ -110,17 +110,23 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
                 </div>
                 <div class="info-card-content">
                         <ul class="info-list horario-list">
-                            <li><span>Segunda-feira</span> <span><?= Html::encode($horario->segunda ?: 'Fechado') ?></span></li>
-                            <li><span>Terça-feira</span> <span><?= Html::encode($horario->terca ?: 'Fechado') ?></span></li>
-                            <li><span>Quarta-feira</span> <span><?= Html::encode($horario->quarta ?: 'Fechado') ?></span></li>
-                            <li><span>Quinta-feira</span> <span><?= Html::encode($horario->quinta ?: 'Fechado') ?></span></li>
-                            <li><span>Sexta-feira</span> <span><?= Html::encode($horario->sexta ?: 'Fechado') ?></span></li>
-                            <li><span>Sábado</span> <span><?= Html::encode($horario->sabado ?: 'Fechado') ?></span></li>
-                            <li><span>Domingo</span> <span><?= Html::encode($horario->domingo ?: 'Fechado') ?></span></li>
+                            <?php if($horario): ?>
+                                <li><span>Segunda-feira</span> <span><?= Html::encode($horario->segunda ?: 'Fechado') ?></span></li>
+                                <li><span>Terça-feira</span> <span><?= Html::encode($horario->terca ?: 'Fechado') ?></span></li>
+                                <li><span>Quarta-feira</span> <span><?= Html::encode($horario->quarta ?: 'Fechado') ?></span></li>
+                                <li><span>Quinta-feira</span> <span><?= Html::encode($horario->quinta ?: 'Fechado') ?></span></li>
+                                <li><span>Sexta-feira</span> <span><?= Html::encode($horario->sexta ?: 'Fechado') ?></span></li>
+                                <li><span>Sábado</span> <span><?= Html::encode($horario->sabado ?: 'Fechado') ?></span></li>
+                                <li><span>Domingo</span> <span><?= Html::encode($horario->domingo ?: 'Fechado') ?></span></li>
+                            <?php else: ?>
+                                <div class="no-info">
+                                    <img src="<?= Url::to('@web/images/icons/blue/icon-horario36.svg') ?>" alt="Nenhum horário disponível" class="no-info-icon">
+                                    <p class="no-info-text">Nenhum horário disponível no momento.</p>
+                                </div>
+                            <?php endif; ?>
                         </ul>
                 </div>
             </div>
-
             <!-- Informações Uteis Card -->
             <div class="info-card">
                 <div class="info-card-title">
@@ -166,6 +172,7 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
     
         <?= BilhetesWidget::widget([
             'model' => $model,
+            'bilhetes' => $bilhetes,
             'showComprar' => true,
             'maxQuantidade' => 10,
         ]) ?>

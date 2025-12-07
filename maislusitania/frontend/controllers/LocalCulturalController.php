@@ -79,6 +79,7 @@ class LocalCulturalController extends Controller
         $horario = $this->findModel($id)->getHorarios()->one();
         $eventos = $this->findModel($id)->getEventos()->all();
         $noticias = $this->findModel($id)->getNoticias()->all();
+        $bilhetes = $this->findModel($id)->getTipoBilhetes()->all();
 
         return $this->render('view', [
             'model' => $model,
@@ -87,6 +88,7 @@ class LocalCulturalController extends Controller
             'horario' => $horario,
             'eventos' => $eventos,
             'noticias' => $noticias,
+            'bilhetes' => $bilhetes,
 
         ]);
     }

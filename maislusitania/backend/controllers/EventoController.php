@@ -74,6 +74,7 @@ class EventoController extends Controller
     {
         $model = new Evento();
         $uploadForm = new UploadForm();
+        $locais = ArrayHelper::map(LocalCultural::find()->all(), 'id', 'nome');
         
 
         if (Yii::$app->request->isPost) {
@@ -101,6 +102,7 @@ class EventoController extends Controller
         return $this->render('create', [
             'model' => $model,
             'uploadForm' => $uploadForm,
+            'locais' => $locais,
         ]);
     }
 
