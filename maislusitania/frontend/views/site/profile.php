@@ -123,7 +123,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                         </div>
                     </a>
 
-                    <a href="<?= Url::to(['/site/change-password']) ?>" class="action-card">
+                    <a href="<?= Url::to(['site/request-password-reset']) ?>" class="action-card">
                         <div class="action-icon">
                             <img src="<?= Url::to('@web/images/icons/blue/icon-reset.svg') ?>" alt="">
                         </div>

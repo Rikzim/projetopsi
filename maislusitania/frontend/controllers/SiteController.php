@@ -19,6 +19,9 @@ use common\models\LocalCultural;
 use common\models\UserProfile;
 use common\models\User;
 use common\models\Reserva;
+use common\models\UploadForm;
+use frontend\models\UpdateForm;
+
 
 /**
  * Site controller
@@ -313,6 +316,47 @@ class SiteController extends Controller
 
         return $this->render('profile', [
             'user' => $user,
+        ]);
+    }
+
+    public function actionUpdateProfile()
+    {
+        $model = new UpdateForm();
+        $uploadForm = new UploadForm();
+        $user = Yii::$app->user->identity;
+
+        if (!$model->loadUser($user->id)) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+                $uploadForm->imageFile = \yii\web\UploadedFile::getInstance($uploadForm, 'imageFile');
+                if ($uploadForm->imageFile) {
+                    $fileName = uniqid('userimage_') . '.' . $uploadForm->imageFile->extension;
+                    if ($uploadForm->upload($fileName)) {
+                        // Remover imagem antiga se existir
+                        if (!empty($model->current_image)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $model->current_image;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
+                        }
+                        $model->imagem_perfil = $fileName;
+                    }
+                }
+                if ($model->update()) {
+                    Yii::$app->session->setFlash('success', 'Utilizador atualizado com sucesso!');
+                    return $this->redirect(['profile']);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao atualizar utilizador.');
+                }
+            }
+        }
+
+        return $this->render('update-profile', [
+            'model' => $model,
+            'uploadForm' => $uploadForm,
         ]);
     }
 

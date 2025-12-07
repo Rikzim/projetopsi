@@ -185,7 +185,7 @@ use yii\widgets\ActiveForm;
         <?php foreach ($bilhetes as $index => $bilhete): ?>
             <div class="ticket-row">
                 <div class="ticket-info">
-                    <h4><?= Html::encode($bilhete['tipo']) ?></h4>
+                    <h4><?= Html::encode($bilhete['nome']) ?></h4>
                     <p><?= Html::encode($bilhete['descricao']) ?></p>
                 </div>
 
@@ -209,7 +209,7 @@ use yii\widgets\ActiveForm;
 
                     <!-- Campos ocultos com informações do bilhete -->
                     <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][tipo_bilhete_id]', $bilhete['id']) ?>
-                    <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][preco]', $bilhete['preco_valor']) ?>
+                    <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][preco]', $bilhete['preco']) ?>
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>

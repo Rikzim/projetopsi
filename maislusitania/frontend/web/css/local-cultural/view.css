@@ -253,6 +253,23 @@
     text-decoration: underline;
 }
 
+.no-info {
+    padding-top: 25%;
+}
+
+.no-info-icon {
+    display: block;
+    margin: 0 auto 15px;
+    width: 116px;
+    height: 116px;
+}
+
+.no-info-text {
+    text-align: center;
+    color: #666;
+    font-size: 18px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
     .info-cards-container {
