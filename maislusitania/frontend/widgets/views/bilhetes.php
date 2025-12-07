@@ -197,7 +197,7 @@ use yii\widgets\ActiveForm;
                     <!-- Input de Quantidade -->
                     <?= Html::input(
                         'number',
-                        "bilhetes[{$bilhete['id']}][quantidade]",  // ✅ USAR o ID do bilhete
+                        "bilhetes[{$bilhete['id']}][quantidade]",
                         0,
                         [
                             'class' => 'quantity-input',

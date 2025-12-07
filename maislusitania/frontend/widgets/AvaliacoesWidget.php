@@ -14,10 +14,12 @@ class AvaliacoesWidget extends Widget
 
     public function run()
     {
+        $query = Avaliacao::find()
+            ->where(['local_id' => $this->localCulturalId, 'ativo' => 1])
+            ->orderBy(['data_avaliacao' => SORT_DESC]);
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Avaliacao::find()
-                ->where(['local_id' => $this->localCulturalId, 'ativo' => 1])
-                ->orderBy(['data_avaliacao' => SORT_DESC]),
+            'query' => $query,
             'pagination' => [
                 'pageSize' => $this->pageSize,
             ],

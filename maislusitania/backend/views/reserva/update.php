@@ -6,6 +6,7 @@ use yii\helpers\Html;
 /** @var common\models\Reserva $model */
 /** @var array $utilizadores */
 /** @var array $locais */
+/** @var array $linhas */
 
 $this->params['breadcrumbs'][] = ['label' => 'Reservas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
@@ -17,8 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
-        'utilizadores' => $utilizadores,
-        'locais' => $locais,
+        'tiposBilhete' => $tiposBilhete,
+        'linhasExistentes' => $linhasExistentes,
     ]) ?>
 
 </div>

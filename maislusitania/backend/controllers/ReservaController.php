@@ -8,9 +8,11 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use common\models\User;
 use backend\models\ReservaSearch;
+use common\models\LinhaReserva;
+use common\models\TipoBilhete;
+use yii\helpers\ArrayHelper;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.
@@ -48,7 +50,7 @@ class ReservaController extends Controller
             LocalCultural::find()->all(),
             'id',
             'nome'
-        );        
+        );
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -69,7 +71,7 @@ class ReservaController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-     
+
     /**
      * Updates an existing Reserva model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -81,26 +83,76 @@ class ReservaController extends Controller
     {
         $model = $this->findModel($id);
 
-        $utilizadores = ArrayHelper::map(
-            User::find()->where(['status' => User::STATUS_ACTIVE])->all(),
-            'id',
-            'username'
-        );
-        $locais = ArrayHelper::map(
-            LocalCultural::find()->all(),
-            'id',
-            'nome'
-        );
+        // Dados auxiliares
+        $tiposBilhete = TipoBilhete::find()
+            ->where(['local_id' => $model->local_id])
+            ->indexBy('id')
+            ->all();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $linhasExistentes = LinhaReserva::find()
+            ->where(['reserva_id' => $model->id])
+            ->indexBy('tipo_bilhete_id')
+            ->all();
+
+        // POST
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            
+            $linhasData = $this->request->post('LinhaReserva', []);
+            
+            $novoPrecoTotal = $this->processarLinhasReserva($model, $linhasData, $linhasExistentes, $tiposBilhete);
+            
+            $model->preco_total = $novoPrecoTotal;
+
+            if (!$model->hasErrors() && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
-            'utilizadores' => $utilizadores,
-            'locais' => $locais,
+            'tiposBilhete' => $tiposBilhete,
+            'linhasExistentes' => $linhasExistentes,
         ]);
+    }
+
+    /**
+     * Processa a criação, atualização e remoção de linhas de reserva.
+     * Retorna o preço total calculado.
+     */
+    private function processarLinhasReserva($model, array $linhasData, array $linhasExistentes, array $tiposBilhete): float
+    {
+        $precoTotal = 0;
+
+        foreach ($linhasData as $tipoBilheteId => $linhaData) {
+            $quantidade = (int)($linhaData['quantidade'] ?? 0);
+            $linha = $linhasExistentes[$tipoBilheteId] ?? null;
+
+            // Se a quantidade for zero ou negativa -> Remover se existir e passar para o próximo
+            if ($quantidade <= 0) {
+                if ($linha) {
+                    $linha->delete();
+                }
+                continue; // Salta para a próxima iteração do loop
+            }
+
+            // Se a linha não existir, criar nova linha
+            if (!$linha) {
+                $linha = new LinhaReserva([
+                    'reserva_id' => $model->id,
+                    'tipo_bilhete_id' => $tipoBilheteId,
+                ]);
+            }
+
+            // Atualizar e Guardar
+            $linha->quantidade = $quantidade;
+            
+            if ($linha->save()) {
+                $precoUnitario = $tiposBilhete[$tipoBilheteId]->preco ?? 0;
+                $precoTotal += $linha->quantidade * $precoUnitario;
+            }
+        }
+
+        return $precoTotal;
     }
 
     /**

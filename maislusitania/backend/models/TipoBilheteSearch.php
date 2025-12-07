@@ -45,8 +45,6 @@ class TipoBilheteSearch extends TipoBilhete
     {
         $query = TipoBilhete::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -54,31 +52,30 @@ class TipoBilheteSearch extends TipoBilhete
         $this->load($params, $formName);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
+        // Filtrar por local_id sempre
         $query->andFilterWhere([
             'local_id' => $this->local_id,
         ]);
 
-        if($this->globalSearch){
-            $query->orFilterWhere(['like', 'nome', $this->globalSearch])
-                  ->orFilterWhere(['like', 'descricao', $this->globalSearch]);
+        // Pesquisa global
+        if (!empty($this->globalSearch)) {
+            $query->andWhere([
+                'or',
+                ['like', 'nome', $this->globalSearch],
+                ['like', 'descricao', $this->globalSearch]
+            ]);
         }
 
-        // grid filtering conditions
+        // Filtros específicos
         $query->andFilterWhere([
             'id' => $this->id,
             'preco' => $this->preco,
             'ativo' => $this->ativo,
-            'local_id' => $this->local_id,
         ]);
-
-        $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'descricao', $this->descricao]);
-
+        
         return $dataProvider;
     }
 }

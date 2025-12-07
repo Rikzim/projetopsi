@@ -27,6 +27,7 @@ use yii\widgets\ListView;
                     ? Url::to(['avaliacao/update', 'id' => $userAvaliacao->id])
                     : Url::to(['avaliacao/create']),
                 'method' => 'post',
+                'options' => ['data-pjax' => true],
             ]); ?>
 
             <?= Html::hiddenInput('local_id', $localCulturalId) ?>
@@ -62,8 +63,11 @@ use yii\widgets\ListView;
                 <?php if ($userAvaliacao && $canDelete): ?>
                     <?= Html::a('Eliminar', ['avaliacao/delete', 'id' => $userAvaliacao->id], [
                         'class' => 'btn btn-danger',
-                        'data-confirm' => 'Tem a certeza que deseja eliminar a sua avaliação?',
-                        'data-method' => 'post',
+                        'data' => [
+                            'confirm' => 'Tem a certeza que deseja eliminar a sua avaliação?',
+                            'method' => 'post',
+                            'pjax' => '1', // Esta linha instrui o Yii a tratar este link via Pjax
+                        ],
                     ]) ?>
                 <?php endif; ?>
             </div>

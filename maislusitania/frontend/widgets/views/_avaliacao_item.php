@@ -2,19 +2,29 @@
 
 use yii\helpers\Html;
 
+/** @var common\models\Avaliacao $model */
 ?>
-
 <div class="avaliacao-item">
     <div class="avaliacao-header">
-        <strong><?= Html::encode($model->utilizador->username ?? 'Utilizador') ?></strong>
-        <div class="rating-display">
-            <?php for ($i = 1; $i <= 5; $i++): ?>
-                <span class="star <?= $i <= $model->classificacao ? 'filled' : '' ?>">★</span>
-            <?php endfor; ?>
+        <div class="user-info">
+            <?= Html::encode($model->utilizador->username) ?>
         </div>
-        <span class="avaliacao-date"><?= Yii::$app->formatter->asDate($model->data_avaliacao) ?></span>
+        <div class="stars">
+            <?php
+            // Display solid stars for the rating and empty stars for the remainder.
+            for ($i = 1; $i <= 5; $i++) {
+                echo $i <= $model->classificacao ? '★' : '☆';
+            }
+            ?>
+        </div>
+        <div class="date">
+            <?= Yii::$app->formatter->asDate($model->data_avaliacao, 'medium') ?>
+        </div>
     </div>
-    <?php if ($model->comentario): ?>
-        <p class="avaliacao-comentario"><?= Html::encode($model->comentario) ?></p>
+
+    <?php if (!empty($model->comentario)): ?>
+        <div class="comentario-texto">
+            <p><?= nl2br(Html::encode($model->comentario)) ?></p>
+        </div>
     <?php endif; ?>
 </div>

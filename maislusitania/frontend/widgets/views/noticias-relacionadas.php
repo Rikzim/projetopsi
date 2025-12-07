@@ -135,36 +135,43 @@ use yii\helpers\Url;
 </style>
 
 <div class="section-title-noticias">
-    <span class="section-icon-noticias"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-noticias.svg') ?>"></span>
+    <span class="section-icon-noticias"><img src="<?= Url::to('@web/images/icons/icon-noticias.svg') ?>"></span>
     Notícias Relacionadas
 </div>
 
 <div class="noticias-grid">
+
+    <?php if (empty($noticias)): ?>
+        <p style="text-align: center; color: #666; padding: 30px 15px; font-size: 15px; grid-column: 1 / -1;">
+            Nenhuma notícia relacionada disponível no momento.
+        </p>
+    <?php else: ?>
+
     <?php foreach ($noticias as $noticia): ?>
         <div class="noticia-card">
-            <?php if (isset($noticia['imagem']) && $noticia['imagem']): ?>
-                <img src="<?= Url::to('@web/uploads/noticias/' . $noticia['imagem']) ?>" 
-                     alt="<?= Html::encode($noticia['titulo']) ?>" 
+            <?php $imageUrl = $noticia->getImage(); ?>
+            <?php if ($imageUrl): ?>
+                <img src="<?= Url::to($imageUrl) ?>"
+                     alt="<?= Html::encode($noticia->titulo) ?>"
                      class="noticia-card-image">
             <?php else: ?>
-                <div class="noticia-card-image"><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-noticias.svg') ?>"></div>
+                <div class="noticia-card-image"><img src="<?=Url::to('@web/images/icons/icon-noticias.svg') ?>"></div>
             <?php endif; ?>
             
             <div class="noticia-card-content">
-                <h3><?= Html::encode($noticia['titulo']) ?></h3>
+                <h3><?= Html::encode($noticia->titulo) ?></h3>
                 
                 <div class="noticia-card-meta">
-                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($noticia['data']) ?></span>
-                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-local.svg') ?>"> <?= Html::encode($noticia['local']) ?></span>
-                    <span><img src="<?= \yii\helpers\Url::to('@web/images/icons/icon-time-evento.svg') ?>"> <?= Html::encode($noticia['tempo_leitura']) ?></span>
+                    <span><img src="<?= Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Yii::$app->formatter->asDate($noticia->data_publicacao, 'long') ?></span>
                 </div>
                 
                 <p class="noticia-card-description">
-                    <?= Html::encode($noticia['descricao']) ?>
+                    <?= Html::encode($noticia->resumo) ?>
                 </p>
                 
-                <?= Html::a('Ver Mais', ['noticia/view', 'id' => $noticia['id']], ['class' => 'btn-ver-mais-noticia']) ?>
+                <?= Html::a('Ver Mais', ['noticia/view', 'id' => $noticia->id], ['class' => 'btn-ver-mais-noticia']) ?>
             </div>
         </div>
     <?php endforeach; ?>
+    <?php endif; ?>
 </div>
