@@ -194,6 +194,7 @@ $this->registerCss("
                                 [
                                     'class' => 'btn-favorite ' . ($isFavorite ? 'favorited' : ''),
                                     'title' => $isFavorite ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos',
+                                    'data-pjax' => '1',
                                 ]
                             ) ?>
                             <a href="<?= Url::to(['view', 'id' => $local->id]) ?>" class="view-details">
