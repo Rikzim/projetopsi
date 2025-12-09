@@ -119,12 +119,14 @@ class LocalCulturalController extends Controller
             $favorito->local_id = $id;
             $favorito->data_adicao = date('Y-m-d H:i:s');
             
-            if ($favorito->save()) {
-                Yii::$app->session->setFlash('success', 'Adicionado aos favoritos!');
-            }
+            $favorito->save();
         }
 
-        return $this->redirect(Yii::$app->request->referrer ?: ['view', 'id' => $id]);
+        if (Yii::$app->request->isPjax) {
+            return $this->actionIndex();
+        }
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
     protected function findModel($id)
     {
