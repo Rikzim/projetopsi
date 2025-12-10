@@ -50,30 +50,28 @@ class MapaController extends Controller
         
         return <<<HTML
         <div class="custom-popup">
-            <div class="popup-image">
-                <img src="{$imagemUrl}" alt="{$local->nome}" style="max-width: 100%; height: auto;" />
+            <div class="popup-image-container">
+                <img src="{$imagemUrl}" alt="{$local->nome}" class="popup-image" />
                 <span class="popup-badge">{$local->tipo->nome}</span>
             </div>
             <div class="popup-content">
-                <h3 class="popup-title">{$local->nome}</h3>
-                <div class="popup-info">
+                <div class="popup-header">
+                    <h3 class="popup-title">{$local->nome}</h3>
+                    <p class="popup-subtitle">{$local->morada}</p>
+                </div>
+                <div class="popup-details">
                     <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>{$local->morada}</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-phone"></i>
                         <span>{$local->contacto_telefone}</span>
                     </div>
                     <div class="info-item">
-                        <i class="fas fa-clock"></i>
                         <span>{$local->horario_funcionamento}</span>
                     </div>
                 </div>
-                <a href="{$baseurl}/local-cultural/view?id={$local->id}" class="btn-details">
-                    Ver Detalhes
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                <div class="popup-footer">
+                    <a href="{$baseurl}/local-cultural/view?id={$local->id}" class="btn-details">
+                        Ver Detalhes
+                    </a>
+                </div>
             </div>
         </div>
         HTML;
