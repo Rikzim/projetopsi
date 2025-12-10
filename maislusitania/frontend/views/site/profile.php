@@ -16,7 +16,6 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
     <div class="profile-header">
         <div class="profile-header-content">
             <h1 class="profile-title">Meu Perfil</h1>
-            <p class="profile-subtitle">Gerencie as suas informações pessoais</p>
         </div>
     </div>
 
@@ -128,8 +127,8 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                             <img src="<?= Url::to('@web/images/icons/blue/icon-reset.svg') ?>" alt="">
                         </div>
                         <div class="action-content">
-                            <h4 class="action-title">Alterar Password</h4>
-                            <p class="action-description">Atualize a sua senha</p>
+                            <h4 class="action-title">Alterar Palavra-Passe</h4>
+                            <p class="action-description">Atualize a sua palavra-passe</p>
                         </div>
                     </a>
                 </div>
