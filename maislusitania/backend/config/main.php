@@ -61,15 +61,16 @@ return [
                     'api/evento',
                     'api/favorito',
                     'api/linha-reserva',
-                    'api/local-cultural',
-                    'api/login-form',
-                    'api/signup-form',
-                    'api/noticia',
-                    'api/reserva',
+                    'api/local-cultural', //Funciona
+                    'api/login-form', //Funciona
+                    'api/signup-form', //Funciona
+                    'api/noticia', //Funciona
+                    'api/reserva', 
                     'api/tipo-bilhete',
                     'api/tipo-local',
                     'api/user',
                     'api/user-profile',
+                    'api/mapa',
                     ],
                     'pluralize' => true,
                     'extraPatterns' => [

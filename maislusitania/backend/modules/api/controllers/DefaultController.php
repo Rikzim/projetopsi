@@ -28,6 +28,7 @@ class DefaultController extends Controller
                 '/api/tipo-bilhetes' => 'Gestão de tipos de bilhete',
                 '/api/tipo-locals' => 'Gestão de tipos de local',
                 '/api/user-profile' => 'Gestão de perfis de utilizador',
+                '/api/mapa' => 'Gestão de mapa',
                 //RESTANTAS ENDPOINTS AQUI
             ],
         ];
