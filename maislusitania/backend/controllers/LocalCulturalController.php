@@ -75,6 +75,8 @@ class LocalCulturalController extends Controller
         $model = new LocalCultural();
         $uploadForm = new UploadForm();
         $horario = new Horario();
+        $tipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
+        $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
 
         if (Yii::$app->request->isPost) {
             if (
@@ -104,6 +106,8 @@ class LocalCulturalController extends Controller
             'model' => $model,
             'uploadForm' => $uploadForm,
             'horario' => $horario,
+            'distritos' => $distritos,
+            'tipoLocais' => $tipoLocais,
         ]);
     }
 
