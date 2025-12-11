@@ -48,7 +48,7 @@ $backgroundStyle = $showOverlay
         ">
     <div class="hero-section-content">
         <?php if ($title): ?>
-            <h1><?= Html::encode($title) ?></h1>
+            <?= Html::tag('h1', $title, $titleOptions) ?>
         <?php endif; ?>
 
         <?php if ($subtitle): ?>

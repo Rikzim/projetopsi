@@ -26,6 +26,7 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
     <?= HeroSection::widget([
             'backgroundImage' => Url::to($model->getImage()),
             'title' => $model->nome,
+            'titleOptions' => ['class' => 'hero-section-title-bordered'],
             'showOverlay' => false,
     ]) ?>
 
