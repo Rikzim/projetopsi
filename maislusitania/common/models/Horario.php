@@ -7,7 +7,6 @@ use Yii;
 /**
  * This is the model class for table "horario".
  *
- * @property int $local_id
  * @property string|null $segunda
  * @property string|null $terca
  * @property string|null $quarta
@@ -17,7 +16,7 @@ use Yii;
  * @property string|null $domingo
  * @property int $id
  *
- * @property LocalCultural $local
+ * @property LocalCultural $localCultural
  */
 class Horario extends \yii\db\ActiveRecord
 {
@@ -38,10 +37,7 @@ class Horario extends \yii\db\ActiveRecord
     {
         return [
             [['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'], 'default', 'value' => null],
-            [['local_id'], 'required'],
-            [['local_id'], 'integer'],
             [['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'], 'string', 'max' => 100],
-            [['local_id'], 'exist', 'skipOnError' => true, 'targetClass' => LocalCultural::class, 'targetAttribute' => ['local_id' => 'id']],
         ];
     }
 
@@ -51,7 +47,6 @@ class Horario extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'local_id' => 'Local ID',
             'segunda' => 'Segunda',
             'terca' => 'Terca',
             'quarta' => 'Quarta',
@@ -64,13 +59,13 @@ class Horario extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Local]].
+     * Gets query for [[LocalCultural]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLocal()
+    public function getLocalCultural()
     {
-        return $this->hasOne(LocalCultural::class, ['id' => 'local_id']);
+        return $this->hasOne(LocalCultural::class, ['horario_id' => 'id']);
     }
 
 }

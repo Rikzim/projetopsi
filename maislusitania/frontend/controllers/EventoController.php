@@ -32,7 +32,7 @@ class EventoController extends Controller
         $searchModel = new EventoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $dataProvider->query->joinWith(['local.tipo', 'local.distrito']);
+        $dataProvider->query->joinWith(['local.tipoLocal', 'local.distrito']);
 
         // Filter by tipo if provided
         $tipo = Yii::$app->request->get('tipo');

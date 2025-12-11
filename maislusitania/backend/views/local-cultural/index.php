@@ -164,9 +164,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'label' => 'Tipo',
                                 'format' => 'raw',
                                 'value' => function($model) {
-                                    if ($model->tipo) {
+                                    if ($model->tipoLocal) {
                                         return Html::tag('span', 
-                                            '<i class="fas fa-tag mr-2"></i>' . Html::encode($model->tipo->nome),
+                                            '<i class="fas fa-tag mr-2"></i>' . Html::encode($model->tipoLocal->nome),
                                             [
                                                 'class' => 'badge badge-info',
                                                 'style' => 'font-size: 0.95rem; padding: 0.6em 1em; display: inline-block;'

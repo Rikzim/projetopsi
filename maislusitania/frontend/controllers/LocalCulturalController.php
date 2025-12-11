@@ -76,18 +76,18 @@ class LocalCulturalController extends Controller
         $model = $this->findModel($id);
         $averageRating = $this->findModel($id)->getAverageRating();
         $ratingCount = $this->findModel($id)->getRatingCount();
-        $horario = $this->findModel($id)->getHorarios()->one();
-        $eventos = $this->findModel($id)->getEventos()->all();
-        $noticias = $this->findModel($id)->getNoticias()->all();
+        //$horario = $this->findModel($id)->horarios;
+        //$eventos = $this->findModel($id)->getEventos()->all();
+        //$noticias = $this->findModel($id)->noticias;
         $bilhetes = $this->findModel($id)->getTipoBilhetes()->all();
 
         return $this->render('view', [
             'model' => $model,
             'averageRating' => $averageRating,
             'ratingCount' => $ratingCount,
-            'horario' => $horario,
-            'eventos' => $eventos,
-            'noticias' => $noticias,
+            //'horario' => $horario,
+            //'eventos' => $eventos,
+            //'noticias' => $noticias,
             'bilhetes' => $bilhetes,
 
         ]);

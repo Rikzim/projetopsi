@@ -22,8 +22,8 @@ class LocalCulturalSearch extends LocalCultural
     public function rules()
     {
         return [
-            [['id', 'tipo_id', 'distrito_id', 'ativo'], 'integer'],
-            [['nome', 'morada', 'descricao', 'horario_funcionamento', 'contacto_telefone', 'contacto_email', 'website', 'imagem_principal'], 'safe'],
+            [['id', 'tipo_id', 'distrito_id', 'ativo', 'horario_id'], 'integer'],
+            [['nome', 'morada', 'descricao', 'contacto_telefone', 'contacto_email', 'website', 'imagem_principal'], 'safe'],
             [['latitude', 'longitude'], 'number'],
             [['search', 'tipo', 'distrito', 'order'], 'safe'], // Adicionar campos customizados
         ];
@@ -114,18 +114,22 @@ class LocalCulturalSearch extends LocalCultural
         
         // grid filtering conditions
         $query->andFilterWhere([
-            'local_cultural.id' => $this->id,
-            'local_cultural.tipo_id' => $this->tipo_id,
-            'local_cultural.distrito_id' => $this->distrito_id,
-            'local_cultural.latitude' => $this->latitude,
-            'local_cultural.longitude' => $this->longitude,
+            'id' => $this->id,
+		           'tipo_id' => $this->tipo_id,
+		           'distrito_id' => $this->distrito_id,
+		           'ativo' => $this->ativo,
+		           'latitude' => $this->latitude,
+		           'longitude' => $this->longitude,
+		           'horario_id' => $this->horario_id,
         ]);
 
-        $query->andFilterWhere(['like', 'local_cultural.horario_funcionamento', $this->horario_funcionamento])
-            ->andFilterWhere(['like', 'local_cultural.contacto_telefone', $this->contacto_telefone])
-            ->andFilterWhere(['like', 'local_cultural.contacto_email', $this->contacto_email])
-            ->andFilterWhere(['like', 'local_cultural.website', $this->website])
-            ->andFilterWhere(['like', 'local_cultural.imagem_principal', $this->imagem_principal]);
+        $query->andFilterWhere(['like', 'nome', $this->nome])
+		           ->andFilterWhere(['like', 'morada', $this->morada])
+		           ->andFilterWhere(['like', 'descricao', $this->descricao])
+		           ->andFilterWhere(['like', 'contacto_telefone', $this->contacto_telefone])
+		           ->andFilterWhere(['like', 'contacto_email', $this->contacto_email])
+		           ->andFilterWhere(['like', 'website', $this->website])
+		           ->andFilterWhere(['like', 'imagem_principal', $this->imagem_principal]);
 
         return $dataProvider;
     }

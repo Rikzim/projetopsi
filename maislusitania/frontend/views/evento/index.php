@@ -91,7 +91,7 @@ $this->registerCssFile('@web/css/evento/index.css', ['depends' => [\yii\web\YiiA
                     <a href="<?= Url::to(['view', 'id' => $evento->id]) ?>" class="evento-list-card">
                         <div class="evento-list-image" style="background-image: url('/uploads/<?php echo Html::encode($evento->imagem) ?>');">
                             <span class="evento-list-category">
-                                <?= Html::encode($evento->local && $evento->local->tipo ? $evento->local->tipo->nome : 'Eventos') ?>
+                                <?= Html::encode($evento->local && $evento->local->tipoLocal ? $evento->local->tipoLocal->nome : 'Eventos') ?>
                             </span>
                         </div>
 

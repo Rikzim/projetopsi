@@ -21,6 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'uploadForm' => $uploadForm,
                         'horario' => $horario,
+                        'tipoLocais' => $tipoLocais,
+                        'distritos' => $distritos,
                     ]) ?>
                 </div>
             </div>
