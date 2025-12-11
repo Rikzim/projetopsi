@@ -38,22 +38,15 @@ class FavoritoController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Favorito::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+
+        $user = Yii::$app->user->identity;
+        $favorites = $user->favorites;
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'favorites' => $favorites,
         ]);
     }
 
