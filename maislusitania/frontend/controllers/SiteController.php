@@ -366,7 +366,7 @@ class SiteController extends Controller
             return $this->redirect(['site/login']);
         }
         $user = Yii::$app->user->identity;
-        $favorites = $user->getFavorites()->all();
+        $favorites = $user->favorites;
 
         return $this->render('favorites', [
             'favorites' => $favorites,

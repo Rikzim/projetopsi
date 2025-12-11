@@ -43,7 +43,7 @@ class FavoritoController extends Controller
         }
 
         $user = Yii::$app->user->identity;
-        $favorites = $user->getFavorites()->all();
+        $favorites = $user->favorites;
 
         return $this->render('index', [
             'favorites' => $favorites,

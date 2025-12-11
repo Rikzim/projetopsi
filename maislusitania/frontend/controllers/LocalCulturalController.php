@@ -100,22 +100,17 @@ class LocalCulturalController extends Controller
         }
 
         $local = $this->findModel($id);
-        $userId = Yii::$app->user->id;
+        $user = Yii::$app->user->identity;
 
         // Verificar se já existe
-        $favorito = Favorito::findOne([
-            'utilizador_id' => $userId,
-            'local_id' => $id
-        ]);
-
-        if ($favorito) {
-            // Se existe, remover
-            $favorito->delete();
+        $index = array_search($id, array_column($user->favorites, 'local_id'));
+        if ($index) {
+            $favorito = $user->favorites[$index]->delete();
             Yii::$app->session->setFlash('success', 'Removido dos favoritos!');
         } else {
             // Se não existe, adicionar
             $favorito = new Favorito();
-            $favorito->utilizador_id = $userId;
+            $favorito->utilizador_id = $user->id;
             $favorito->local_id = $id;
             $favorito->data_adicao = date('Y-m-d H:i:s');
             

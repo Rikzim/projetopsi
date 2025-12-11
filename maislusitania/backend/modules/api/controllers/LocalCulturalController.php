@@ -84,7 +84,9 @@ class LocalCulturalController extends ActiveController
         return ['data' => $this->formatLocalData($local)];
     }
 
-    public function actionDistritos($nome)
+
+    // Extra Patterns
+    public function actionDistrito($nome)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         // Procura o distrito pelo nome (case-insensitive)
@@ -107,7 +109,7 @@ class LocalCulturalController extends ActiveController
             'locais' => $locais,
         ];
     }
-    public function actionTipos($nome)
+    public function actionTipoLocal($nome)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         // Procura o distrito pelo nome (case-insensitive)
@@ -126,6 +128,25 @@ class LocalCulturalController extends ActiveController
 
         return [
             'tipo_local' => $tipolocal->nome,
+            'total' => count($locais),
+            'locais' => $locais,
+        ];
+    }
+
+    public function actionSearch($nome)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $locais = LocalCultural::find()
+            ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
+            ->andWhere(['ativo' => true])
+            ->all();
+
+        if (empty($locais)) {
+            throw new NotFoundHttpException("Nenhum local cultural encontrado com o nome '$nome'.");
+        }
+
+        return [
             'total' => count($locais),
             'locais' => $locais,
         ];
