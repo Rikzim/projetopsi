@@ -38,9 +38,9 @@ use yii\helpers\Url;
                                 </div>
                                 <div class="mobile-user-name"><?= Html::encode($username) ?></div>
                             </div>
-                            <a href="<?= Url::to(['/site/profile']) ?>" class="mobile-menu-link">Perfil</a>
-                            <a href="<?= Url::to(['/site/favorites']) ?>" class="mobile-menu-link">Favoritos</a>
-                            <a href="<?= Url::to(['/site/bilhetes']) ?>" class="mobile-menu-link">Meus Bilhetes</a>
+                            <a href="<?= Url::to(['/profile/me']) ?>" class="mobile-menu-link">Perfil</a>
+                            <a href="<?= Url::to(['/favorito/index']) ?>" class="mobile-menu-link">Favoritos</a>
+                            <a href="<?= Url::to(['/bilhetes/index']) ?>" class="mobile-menu-link">Meus Bilhetes</a>
                             <?= Html::beginForm(['/site/logout'], 'post', ['style' => 'margin: 0']) ?>
                             <button type="submit" class="mobile-menu-link logout">Logout</button>
                             <?= Html::endForm() ?>
@@ -85,19 +85,19 @@ use yii\helpers\Url;
                             
                             <ul class="user-dropdown-menu">
                                 <li>
-                                    <a href="<?= Url::to(['/site/profile']) ?>" class="user-dropdown-item">
+                                    <a href="<?= Url::to(['/profile/me']) ?>" class="user-dropdown-item">
                                         <img src="<?= Url::to('@web/images/icons/blue/icon-profile.svg') ?>" alt="">
                                         Perfil
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/site/favorites']) ?>" class="user-dropdown-item">
+                                    <a href="<?= Url::to(['/favorito/index']) ?>" class="user-dropdown-item">
                                         <img src="<?= Url::to('@web/images/icons/blue/icon-favorite.svg') ?>" alt="">
                                         Favoritos
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?= Url::to(['/site/bilhetes']) ?>" class="user-dropdown-item">
+                                    <a href="<?= Url::to(['/reserva/index']) ?>" class="user-dropdown-item">
                                         <img src="<?= Url::to('@web/images/icons/blue/icon-ticket.svg') ?>" alt="">
                                         Meus Bilhetes
                                     </a>

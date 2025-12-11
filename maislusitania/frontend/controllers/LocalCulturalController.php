@@ -100,21 +100,30 @@ class LocalCulturalController extends Controller
         }
 
         $local = $this->findModel($id);
-        $user = Yii::$app->user->identity;
+        $userId = Yii::$app->user->id;
 
-        // Verificar se já existe
-        $index = array_search($id, array_column($user->favorites, 'local_id'));
-        if ($index) {
-            $favorito = $user->favorites[$index]->delete();
+        // Verificar se já existe usando query direta
+        $favorito = Favorito::findOne([
+            'utilizador_id' => $userId,
+            'local_id' => $id,
+        ]);
+        
+        if ($favorito !== null) {
+            // Existe, então remover
+            $favorito->delete();
             Yii::$app->session->setFlash('success', 'Removido dos favoritos!');
         } else {
             // Se não existe, adicionar
             $favorito = new Favorito();
-            $favorito->utilizador_id = $user->id;
+            $favorito->utilizador_id = $userId;
             $favorito->local_id = $id;
             $favorito->data_adicao = date('Y-m-d H:i:s');
             
-            $favorito->save();
+            if (!$favorito->save()) {
+                Yii::$app->session->setFlash('error', 'Erro ao adicionar aos favoritos.');
+            } else {
+                Yii::$app->session->setFlash('success', 'Adicionado aos favoritos!');
+            }
         }
 
         if (Yii::$app->request->isPjax) {
@@ -123,6 +132,7 @@ class LocalCulturalController extends Controller
 
         return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
+
     protected function findModel($id)
     {
         if (($model = LocalCultural::findOne(['id' => $id])) !== null) {
