@@ -107,10 +107,8 @@ $this->registerCss("
     }
 }
 ");
+
 ?>
-
-
-
 
 <div class="curiosidades-section">
     <h2 class="curiosidades-title"><?= Html::encode($title) ?></h2>
@@ -120,14 +118,14 @@ $this->registerCss("
             $image = isset($card['image']) && is_string($card['image']) ? Url::to($card['image']) : '';
             $cardTitle = isset($card['title']) && is_string($card['title']) ? $card['title'] : '';
             $buttonText = isset($card['buttonText']) && is_string($card['buttonText']) ? $card['buttonText'] : 'Ver mais';
-            $url = isset($card['url']) && is_string($card['url']) ? $card['url'] : '#';
+            $url = isset($card['url']) ? Url::to($card['url']) : '#';
             ?>
             <div class="curiosidade-card">
                 <div class="curiosidade-image-wrapper">
                     <img class="curiosidade-image" src="<?= Html::encode($image) ?>" alt="<?= Html::encode($cardTitle) ?>">
                 </div>
                 <p class="curiosidade-text"><?= Html::encode($cardTitle) ?></p>
-                <a href="<?= Html::encode($url) ?>" class="curiosidade-btn">
+                <a href="<?= $url ?>" class="curiosidade-btn">
                     <?= Html::encode($buttonText) ?>
                 </a>
             </div>
