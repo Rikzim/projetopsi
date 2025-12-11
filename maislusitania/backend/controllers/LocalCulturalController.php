@@ -63,10 +63,8 @@ class LocalCulturalController extends Controller
      */
     public function actionView($id)
     {
-        $horario = $this->findModel($id)->getHorarios()->all();
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'horario' => $horario,
         ]);
     }
 
@@ -90,14 +88,13 @@ class LocalCulturalController extends Controller
                         $model->imagem_principal = $fileName;
                     }
                 }
-                if ($model->save(false)) {
-                    $horario->local_id = $model->id;
-                    $horario->save(false);
-
-                    Yii::$app->session->setFlash('success', 'Local Cultural criado com sucesso!');
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Erro ao criar Local Cultural.');
+                
+                // Save horario first to get an ID, then link it to the model and save the model.
+                if ($horario->save()) {
+                    $model->horario_id = $horario->id;
+                    if ($model->save()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
                 }
             }
         }
@@ -117,11 +114,8 @@ class LocalCulturalController extends Controller
         $tipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
         $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
         $uploadForm = new UploadForm();
-        $horario = $model->getHorarios()->one() ?: new Horario();
+        $horario = $model->horario ?: new Horario();
 
-        if (!$horario) {
-            $horario = new Horario();
-        }
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
@@ -144,9 +138,16 @@ class LocalCulturalController extends Controller
                     }
                 }
 
-                if ($model->save(false)) {
-                    $horario->local_id = $model->id;
-                    $horario->save(false);
+                if ($model->save()) {
+                    // Save the horario (this will UPDATE an existing record or INSERT a new one)
+                    if ($horario->save()) {
+                        // If the horario was new, we need to link it to the LocalCultural model
+                        // and save the model again to persist the foreign key.
+                        if (!$model->horario_id) {
+                            $model->horario_id = $horario->id;
+                            $model->save();
+                        }
+                    }
 
                     Yii::$app->session->setFlash('success', 'Local Cultural atualizado!');
                     return $this->redirect(['view', 'id' => $model->id]);

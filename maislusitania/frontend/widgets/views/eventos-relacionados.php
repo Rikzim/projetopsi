@@ -162,8 +162,8 @@ use yii\helpers\Url;
                 <h3><?= Html::encode($evento['titulo']) ?></h3>
                 
                 <div class="evento-card-meta">
-                    <span><img src="<?= Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($evento['data_inicio']) ?></span>
-                    <span><img src="<?= Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Html::encode($evento['data_fim']) ?></span>
+                    <span><img src="<?= Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Yii::$app->formatter->asDatetime($evento['data_inicio'], 'php:d/m/Y H:i') ?></span>
+                    <span><img src="<?= Url::to('@web/images/icons/icon-calender.svg') ?>"> <?= Yii::$app->formatter->asDatetime($evento['data_fim'], 'php:d/m/Y H:i') ?></span>
                 </div>
                 
                 <p class="evento-card-description">

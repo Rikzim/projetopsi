@@ -23,8 +23,8 @@ class MapaController extends Controller
                 'lat' => (float)$local->latitude,
                 'lng' => (float)$local->longitude,
                 'popup' => $this->buildPopupHtml($local),
-                'type' => $local->tipo->nome,
-                'icone' => $local->tipo->getImage()
+                'type' => $local->tipoLocal->nome,
+                'icone' => $local->tipoLocal->getImage()
             ];
         }
 
@@ -52,7 +52,7 @@ class MapaController extends Controller
         <div class="custom-popup">
             <div class="popup-image-container">
                 <img src="{$imagemUrl}" alt="{$local->nome}" class="popup-image" />
-                <span class="popup-badge">{$local->tipo->nome}</span>
+                <span class="popup-badge">{$local->tipoLocal->nome}</span>
             </div>
             <div class="popup-content">
                 <div class="popup-header">
@@ -64,7 +64,7 @@ class MapaController extends Controller
                         <span>{$local->contacto_telefone}</span>
                     </div>
                     <div class="info-item">
-                        <span>{$local->horario_funcionamento}</span>
+                        <span>{$local->contacto_email}</span>
                     </div>
                 </div>
                 <div class="popup-footer">
