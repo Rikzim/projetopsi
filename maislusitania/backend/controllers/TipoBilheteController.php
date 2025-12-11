@@ -89,7 +89,7 @@ class TipoBilheteController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'locais' => $locais,
+            //'locais' => $locais,
         ]);
     }
 
