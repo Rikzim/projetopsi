@@ -48,6 +48,7 @@ class LocalCulturalController extends ActiveController
                 'descricao' => $local->descricao,
                 'imagem' => $local->getImageAPI(),
                 'avaliacao_media' => $local->getAverageRating(),
+                
             ];
         }, $locais);
 

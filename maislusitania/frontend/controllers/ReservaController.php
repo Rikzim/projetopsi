@@ -39,22 +39,38 @@ class ReservaController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Reserva::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        
+        $userId = Yii::$app->user->id;
+        $hoje = date('Y-m-d');
+        
+        // Buscar todas as reservas do utilizador com eager loading das relações
+        $reservas = Reserva::find()
+            ->where(['utilizador_id' => $userId])
+            ->andWhere(['>=', 'data_visita', $hoje])
+            ->with([
+                'local',              // Carregar dados do local cultural
+                'linhaReservas',      // Carregar linhas de reserva (bilhetes)
+                'linhaReservas.tipoBilhete' // Carregar tipos de bilhete
+            ])
+            ->orderBy(['data_criacao' => SORT_DESC]) // Mais recentes primeiro
+            ->all();
+        $reservasExpiradas = Reserva::find()
+            ->where(['utilizador_id' => $userId])
+            ->andWhere(['<', 'data_visita', date('Y-m-d')])
+            ->with([
+                'local',              
+                'linhaReservas',      
+                'linhaReservas.tipoBilhete' 
+            ])
+            ->orderBy(['data_criacao' => SORT_DESC]) 
+            ->all();
+        
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'reservas' => $reservas,
+            'reservasExpiradas' => $reservasExpiradas,
         ]);
     }
 
@@ -96,7 +112,7 @@ class ReservaController extends Controller
                 $reserva->GuardarReserva($postData);
 
                 Yii::$app->session->setFlash('success', 'Reserva criada com sucesso!');
-                return $this->redirect(['site/bilhetes']);
+                return $this->redirect(['reserva/index']);
             } catch (\Exception $e) {
                 // NÃO redirecionar - renderizar novamente com os dados
                 Yii::$app->session->setFlash('error', $e->getMessage());
