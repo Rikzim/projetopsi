@@ -180,9 +180,17 @@ class UserController extends Controller
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('userimage_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
+                        // Remover imagem antiga se existir
+                        $currentImage = $model->imagem_perfil;
+                        if (!empty($currentImage)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
+                        }
+                        
                         $model->imagem_perfil = $fileName;
                     }
-                    //FALTA REMOVER IMAGEM ANTIGA
                 }
                 if ($model->update()) {
                     Yii::$app->session->setFlash('success', 'Utilizador atualizado com sucesso!');
@@ -215,10 +223,8 @@ class UserController extends Controller
             $userProfile = $model->userProfile;
 
             // Remover imagem antiga se existir
-            $currentImage = $this->findModel($id)->imagem;
-
-            if (!empty($currentImage)) {
-                $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+            if ($userProfile && !empty($userProfile->imagem_perfil)) {
+                $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $userProfile->imagem_perfil;
                 if (file_exists($oldImagePath)) {
                     unlink($oldImagePath);
                 }

@@ -489,3 +489,10 @@
     color: #333;
     line-height: 1.6;
 }
+
+.hero-section-title-bordered {
+    color: #2E5AAC; /* This sets the fill color of the letters to blue */
+    -webkit-text-stroke-width: 6px; /* This sets the border width */
+    -webkit-text-stroke-color: white; /* This sets the border color to white */
+    paint-order: stroke fill; /* Ensures the stroke is drawn behind the fill */
+}
