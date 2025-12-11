@@ -119,8 +119,7 @@ class EventoController extends ActiveController
     {
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
-            ->joinWith('local.tipo')
-            //->joinWith('local.tipoLocal') // ALTERADO: tipoLocal para tipo
+            ->joinWith('local.tipoLocal') // ALTERADO: tipoLocal para tipo
             ->where(['LIKE', 'LOWER(tipo_local.nome)', strtolower($nome)])
             ->andWhere(['evento.ativo' => true])
             ->all();

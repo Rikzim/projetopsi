@@ -110,8 +110,7 @@ class NoticiaController extends ActiveController
     {
         $modelClass = $this->modelClass;
         $noticias = $modelClass::find()
-            ->joinWith('local.tipo')
-            //->joinWith('local.tipoLocal') // ALTERADO: tipoLocal para tipo
+            ->joinWith('local.tipoLocal') // ALTERADO: tipoLocal para tipo
             ->where(['LIKE', 'LOWER(tipo_local.nome)', strtolower($nome)])
             ->andWhere(['noticia.ativo' => true])
             ->all();
