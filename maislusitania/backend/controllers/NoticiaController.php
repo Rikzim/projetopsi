@@ -76,15 +76,6 @@ class NoticiaController extends Controller
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('noticia_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
-                        // Remover imagem antiga se existir
-                        $currentImage = $model->imagem;
-                        if (!empty($currentImage)) {
-                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
-                            if (file_exists($oldImagePath)) {
-                                unlink($oldImagePath);
-                            }
-                        }
-
                         $model->imagem = $fileName;
                     }
                 }
@@ -162,16 +153,20 @@ class NoticiaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $currentImage = $model->imagem;
 
-        // Remover imagem antiga se existir
-        $currentImage = $this->findModel($id)->imagem;
+        if ($model->delete()) {
+            Yii::$app->session->setFlash('success', 'Notícia deletada com sucesso!');
 
-        if (!empty($currentImage)) {
-            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);
+            if (!empty($currentImage)) {
+                $imagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao deletar a notícia.');
         }
 
         return $this->redirect(['index']);

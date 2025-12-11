@@ -76,23 +76,19 @@ class TipoLocalController extends Controller
         $uploadForm = new UploadForm();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post())) {
                 $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('marker_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
-                        // Remover imagem antiga se existir
-                        $currentImage = $model->imagem;
-                        if (!empty($currentImage)) {
-                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
-                            if (file_exists($oldImagePath)) {
-                                unlink($oldImagePath);
-                            }
-                        }
                         $model->icone = $fileName;
                     }
                 }
-                return $this->redirect(['view', 'id' => $model->id]);
+
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'Tipo de Local criado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         }
 
@@ -114,27 +110,27 @@ class TipoLocalController extends Controller
         $model = $this->findModel($id);
         $uploadForm = new UploadForm();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
-                if ($uploadForm->imageFile) {
-                    $fileName = uniqid('marker_') . '.' . $uploadForm->imageFile->extension;
-                    if ($uploadForm->upload($fileName)) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
+            if ($uploadForm->imageFile) {
+                $fileName = uniqid('marker_') . '.' . $uploadForm->imageFile->extension;
+                if ($uploadForm->upload($fileName)) {
 
-                        // Remover imagem antiga se existir
-                        $currentImage = $model->imagem;
-                        if (!empty($currentImage)) {
-                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
-                            if (file_exists($oldImagePath)) {
-                                unlink($oldImagePath);
-                            }
+                    // Remover imagem antiga se existir
+                    $currentImage = $model->icone;
+                    if (!empty($currentImage)) {
+                        $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
                         }
-                        
-                        $model->icone = $fileName;
                     }
-
-                    $model->save(false);
+                    
+                    $model->icone = $fileName;
                 }
+            }
+
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Tipo de Local atualizado com sucesso!');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -154,13 +150,20 @@ class TipoLocalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $currentImage = $model->icone;
 
-        if (!empty($currentImage)) {
-            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);
+        if ($model->delete()) {
+            Yii::$app->session->setFlash('success', 'Tipo de Local deletado com sucesso!');
+
+            if (!empty($currentImage)) {
+                $imagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao deletar o Tipo de Local.');
         }
 
         return $this->redirect(['index']);
