@@ -45,10 +45,10 @@ class MapaController extends ActiveController
                 'nome' => $local->nome,
                 'descricao' => $local->descricao,
                 'imagem' => $local->getImageAPI(),
-                'tipo' => $local->tipo->nome,
+                'tipo' => $local->tipoLocal->nome,
                 'latitude' => $local->latitude,
                 'longitude' => $local->longitude,
-                'markerImagem' => $local->tipo->getImageAPI(),
+                'markerImagem' => $local->tipoLocal->getImageAPI(),
             ];
         }, $locais);
 
