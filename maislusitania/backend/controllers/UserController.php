@@ -124,6 +124,16 @@ class UserController extends Controller
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('userimage_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
+
+                        // Remover imagem antiga se existir
+                        $currentImage = $model->imagem;
+                        if (!empty($currentImage)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
+                        }
+
                         $model->imagem_perfil = $fileName;
                     }
                 }
@@ -204,13 +214,13 @@ class UserController extends Controller
             // Buscar o perfil do utilizador
             $userProfile = $model->userProfile;
 
-            // ISTO NAO PARECE ESTAR A FUNCIONAR, ACHO EU
-            if ($userProfile && $userProfile->imagem_perfil) {
-                $uploadPath = Yii::getAlias('@uploadPath');
-                $imagePath = $uploadPath . DIRECTORY_SEPARATOR . $userProfile->imagem_perfil;
+            // Remover imagem antiga se existir
+            $currentImage = $this->findModel($id)->imagem;
 
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
+            if (!empty($currentImage)) {
+                $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
                 }
             }
 

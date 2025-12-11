@@ -128,6 +128,14 @@ class EventoController extends Controller
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('evento_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
+                        // Remover imagem antiga se existir
+                        $currentImage = $model->imagem;
+                        if (!empty($currentImage)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
+                        }
                         $model->imagem = $fileName;
                     }
                 }
@@ -158,6 +166,16 @@ class EventoController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        // Remover imagem antiga se existir
+        $currentImage = $this->findModel($id)->imagem;
+
+        if (!empty($currentImage)) {
+            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
 
         return $this->redirect(['index']);
     }

@@ -81,6 +81,14 @@ class TipoLocalController extends Controller
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('marker_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
+                        // Remover imagem antiga se existir
+                        $currentImage = $model->imagem;
+                        if (!empty($currentImage)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
+                        }
                         $model->icone = $fileName;
                     }
                 }
@@ -112,10 +120,18 @@ class TipoLocalController extends Controller
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('marker_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
+
+                        // Remover imagem antiga se existir
+                        $currentImage = $model->imagem;
+                        if (!empty($currentImage)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
+                        }
+                        
                         $model->icone = $fileName;
                     }
-
-                    //FALTA REMOVER IMAGEM ANTIGA
 
                     $model->save(false);
                 }
@@ -140,7 +156,12 @@ class TipoLocalController extends Controller
     {
         $this->findModel($id)->delete();
 
-        //FALTA REMOVER IMAGEM ASSOCIADA
+        if (!empty($currentImage)) {
+            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
 
         return $this->redirect(['index']);
     }
