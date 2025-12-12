@@ -80,4 +80,8 @@ class Favorito extends \yii\db\ActiveRecord
         return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
+    public static function getFavoriteByUserAndLocal($userId, $localId){
+        return static::findOne(['utilizador_id' => $userId, 'local_id' => $localId]);
+    }
+
 }
