@@ -76,18 +76,18 @@ class LocalCulturalController extends Controller
         $model = $this->findModel($id);
         $averageRating = $this->findModel($id)->getAverageRating();
         $ratingCount = $this->findModel($id)->getRatingCount();
-        $horario = $this->findModel($id)->getHorarios()->one();
-        $eventos = $this->findModel($id)->getEventos()->all();
-        $noticias = $this->findModel($id)->getNoticias()->all();
+        //$horario = $this->findModel($id)->horarios;
+        //$eventos = $this->findModel($id)->getEventos()->all();
+        //$noticias = $this->findModel($id)->noticias;
         $bilhetes = $this->findModel($id)->getTipoBilhetes()->all();
 
         return $this->render('view', [
             'model' => $model,
             'averageRating' => $averageRating,
             'ratingCount' => $ratingCount,
-            'horario' => $horario,
-            'eventos' => $eventos,
-            'noticias' => $noticias,
+            //'horario' => $horario,
+            //'eventos' => $eventos,
+            //'noticias' => $noticias,
             'bilhetes' => $bilhetes,
 
         ]);
@@ -102,14 +102,14 @@ class LocalCulturalController extends Controller
         $local = $this->findModel($id);
         $userId = Yii::$app->user->id;
 
-        // Verificar se já existe
+        // Verificar se já existe usando query direta
         $favorito = Favorito::findOne([
             'utilizador_id' => $userId,
-            'local_id' => $id
+            'local_id' => $id,
         ]);
-
-        if ($favorito) {
-            // Se existe, remover
+        
+        if ($favorito !== null) {
+            // Existe, então remover
             $favorito->delete();
             Yii::$app->session->setFlash('success', 'Removido dos favoritos!');
         } else {
@@ -119,7 +119,11 @@ class LocalCulturalController extends Controller
             $favorito->local_id = $id;
             $favorito->data_adicao = date('Y-m-d H:i:s');
             
-            $favorito->save();
+            if (!$favorito->save()) {
+                Yii::$app->session->setFlash('error', 'Erro ao adicionar aos favoritos.');
+            } else {
+                Yii::$app->session->setFlash('success', 'Adicionado aos favoritos!');
+            }
         }
 
         if (Yii::$app->request->isPjax) {
@@ -128,6 +132,7 @@ class LocalCulturalController extends Controller
 
         return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
+
     protected function findModel($id)
     {
         if (($model = LocalCultural::findOne(['id' => $id])) !== null) {

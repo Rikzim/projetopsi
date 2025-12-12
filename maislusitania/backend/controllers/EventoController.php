@@ -128,6 +128,14 @@ class EventoController extends Controller
                 if ($uploadForm->imageFile) {
                     $fileName = uniqid('evento_') . '.' . $uploadForm->imageFile->extension;
                     if ($uploadForm->upload($fileName)) {
+                        // Remover imagem antiga se existir
+                        $currentImage = $model->imagem;
+                        if (!empty($currentImage)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
+                        }
                         $model->imagem = $fileName;
                     }
                 }
@@ -157,7 +165,21 @@ class EventoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $currentImage = $model->imagem;
+
+        if ($model->delete()) {
+            Yii::$app->session->setFlash('success', 'Evento deletado com sucesso!');
+
+            if (!empty($currentImage)) {
+                $imagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao deletar o evento.');
+        }
 
         return $this->redirect(['index']);
     }

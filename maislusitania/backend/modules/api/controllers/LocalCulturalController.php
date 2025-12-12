@@ -9,6 +9,7 @@ use yii\filters\Cors;
 use common\models\Distrito;
 use common\models\LocalCultural;
 use common\models\TipoLocal;
+use yii\filters\ContentNegotiator;
 use Yii;
 
 class LocalCulturalController extends ActiveController
@@ -32,12 +33,10 @@ class LocalCulturalController extends ActiveController
     // Lista todos os locais culturais ativos
     public function actionIndex()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $modelClass = $this->modelClass;
         $locais = $modelClass::find()
             ->where(['ativo' => true])
-            ->with(['distrito', 'tipo'])
+            ->with(['distrito', 'tipoLocal'])
             ->all();
 
         $data = array_map(function($local) {
@@ -49,6 +48,7 @@ class LocalCulturalController extends ActiveController
                 'descricao' => $local->descricao,
                 'imagem' => $local->getImageAPI(),
                 'avaliacao_media' => $local->getAverageRating(),
+                
             ];
         }, $locais);
 
@@ -57,8 +57,6 @@ class LocalCulturalController extends ActiveController
     // Visualiza um local específico por ID
     public function actionView($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        
         $modelClass = $this->modelClass;
         $local = $modelClass::find()
             ->where(['id' => $id, 'ativo' => true])
@@ -71,8 +69,8 @@ class LocalCulturalController extends ActiveController
                 'tipoBilhetes' => function($query) {  // ALTERADO: tipoBilhetes (plural)
                     $query->andWhere(['ativo' => true]);
                 },
-                'horarios',
-                'tipo',
+                'horario',
+                'tipoLocal',
                 'distrito'
             ])
             ->one();
@@ -80,17 +78,18 @@ class LocalCulturalController extends ActiveController
         if (!$local) {
             throw new NotFoundHttpException('Local cultural não encontrado.');
         }
-
         return ['data' => $this->formatLocalData($local)];
     }
-
-    public function actionDistritos($nome)
+    // Extra Patterns
+    public function actionDistrito($nome)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        // Procura o distrito pelo nome (case-insensitive)
         $distrito = Distrito::find()
             ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
             ->one();
+
+        if (!$distrito) {
+            throw new NotFoundHttpException("Distrito '$nome' não encontrado.");
+        }
 
         // Retorna os locais culturais desse distrito
         $locais = LocalCultural::find()
@@ -107,10 +106,8 @@ class LocalCulturalController extends ActiveController
             'locais' => $locais,
         ];
     }
-    public function actionTipos($nome)
+    public function actionTipoLocal($nome)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        // Procura o distrito pelo nome (case-insensitive)
         $tipolocal = TipoLocal::find()
             ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
             ->one();
@@ -131,25 +128,50 @@ class LocalCulturalController extends ActiveController
         ];
     }
 
+    public function actionSearch($nome)
+    {
+        $locais = LocalCultural::find()
+            ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
+            ->andWhere(['ativo' => true])
+            ->all();
+
+        if (empty($locais)) {
+            throw new NotFoundHttpException("Nenhum local cultural encontrado com o nome '$nome'.");
+        }
+
+        return [
+            'total' => count($locais),
+            'locais' => $locais,
+        ];
+    }
+
     // Método auxiliar para formatar os dados do local
     private function formatLocalData($local)
     {
         return [
             'id' => $local->id,
             'nome' => $local->nome,
-            'tipo' => $local->tipo->nome ?? null,
+            'tipo' => $local->tipoLocal->nome ?? null,
             'distrito' => $local->distrito->nome ?? null,
             'imagem' => $local->getImageAPI(),
             'morada' => $local->morada,
             'descricao' => $local->descricao,
-            'horario_funcionamento' => $local->horario_funcionamento,
             'contacto_telefone' => $local->contacto_telefone,
             'contacto_email' => $local->contacto_email,
             'website' => $local->website,
             'ativo' => (bool)$local->ativo,
             'latitude' => (float)$local->latitude,
             'longitude' => (float)$local->longitude,
-            'avaliacoes' => array_map(function($avaliacao) {
+            'horario' =>  $local->horario ? [
+                'segunda' => $local->horario->segunda ?? null,
+                'terca' => $local->horario->terca ?? null,
+                'quarta' => $local->horario->quarta ?? null,
+                'quinta' => $local->horario->quinta ?? null,
+                'sexta' => $local->horario->sexta ?? null,
+                'sabado' => $local->horario->sabado ?? null,
+                'domingo' => $local->horario->domingo ?? null,
+            ] : "Horário não disponível",
+            'avaliacoes' => $local->avaliacaos ? array_map(function($avaliacao) {
                 return [
                     'id' => $avaliacao->id,
                     'utilizador' => $avaliacao->user->username ?? 'Anônimo',
@@ -158,8 +180,8 @@ class LocalCulturalController extends ActiveController
                     'data_avaliacao' => date('Y-m-d', strtotime($avaliacao->data_avaliacao)),
                     'ativo' => (bool)$avaliacao->ativo,
                 ];
-            }, $local->avaliacaos),
-            'noticias' => array_map(function($noticia) {
+            }, $local->avaliacaos) : "Ainda não existem avaliações. Seja o primeiro a avaliar!",
+            'noticias' => $local->noticias ? array_map(function($noticia) {
                 return [
                     'id' => $noticia->id,
                     'titulo' => $noticia->titulo,
@@ -167,8 +189,8 @@ class LocalCulturalController extends ActiveController
                     'data_publicacao' => date('Y-m-d H:i', strtotime($noticia->data_publicacao)),
                     'imagem' => $noticia->getImageAPI(),
                 ];
-            }, $local->noticias),
-            'eventos' => array_map(function($evento) {
+            }, $local->noticias) : "Nenhuma notícia relacionada disponível no momento. ",
+            'eventos' => $local->eventos ? array_map(function($evento) {
                 return [
                     'id' => $evento->id,
                     'titulo' => $evento->titulo,
@@ -177,8 +199,8 @@ class LocalCulturalController extends ActiveController
                     'data_fim' => date('Y-m-d\TH:i:s', strtotime($evento->data_fim)),
                     'imagem' => $evento->getImageAPI(),
                 ];
-            }, $local->eventos),
-            'tipos-bilhete' => array_map(function($tipo) {  // ALTERADO: array_map para iterar todos
+            }, $local->eventos) : "Nenhum evento relacionado disponível no momento.",
+            'tipos-bilhete' => $local->tipoBilhetes ? array_map(function($tipo) {  // ALTERADO: array_map para iterar todos
                 return [
                     'id' => $tipo->id,
                     'nome' => $tipo->nome,
@@ -186,19 +208,8 @@ class LocalCulturalController extends ActiveController
                     'preco' => number_format($tipo->preco, 2) . '€',  // MELHORADO: formatação do preço
                     'ativo' => (bool)$tipo->ativo,
                 ];
-            }, $local->tipoBilhetes),  // ALTERADO: tipoBilhetes (plural)
-            'horarios' => array_map(function($horario) {
-                return [
-                    'id' => $horario->id,
-                    'segunda' => $horario->segunda ?? 'Fechado',
-                    'terca' => $horario->terca ?? 'Fechado',
-                    'quarta' => $horario->quarta ?? 'Fechado',
-                    'quinta' => $horario->quinta ?? 'Fechado',
-                    'sexta' => $horario->sexta ?? 'Fechado',
-                    'sabado' => $horario->sabado ?? 'Fechado',
-                    'domingo' => $horario->domingo ?? 'Fechado',
-                ];
-            }, $local->horarios),
+            }, $local->tipoBilhetes) : "Nenhum bilhete disponível no momento.",  // ALTERADO: tipoBilhetes (plural)
+            
         ];
     }
 
@@ -210,12 +221,11 @@ class LocalCulturalController extends ActiveController
         return [
             'id',
             'nome',
-            'tipo',
+            'tipoLocal',
             'distrito',
             'imagem',
             'morada',
             'descricao',
-            'horario_funcionamento',
             'contacto_telefone',
             'contacto_email',
             'website',
@@ -239,6 +249,12 @@ class LocalCulturalController extends ActiveController
                 'Origin' => ['*'],
                 'Access-Control-Request-Method' => ['GET','POST','PUT','DELETE','OPTIONS'],
                 'Access-Control-Allow-Credentials' => true,
+            ],
+        ];
+        $behaviors['contentNegotiator'] = [ // Resposta em JSON
+            'class' => ContentNegotiator::class,
+            'formats' => [
+                'application/json' => Response::FORMAT_JSON,
             ],
         ];
         

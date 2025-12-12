@@ -51,20 +51,55 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'GET api/local-culturals/distritos/<nome:\w+>' => 'api/local-cultural/distritos',
-                'GET api/local-culturals/tipos/<nome:\w+>' => 'api/local-cultural/tipos',
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/local-cultural', 
+                    'pluralize' => true,
+                    'extraPatterns' => [
+                        'GET distrito/{nome}' => 'distrito', // Permite filtrar por distrito
+                        'GET tipo-local/{nome}' => 'tipo-local', // Permite filtrar por tipo de local
+                        'GET search/{nome}' => 'search', // Permite pesquisa por nome
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/noticia', // Necessário ter Autenticação
+                    'pluralize' => true,
+                    'extraPatterns' => [
+                        'GET tipo-local/{nome}' => 'tipo-local', // Permite filtrar por tipo de local
+                        'GET search/{nome}' => 'search', // Permite pesquisa por nome
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/evento', // Necessário ter Autenticação
+                    'pluralize' => true,
+                    'extraPatterns' => [
+                        'GET tipo-local/{nome}' => 'tipo-local', // Permite filtrar por tipo de local
+                        'GET search/{nome}' => 'search', // Permite pesquisa por nome
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                    ],
+                ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => [
                     'api/avaliacao',
                     'api/distrito',
-                    'api/evento',
                     'api/favorito',
                     'api/linha-reserva',
-                    'api/local-cultural', //Funciona
                     'api/login-form', //Funciona
                     'api/signup-form', //Funciona
-                    'api/noticia', //Funciona
                     'api/reserva', 
                     'api/tipo-bilhete',
                     'api/tipo-local',
@@ -73,11 +108,8 @@ return [
                     'api/mapa',
                     ],
                     'pluralize' => true,
-                    'extraPatterns' => [
-                        'GET distrito/{nome}' => 'distritos',
-                        //'GET locais-culturais' => 'actionLocaisCulturais',
-                    ],
                     'tokens' => [
+                        '{id}' => '<id:\\d+>',
                         '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
                     ],
                 ],

@@ -56,7 +56,7 @@ use yii\bootstrap4\ActiveForm;
     <?= $form->field($model, 'local_id')->hiddenInput()->label(false) ?>
 
     <div class="form-group mt-4 text-right">
-        <?= Html::a('Cancelar', ['index', 'local_id' => $model->local_id], ['class' => 'btn btn-secondary mr-2']) ?>
+        <?= Html::a('Cancelar', ['index', 'local_id' => $localCultural->id], ['class' => 'btn btn-secondary mr-2']) ?>
         <?= Html::submitButton('<i class="fas fa-save"></i> Guardar', ['class' => 'btn btn-success px-4']) ?>
     </div>
 

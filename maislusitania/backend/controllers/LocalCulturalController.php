@@ -63,10 +63,8 @@ class LocalCulturalController extends Controller
      */
     public function actionView($id)
     {
-        $horario = $this->findModel($id)->getHorarios()->all();
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'horario' => $horario,
         ]);
     }
 
@@ -75,6 +73,8 @@ class LocalCulturalController extends Controller
         $model = new LocalCultural();
         $uploadForm = new UploadForm();
         $horario = new Horario();
+        $tipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
+        $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
 
         if (Yii::$app->request->isPost) {
             if (
@@ -88,14 +88,13 @@ class LocalCulturalController extends Controller
                         $model->imagem_principal = $fileName;
                     }
                 }
-                if ($model->save(false)) {
-                    $horario->local_id = $model->id;
-                    $horario->save(false);
-
-                    Yii::$app->session->setFlash('success', 'Local Cultural criado com sucesso!');
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Erro ao criar Local Cultural.');
+                
+                // Save horario first to get an ID, then link it to the model and save the model.
+                if ($horario->save()) {
+                    $model->horario_id = $horario->id;
+                    if ($model->save()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
                 }
             }
         }
@@ -104,6 +103,8 @@ class LocalCulturalController extends Controller
             'model' => $model,
             'uploadForm' => $uploadForm,
             'horario' => $horario,
+            'distritos' => $distritos,
+            'tipoLocais' => $tipoLocais,
         ]);
     }
 
@@ -113,11 +114,8 @@ class LocalCulturalController extends Controller
         $tipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
         $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
         $uploadForm = new UploadForm();
-        $horario = $model->getHorarios()->one() ?: new Horario();
+        $horario = $model->horario ?: new Horario();
 
-        if (!$horario) {
-            $horario = new Horario();
-        }
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
@@ -126,23 +124,32 @@ class LocalCulturalController extends Controller
 
                 $uploadForm->imageFile = UploadedFile::getInstance($uploadForm, 'imageFile');
                 if ($uploadForm->imageFile) {
-                    $oldImage = $model->imagem_principal; // Save old name
                     $fileName = uniqid('local_') . '.' . $uploadForm->imageFile->extension;
 
                     if ($uploadForm->upload($fileName)) {
-                        $model->imagem_principal = $fileName;
-
-                        // APAGAR A IMAGEM ANTIGA
-                        $path = Yii::getAlias('/uploads/' . $oldImage);
-                        if ($oldImage && file_exists($path)) {
-                            unlink($path);
+                        // Remover imagem antiga se existir
+                        $currentImage = $model->imagem_principal;
+                        if (!empty($currentImage)) {
+                            $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                            if (file_exists($oldImagePath)) {
+                                unlink($oldImagePath);
+                            }
                         }
+
+                        $model->imagem_principal = $fileName;
                     }
                 }
 
-                if ($model->save(false)) {
-                    $horario->local_id = $model->id;
-                    $horario->save(false);
+                if ($model->save()) {
+                    // Save the horario (this will UPDATE an existing record or INSERT a new one)
+                    if ($horario->save()) {
+                        // If the horario was new, we need to link it to the LocalCultural model
+                        // and save the model again to persist the foreign key.
+                        if (!$model->horario_id) {
+                            $model->horario_id = $horario->id;
+                            $model->save();
+                        }
+                    }
 
                     Yii::$app->session->setFlash('success', 'Local Cultural atualizado!');
                     return $this->redirect(['view', 'id' => $model->id]);
@@ -162,26 +169,27 @@ class LocalCulturalController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+        $currentImage = $model->imagem_principal;
+        $horario = $model->horario;
 
-        //ISTO NAO ME PARECE ESTAR A FUNCIONAR CORRETAMENTE
-        // Delete associated image file
-        if ($model->imagem_principal) {
-            $uploadPath = Yii::getAlias('@uploadPath');
-            $imagePath = $uploadPath . DIRECTORY_SEPARATOR . $model->imagem_principal;
-            
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
+        if ($model->delete()) {
+            Yii::$app->session->setFlash('success', 'Local Cultural deletado com sucesso!');
+
+            // Apagar a imagem associada
+            if (!empty($currentImage)) {
+                $imagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-        }
 
-        // Delete associated horario
-        $horario = $model->getHorarios()->one();
-        if ($horario) {
-            $horario->delete();
+            // Apagar o horário associado
+            if ($horario) {
+                $horario->delete();
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao deletar o Local Cultural.');
         }
-
-        $model->delete();
-        Yii::$app->session->setFlash('success', 'Local Cultural apagado com sucesso!');
 
         return $this->redirect(['index']);
     }

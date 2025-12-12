@@ -72,16 +72,24 @@ class TipoBilheteController extends Controller
 
     /**
      * Creates a new TipoBilhete model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the 'index' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($local_id)
     {
+        $localCultural = LocalCultural::findOne($local_id);
+        if ($localCultural === null) {
+            throw new NotFoundHttpException('Local Cultural não encontrado.');
+        }
+
         $model = new TipoBilhete();
+        $model->local_id = $local_id;
+        $model->ativo = 1; // Set default value for 'ativo'
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                \Yii::$app->session->setFlash('success', 'Tipo de bilhete criado com sucesso.');
+                return $this->redirect(['index', 'local_id' => $model->local_id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -89,13 +97,13 @@ class TipoBilheteController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'locais' => $locais,
+            'localCultural' => $localCultural,
         ]);
     }
 
     /**
      * Updates an existing TipoBilhete model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * If update is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
@@ -105,11 +113,13 @@ class TipoBilheteController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            \Yii::$app->session->setFlash('success', 'Tipo de bilhete atualizado com sucesso.');
+            return $this->redirect(['index', 'local_id' => $model->local_id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'localCultural' => $model->local, // Pass local cultural for context in the view
         ]);
     }
 
@@ -122,9 +132,12 @@ class TipoBilheteController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $local_id = $model->local_id; // Get local_id before deleting
+        $model->delete();
+        \Yii::$app->session->setFlash('success', 'Tipo de bilhete removido com sucesso.');
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'local_id' => $local_id]);
     }
 
     /**

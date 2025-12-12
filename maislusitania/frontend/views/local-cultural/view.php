@@ -26,15 +26,16 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
     <?= HeroSection::widget([
             'backgroundImage' => Url::to($model->getImage()),
             'title' => $model->nome,
+            'titleOptions' => ['class' => 'hero-section-title-bordered'],
             'showOverlay' => false,
     ]) ?>
 
     <div class="content-wrapper">
         <div class="lc-header-card">
             
-            <?php if ($model->tipo): ?>
+            <?php if ($model->tipoLocal): ?>
                 <span class="lc-type-badge">
-                    <?= Html::encode($model->tipo->nome ?? 'Local Cultural') ?>
+                    <?= Html::encode($model->tipoLocal->nome ?? 'Local Cultural') ?>
                 </span>
             <?php endif; ?>
          
@@ -110,14 +111,14 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
                 </div>
                 <div class="info-card-content">
                         <ul class="info-list horario-list">
-                            <?php if($horario): ?>
-                                <li><span>Segunda-feira</span> <span><?= Html::encode($horario->segunda ?: 'Fechado') ?></span></li>
-                                <li><span>Terça-feira</span> <span><?= Html::encode($horario->terca ?: 'Fechado') ?></span></li>
-                                <li><span>Quarta-feira</span> <span><?= Html::encode($horario->quarta ?: 'Fechado') ?></span></li>
-                                <li><span>Quinta-feira</span> <span><?= Html::encode($horario->quinta ?: 'Fechado') ?></span></li>
-                                <li><span>Sexta-feira</span> <span><?= Html::encode($horario->sexta ?: 'Fechado') ?></span></li>
-                                <li><span>Sábado</span> <span><?= Html::encode($horario->sabado ?: 'Fechado') ?></span></li>
-                                <li><span>Domingo</span> <span><?= Html::encode($horario->domingo ?: 'Fechado') ?></span></li>
+                            <?php if($model->horario): ?>
+                                <li><span>Segunda-feira</span> <span><?= Html::encode($model->horario->segunda ?: 'Fechado') ?></span></li>
+                                <li><span>Terça-feira</span> <span><?= Html::encode($model->horario->terca ?: 'Fechado') ?></span></li>
+                                <li><span>Quarta-feira</span> <span><?= Html::encode($model->horario->quarta ?: 'Fechado') ?></span></li>
+                                <li><span>Quinta-feira</span> <span><?= Html::encode($model->horario->quinta ?: 'Fechado') ?></span></li>
+                                <li><span>Sexta-feira</span> <span><?= Html::encode($model->horario->sexta ?: 'Fechado') ?></span></li>
+                                <li><span>Sábado</span> <span><?= Html::encode($model->horario->sabado ?: 'Fechado') ?></span></li>
+                                <li><span>Domingo</span> <span><?= Html::encode($model->horario->domingo ?: 'Fechado') ?></span></li>
                             <?php else: ?>
                                 <div class="no-info">
                                     <img src="<?= Url::to('@web/images/icons/blue/icon-horario36.svg') ?>" alt="Nenhum horário disponível" class="no-info-icon">
@@ -179,14 +180,14 @@ $this->registerCssFile('@web/css/local-cultural/view.css', ['depends' => [\yii\w
 
         <?= EventosRelacionadosWidget::widget([
             'localCulturalId' => $model->id,
-            'eventos' => $eventos,
+            'eventos' => $model->eventos,
             'limit' => 3,
         ]) ?>
 
         
         <?= NoticiasRelacionadasWidget::widget([
             'localCulturalId' => $model->id,
-            'noticias' => $noticias,
+            'noticias' => $model->noticias,
             'limit' => 3,
         ]) ?>
 

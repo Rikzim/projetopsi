@@ -8,6 +8,7 @@ use yii\helpers\Url;
 class HeroSection extends Widget
 {
     public $title;
+    public $titleOptions = [];
     public $subtitle;
     public $buttons = [];
     public $backgroundImage = '@web/images/hero-background.jpg';
@@ -21,6 +22,7 @@ class HeroSection extends Widget
 
         return $this->render('hero-section', [
             'title' => $this->title,
+            'titleOptions' => $this->titleOptions,
             'subtitle' => $this->subtitle,
             'buttons' => $this->buttons,
             'backgroundImage' => $imageUrl,

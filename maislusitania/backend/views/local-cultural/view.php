@@ -71,8 +71,8 @@ $this->title = $model->nome;
                                         'attribute' => 'tipo_id',
                                         'label' => 'Tipo',
                                         'format' => 'raw',
-                                        'value' => $model->tipo ? Html::tag('span', 
-                                            '<i class="fas fa-tag mr-2"></i>' . Html::encode($model->tipo->nome),
+                                        'value' => $model->tipoLocal ? Html::tag('span', 
+                                            '<i class="fas fa-tag mr-2"></i>' . Html::encode($model->tipoLocal->nome),
                                             ['class' => 'badge badge-info', 'style' => 'font-size: 0.95rem; padding: 0.5em 1em;']
                                         ) : '<span class="text-muted">-</span>',
                                     ],
@@ -121,7 +121,7 @@ $this->title = $model->nome;
                                     [
                                         'label' => 'Horários',
                                         'format' => 'raw',
-                                        'value' => $horario ? Html::a(
+                                        'value' => $model->horario ? Html::a(
                                             '<i class="fas fa-clock mr-2"></i>Ver Horários de Funcionamento <i class="fas fa-chevron-down ml-2"></i>',
                                             '#collapseHorarios',
                                             [
@@ -135,31 +135,31 @@ $this->title = $model->nome;
                                                 Html::tag('tbody',
                                                     Html::tag('tr',
                                                         Html::tag('td', Html::tag('strong', 'Segunda-feira'), ['style' => 'width: 150px;']) .
-                                                        Html::tag('td', Html::encode($horario[0]->segunda))
+                                                        Html::tag('td', Html::encode($model->horario->segunda))
                                                     ) .
                                                     Html::tag('tr',
                                                         Html::tag('td', Html::tag('strong', 'Terça-feira')) .
-                                                        Html::tag('td', Html::encode($horario[0]->terca))
+                                                        Html::tag('td', Html::encode($model->horario->terca))
                                                     ) .
                                                     Html::tag('tr',
                                                         Html::tag('td', Html::tag('strong', 'Quarta-feira')) .
-                                                        Html::tag('td', Html::encode($horario[0]->quarta))
+                                                        Html::tag('td', Html::encode($model->horario->quarta))
                                                     ) .
                                                     Html::tag('tr',
                                                         Html::tag('td', Html::tag('strong', 'Quinta-feira')) .
-                                                        Html::tag('td', Html::encode($horario[0]->quinta))
+                                                        Html::tag('td', Html::encode($model->horario->quinta))
                                                     ) .
                                                     Html::tag('tr',
                                                         Html::tag('td', Html::tag('strong', 'Sexta-feira')) .
-                                                        Html::tag('td', Html::encode($horario[0]->sexta))
+                                                        Html::tag('td', Html::encode($model->horario->sexta))
                                                     ) .
                                                     Html::tag('tr',
                                                         Html::tag('td', Html::tag('strong', 'Sábado')) .
-                                                        Html::tag('td', Html::encode($horario[0]->sabado))
+                                                        Html::tag('td', Html::encode($model->horario->sabado))
                                                     ) .
                                                     Html::tag('tr',
                                                         Html::tag('td', Html::tag('strong', 'Domingo')) .
-                                                        Html::tag('td', Html::encode($horario[0]->domingo))
+                                                        Html::tag('td', Html::encode($model->horario->domingo))
                                                     )
                                                 ),
                                                 ['class' => 'table table-sm table-striped mb-0']
