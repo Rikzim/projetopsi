@@ -2,7 +2,7 @@
 
 namespace backend\modules\api;
 
-use yii\filters\auth\HttpBasicAuth;
+
 use yii\filters\Cors;
 
 /**
