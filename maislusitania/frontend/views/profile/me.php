@@ -131,6 +131,16 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                             <p class="action-description">Atualize a sua palavra-passe</p>
                         </div>
                     </a>
+
+                    <a href="<?= Url::to(['user/delete-account']) ?>" class="action-card delete-account">
+                        <div class="action-icon">
+                            <img src="<?= Url::to('@web/images/icons/icon-delete.svg') ?>" alt="">
+                        </div>
+                        <div class="action-content">
+                            <h4 class="action-title">Apagar Conta</h4>
+                            <p class="action-description">Exclua sua conta permanentemente</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
