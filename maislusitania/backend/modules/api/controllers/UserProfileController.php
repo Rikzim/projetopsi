@@ -1,6 +1,8 @@
 <?php
 namespace backend\modules\api\controllers;
 
+use Yii;
+use common\models\UserProfile;
 use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\QueryParamAuth;
@@ -33,6 +35,56 @@ class UserProfileController extends ActiveController
                 'pageSize' => 20, 
             ],
         ]);
+    }
+
+    // ========================================
+    // ENDPOINT: Obter perfil do usuário autenticado
+    // ========================================
+    /**
+     * Retorna o perfil do usuário autenticado
+     * Endpoint: GET /api/user-profile/me?access-token=SEU_TOKEN
+     * 
+     * @return UserProfile|array
+     */
+    public function actionMe()
+    {
+        // Obtém o ID do usuário autenticado
+        $userId = Yii::$app->user->id;
+        
+        // Se não houver usuário autenticado, retorna erro 401
+        if (!$userId) {
+            Yii::$app->response->statusCode = 401;
+            return [
+                'success' => false,
+                'message' => 'Não autenticado. Token inválido ou ausente.',
+            ];
+        }
+        
+        // Busca o perfil do usuário autenticado
+        $userProfile = UserProfile::findOne(['user_id' => $userId]);
+        
+        // Se o perfil não existir, retorna erro 404
+        if (!$userProfile) {
+            Yii::$app->response->statusCode = 404;
+            return [
+                'success' => false,
+                'message' => 'Perfil não encontrado para este usuário.',
+            ];
+        }
+        
+        // Retorna o perfil com dados do usuário
+        return [
+            'success' => true,
+            'data' => [
+                'id' => $userProfile->id,
+                'primeiro_nome' => $userProfile->primeiro_nome,
+                'ultimo_nome' => $userProfile->ultimo_nome,
+                'imagem_perfil' => $userProfile->getImageAPI(), // URL completa da imagem
+                'user_id' => $userProfile->user_id,
+                'username' => $userProfile->user->username, // Dados do user relacionado
+                'email' => $userProfile->user->email,
+            ],
+        ];
     }
 
     // ========================================
