@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use frontend\widgets\TicketCard;
 
 $this->title = 'Meus Bilhetes';
-$this->registerCssFile('@web/css/site/mytickets.css');
+$this->registerCssFile('@web/css/reservas/index.css');
 ?>
 
 <div class="my-tickets-page">

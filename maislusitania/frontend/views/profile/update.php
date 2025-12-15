@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Editar Perfil';
 // Nota: Carregamos o CSS específico que é baseado no profile.css
-$this->registerCssFile('@web/css/site/update-profile.css', ['depends' => [\yii\web\YiiAsset::class]]);
+$this->registerCssFile('@web/css/profile/update-profile.css', ['depends' => [\yii\web\YiiAsset::class]]);
 ?>
 
 <div class="profile-page">
