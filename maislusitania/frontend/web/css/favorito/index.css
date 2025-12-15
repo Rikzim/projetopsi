@@ -1,0 +1,231 @@
+.favorites-page {
+    min-height: 100vh;
+    padding-bottom: 60px;
+}
+
+/* Header Section */
+.favorites-header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header-icon {
+    color: #2E5AAC;
+    margin-bottom: 20px;
+}
+
+.favorites-header h1 {
+    color: #2E5AAC;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.favorites-header p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.favorites-count {
+    display: inline-block;
+    background: #EEF2F9;
+    color: #2E5AAC;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Empty State */
+.empty-favorites {
+    padding: 50px 20px;
+    background: white;
+    border-radius: 30px;
+    border: 2px dashed #cbd5e1;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-favorites h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.btn-explore {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 35px;
+    background: #2E5AAC;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 90, 172, 0.2);
+}
+
+.btn-explore:hover {
+    background: #1e3a8a;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 90, 172, 0.3);
+}
+
+/* Grid Layout */
+.favorites-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* Favorite Card */
+.favorite-card {
+    background: white;
+    border: 2px solid #2E5AAC;
+    border-radius: 30px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.favorite-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(46, 90, 172, 0.15);
+}
+
+.card-image-link {
+    display: block;
+    overflow: hidden;
+    height: 200px;
+    position: relative;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.favorite-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.card-title a {
+    color: #1a1a1a;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+
+.card-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #2E5AAC;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.card-description {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Card Footer */
+.card-footer {
+    margin: 20px;
+    padding: 15px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-details {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+    padding: 12px 24px;
+    border-radius: 30px;
+    background-color: #2E5AAC;
+}
+.btn-details:hover {
+    color: white;
+    background-color: #24488a;
+}
+
+.btn-unfavorite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    color: #2E5AAC;
+    border: 2px solid #2E5AAC;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn-unfavorite:hover {
+    background: #2E5AAC;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .favorites-header h1 {
+        font-size: 2rem;
+    }
+    
+    .favorites-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .favorites-container {
+        padding: 0 15px;
+    }
+}

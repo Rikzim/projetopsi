@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = 'Meu Perfil';
-$this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiAsset::class]]);
+$this->registerCssFile('@web/css/profile/profile.css', ['depends' => [\yii\web\YiiAsset::class]]);
 ?>
 
 <div class="profile-page">
@@ -102,7 +102,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                 <h3 class="info-section-title">Ações Rápidas</h3>
                 
                 <div class="quick-actions">
-                    <a href="<?= Url::to(['/site/favorites']) ?>" class="action-card">
+                    <a href="<?= Url::to(['/favorito/index']) ?>" class="action-card">
                         <div class="action-icon">
                             <img src="<?= Url::to('@web/images/icons/blue/icon-favorite.svg') ?>" alt="">
                         </div>
@@ -112,7 +112,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                         </div>
                     </a>
 
-                    <a href="<?= Url::to(['/site/bilhetes']) ?>" class="action-card">
+                    <a href="<?= Url::to(['/reserva/index']) ?>" class="action-card">
                         <div class="action-icon">
                             <img src="<?= Url::to('@web/images/icons/blue/icon-ticket.svg') ?>" alt="">
                         </div>
@@ -132,7 +132,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                         </div>
                     </a>
 
-                    <a href="<?= Url::to(['user/delete-account']) ?>" class="action-card delete-account">
+                    <a href="<?= Url::to(['/profile/delete-account']) ?>" class="action-card delete-account">
                         <div class="action-icon">
                             <img src="<?= Url::to('@web/images/icons/icon-delete.svg') ?>" alt="">
                         </div>
