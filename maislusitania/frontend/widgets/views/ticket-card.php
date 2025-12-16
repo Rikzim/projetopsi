@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use Yii;
 
 /** @var $reserva */
 /** @var $linha */
@@ -67,7 +66,7 @@ use Yii;
                 </div>
                 <div class="info-content">
                     <span class="info-label">Preço</span>
-                    <span class="info-value"><?= Yii::$app->formatter->asCurrency($linha->tipoBilhete->preco, 'EUR') ?></span>
+                    <span class="info-value"><?= $linha->tipoBilhete->getPrecoFormatado() ?></span>
                 </div>
             </div>
         </div>
