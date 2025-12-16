@@ -49,6 +49,7 @@ class TipoBilheteController extends Controller
         $searchModel = new TipoBilheteSearch();
         $searchModel->local_id = $local_id;
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider->pagination->pageSize = 10;
 
         return $this->render('index', [
             'searchModel' => $searchModel,
