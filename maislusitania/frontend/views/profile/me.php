@@ -132,15 +132,21 @@ $this->registerCssFile('@web/css/profile/profile.css', ['depends' => [\yii\web\Y
                         </div>
                     </a>
 
-                    <a href="<?= Url::to(['/profile/delete-account']) ?>" class="action-card delete-account">
+                    <?= Html::beginForm(['/profile/delete'], 'post', ['style' => 'display:inline;']) ?>
+                    <?= Html::button('
                         <div class="action-icon">
-                            <img src="<?= Url::to('@web/images/icons/icon-delete.svg') ?>" alt="">
+                            <img src="' . Url::to('@web/images/icons/icon-delete.svg') . '" alt="">
                         </div>
                         <div class="action-content">
                             <h4 class="action-title">Apagar Conta</h4>
                             <p class="action-description">Exclua sua conta permanentemente</p>
                         </div>
-                    </a>
+                    ', [
+                        'class' => 'action-card delete-account',
+                        'type' => 'submit',
+                        'onclick' => "return confirm('Tem certeza de que deseja apagar a sua conta? Esta ação não pode ser desfeita.');",
+                    ]) ?>
+                    <?= Html::endForm() ?>
                 </div>
             </div>
         </div>
