@@ -112,16 +112,11 @@ class TipoBilhete extends \yii\db\ActiveRecord
 
         $resultado = [];
         foreach ($bilhetes as $bilhete) {
-            $preco = floatval($bilhete->preco);
-            $gratuito = ($preco == 0);
-
             $resultado[] = [
                 'id' => $bilhete->id,
-                'tipo' => $bilhete->nome,
+                'nome' => $bilhete->nome,
                 'descricao' => $bilhete->descricao,
-                'preco' => $gratuito ? 'Grátis' : number_format($preco, 2, ',', '') . '€',
-                'preco_valor' => $preco,
-                'gratuito' => $gratuito,
+                'preco' => $bilhete->preco,
             ];
         }
 

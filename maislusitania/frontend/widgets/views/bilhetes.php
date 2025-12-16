@@ -185,12 +185,12 @@ use yii\widgets\ActiveForm;
         <?php foreach ($bilhetes as $index => $bilhete): ?>
             <div class="ticket-row">
                 <div class="ticket-info">
-                    <h4><?= Html::encode($bilhete['nome']) ?></h4>
-                    <p><?= Html::encode($bilhete['descricao']) ?></p>
+                    <h4><?= Html::encode($bilhete->nome) ?></h4>
+                    <p><?= Html::encode($bilhete->descricao) ?></p>
                 </div>
 
                 <div class="ticket-price">
-                    <?= Html::encode($bilhete['preco']) ?>
+                    <?= Html::encode($bilhete->getPrecoFormatado()) ?>
                 </div>
 
                 <?php if (isset($showComprar) && $showComprar): ?>
@@ -208,8 +208,8 @@ use yii\widgets\ActiveForm;
                     ) ?>
 
                     <!-- Campos ocultos com informações do bilhete -->
-                    <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][tipo_bilhete_id]', $bilhete['id']) ?>
-                    <?= Html::hiddenInput('bilhetes[' . $bilhete['id'] . '][preco]', $bilhete['preco']) ?>
+                    <?= Html::hiddenInput('bilhetes[' . $bilhete->id . '][tipo_bilhete_id]', $bilhete->id) ?>
+                    <?= Html::hiddenInput('bilhetes[' . $bilhete->id . '][preco]', $bilhete->preco) ?>
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
