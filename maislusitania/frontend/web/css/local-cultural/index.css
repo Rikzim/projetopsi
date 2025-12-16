@@ -413,7 +413,7 @@ body > .wrap > .container {
     align-items: center;
     justify-content: center;
     background: white;
-    border: 1px solid var(--gray-200);
+    border: 2px solid var(--lusiazul);
     border-radius: 50%;
     color: var(--gray-700);
     text-decoration: none;
@@ -427,10 +427,19 @@ body > .wrap > .container {
     border-color: var(--lusiazul);
 }
 
-.pagination .active {
+.pagination .active a,
+.pagination .active span {
     background: var(--lusiazul);
     color: white;
     border-color: var(--lusiazul);
+    cursor: default;
+}
+
+.pagination .disabled span {
+    background-color: var(--gray-100);
+    color: var(--gray-400);
+    border-color: var(--gray-200);
+    cursor: not-allowed;
 }
 
 /* ===== NO RESULTS ===== */
