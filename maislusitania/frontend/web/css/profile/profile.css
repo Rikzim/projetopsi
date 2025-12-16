@@ -193,15 +193,32 @@
     text-decoration: none;
     transition: all 0.3s ease;
 }
-
-.action-card.delete-account {
-    border-color: #ff4d4f;
-}
-
 .action-card:hover {
-    border-color: #2E5AAC;
+    border: 2px solid #2E5AAC;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(46, 90, 172, 0.15);
+}
+
+.delete-account {
+    border: 2px solid #ff4d4f;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+}
+
+.delete-account:hover {
+    border: 2px solid #ff4d4f;
+    background-color: #ff4d4f;
+}
+
+.delete-account:hover .action-title,
+.delete-account:hover .action-description {
+    color: white;
+}
+
+.delete-account:hover .action-icon img {
+    filter: brightness(0) invert(1);
 }
 
 .action-icon {

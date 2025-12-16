@@ -132,7 +132,7 @@ $this->registerCssFile('@web/css/profile/profile.css', ['depends' => [\yii\web\Y
                         </div>
                     </a>
 
-                    <?= Html::beginForm(['/profile/delete'], 'post', ['style' => 'display:inline;']) ?>
+                    <?= Html::beginForm(['/profile/delete'], 'post') ?>
                     <?= Html::button('
                         <div class="action-icon">
                             <img src="' . Url::to('@web/images/icons/icon-delete.svg') . '" alt="">
