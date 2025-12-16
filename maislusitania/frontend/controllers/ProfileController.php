@@ -91,6 +91,17 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function actionDelete()
+    {
+        $user = Yii::$app->user->identity;
+        if (!$user) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+        $user->SoftDelete();
+        Yii::$app->user->logout();
+        return $this->redirect(['site/index']);
+    }
+
     /**
      * Finds the UserProfile model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

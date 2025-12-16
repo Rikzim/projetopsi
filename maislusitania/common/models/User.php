@@ -233,6 +233,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function getReservas(){
         return $this->hasMany(Reserva::class, ['utilizador_id' => 'id']);
     }
+    
+    public function SoftDelete()
+    {
+        $this->status = self::STATUS_DELETED;
+        return $this->save();
+    }
 
 
 }
