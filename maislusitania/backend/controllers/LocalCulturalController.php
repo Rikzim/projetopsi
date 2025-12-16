@@ -45,6 +45,9 @@ class LocalCulturalController extends Controller
         $distritos = ArrayHelper::map(Distrito::find()->all(), 'id', 'nome');
         $tipoLocais = ArrayHelper::map(TipoLocal::find()->all(), 'id', 'nome');
 
+        //Paginação
+        $dataProvider->pagination->pageSize = 10;
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -52,6 +55,7 @@ class LocalCulturalController extends Controller
             'locais' => $locais,
             'distritos' => $distritos,
             'tipoLocais' => $tipoLocais,
+
         ]);
     }
 

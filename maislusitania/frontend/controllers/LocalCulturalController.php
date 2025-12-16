@@ -49,6 +49,8 @@ class LocalCulturalController extends Controller
         $searchModel = new LocalCulturalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $dataProvider->pagination->pageSize = 10;
+
         // Buscar tipos de local para dropdown
         $tiposLocal = ArrayHelper::map(
             TipoLocal::find()->orderBy('nome')->all(),

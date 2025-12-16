@@ -44,6 +44,8 @@ class NoticiaController extends Controller
             ->all();
         $totalNoticias = Noticia::find()->where(['ativo' => 1])->count();
 
+        $dataProvider->pagination->pageSize = 10;
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

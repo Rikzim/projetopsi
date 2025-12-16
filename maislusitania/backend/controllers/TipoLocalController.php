@@ -45,6 +45,7 @@ class TipoLocalController extends Controller
     {
         $searchModel = new TipoLocalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider->pagination->pageSize = 10;
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
