@@ -34,6 +34,8 @@ class EventoController extends Controller
 
         $dataProvider->query->joinWith(['local.tipoLocal', 'local.distrito']);
 
+        $dataProvider->pagination->pageSize = 10;
+
         // Filter by tipo if provided
         $tipo = Yii::$app->request->get('tipo');
         if ($tipo) {

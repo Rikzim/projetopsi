@@ -41,6 +41,8 @@ class NoticiaController extends Controller
         $searchModel = new NoticiaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $dataProvider->pagination->pageSize = 10;
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
