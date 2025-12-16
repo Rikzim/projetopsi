@@ -9,6 +9,28 @@ use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap5\ActiveForm */
+
+$this->registerJs("
+window.applyToAll = function() {
+    var value = $('#quick-fill-input').val();
+    $('.schedule-field').val(value);
+};
+
+window.applyToWeekdays = function() {
+    var value = $('#quick-fill-input').val();
+    $('#horario-segunda, #horario-terca, #horario-quarta, #horario-quinta, #horario-sexta').val(value);
+};
+
+window.applyToWeekend = function() {
+    var value = $('#quick-fill-input').val();
+    $('#horario-sabado, #horario-domingo').val(value);
+};
+
+window.clearAll = function() {
+    $('#quick-fill-input').val('');
+    $('.schedule-field').val('');
+};
+");
 ?>
 
 <div class="local-cultural-form">
@@ -96,29 +118,59 @@ use kartik\select2\Select2;
     <h5 class="text-primary mb-3 mt-4"><i class="far fa-clock"></i> Horário de Funcionamento Semanal</h5>
     <div class="card">
         <div class="card-body">
+            <!-- Quick Fill Section -->
+            <div class="alert alert-light border mb-4 p-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="quick-fill-input" class="form-label fw-bold">Preenchimento Rápido:</label>
+                        <input type="text" id="quick-fill-input" class="form-control" placeholder="Ex: 09:00 - 18:00">
+                    </div>
+                    <div class="col-md-8 mt-3 mt-md-0 d-flex align-items-end">
+                        <div>
+                            <?= Html::button('<i class="fas fa-copy"></i> Aplicar a Todos', [
+                                'class' => 'btn btn-success me-2 mb-2',
+                                'onclick' => 'applyToAll()'
+                            ]) ?>
+                            <?= Html::button('<i class="fas fa-briefcase"></i> Dias Úteis', [
+                                'class' => 'btn btn-primary me-2 mb-2',
+                                'onclick' => 'applyToWeekdays()'
+                            ]) ?>
+                            <?= Html::button('<i class="fas fa-calendar-day"></i> Fim de Semana', [
+                                'class' => 'btn btn-primary me-2 mb-2',
+                                'onclick' => 'applyToWeekend()'
+                            ]) ?>
+                            <?= Html::button('<i class="fas fa-eraser"></i> Limpar', [
+                                'class' => 'btn btn-secondary mb-2',
+                                'onclick' => 'clearAll()'
+                            ]) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-3">
-                    <?= $form->field($horario, 'segunda')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'segunda')->textInput(['id' => 'horario-segunda', 'maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00', 'class' => 'form-control schedule-field']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($horario, 'terca')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'terca')->textInput(['id' => 'horario-terca', 'maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00', 'class' => 'form-control schedule-field']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($horario, 'quarta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'quarta')->textInput(['id' => 'horario-quarta', 'maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00', 'class' => 'form-control schedule-field']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($horario, 'quinta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'quinta')->textInput(['id' => 'horario-quinta', 'maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00', 'class' => 'form-control schedule-field']) ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <?= $form->field($horario, 'sexta')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00']) ?>
+                    <?= $form->field($horario, 'sexta')->textInput(['id' => 'horario-sexta', 'maxlength' => true, 'placeholder' => 'Ex: 09:00 - 18:00', 'class' => 'form-control schedule-field']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($horario, 'sabado')->textInput(['maxlength' => true, 'placeholder' => 'Ex: 10:00 - 13:00']) ?>
+                    <?= $form->field($horario, 'sabado')->textInput(['id' => 'horario-sabado', 'maxlength' => true, 'placeholder' => 'Ex: 10:00 - 13:00', 'class' => 'form-control schedule-field']) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($horario, 'domingo')->textInput(['maxlength' => true, 'placeholder' => 'Ex: Encerrado']) ?>
+                    <?= $form->field($horario, 'domingo')->textInput(['id' => 'horario-domingo', 'maxlength' => true, 'placeholder' => 'Ex: Encerrado', 'class' => 'form-control schedule-field']) ?>
                 </div>
                 <div class="col-md-3">
                     <small class="text-muted d-block mt-4">
