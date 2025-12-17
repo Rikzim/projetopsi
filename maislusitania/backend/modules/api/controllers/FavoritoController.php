@@ -64,7 +64,52 @@ class FavoritoController extends ActiveController
         ];
 
         return $behaviors;
-    } 
+    }
+
+    public function actionAdd($localid)
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
+        $favoritoExistente = Favorito::getFavoriteByUserAndLocal($user->id, $localid);
+
+        if ($favoritoExistente) {
+            return ['status' => 'error', 'message' => 'Favorito já existe'];
+        }
+
+        $novoFavorito = new Favorito();
+        $novoFavorito->utilizador_id = $user->id;
+        $novoFavorito->local_id = $localid;
+
+        if ($novoFavorito->save()) {
+            return ['status' => 'success', 'message' => 'Favorito adicionado com sucesso'];
+        } else {
+            return ['status' => 'error', 'errors' => $novoFavorito->errors];
+        }
+    }
+    public function actionRemove($localid)
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
+        $favorito = Favorito::getFavoriteByUserAndLocal($user->id, $localid);
+
+        if (!$favorito) {
+            return ['status' => 'error', 'message' => 'Favorito não encontrado'];
+        }
+
+        if ($favorito->delete()) {
+            return ['status' => 'success', 'message' => 'Favorito removido com sucesso'];
+        } else {
+            return ['status' => 'error', 'message' => 'Erro ao remover favorito'];
+        }
+    }
 
     public function actionToggle($localid)
     {
