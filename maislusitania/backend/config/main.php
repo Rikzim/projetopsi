@@ -97,6 +97,8 @@ return [
                     'pluralize' => true,
                     'extraPatterns' => [
                         'POST toggle/{localid}' => 'toggle', // Permite filtrar por distrito
+                        'POST add/{localid}' => 'add', // Permite filtrar por distrito
+                        'DELETE remove/{localid}' => 'remove', // Permite filtrar por distrito
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
