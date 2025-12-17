@@ -102,7 +102,17 @@ class NoticiaController extends ActiveController
             throw new NotFoundHttpException('Notícia não encontrada.');
         }
 
-        return ['data' => $noticia];
+        $data = array_map(function($noticia) {
+            return [
+                'id' => $noticia->id,
+                'nome' => $noticia->titulo,
+                'conteudo' => $noticia->conteudo,
+                'imagem' => $noticia->getImageAPI(),
+                'data_publicacao' => $noticia->data_publicacao,
+            ];
+        }, [$noticia]);
+
+        return ['data' => $data];
     }
 
     // Extra Patterns
