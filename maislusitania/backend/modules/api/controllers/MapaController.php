@@ -43,7 +43,6 @@ class MapaController extends ActiveController
             return [
                 'id' => $local->id,
                 'nome' => $local->nome,
-                'descricao' => $local->descricao,
                 'imagem' => $local->getImageAPI(),
                 'tipo' => $local->tipoLocal->nome,
                 'latitude' => $local->latitude,
