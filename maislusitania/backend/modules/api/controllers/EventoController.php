@@ -81,6 +81,8 @@ class EventoController extends ActiveController
             return [
                 'id' => $evento->id,
                 'titulo' => $evento->titulo,
+                'nome_local' => $evento->local->nome,
+                'descricao' => $evento->descricao,
                 'imagem' => $evento->getImageAPI(),
                 'data_inicio' => date('d/m/Y H:i', strtotime($evento->data_inicio)),
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
@@ -102,13 +104,12 @@ class EventoController extends ActiveController
         $data = array_map(function($evento) {
             return [
                 'id' => $evento->id,
-                'local_id' => $evento->local_id,
+                'nome_local' => $evento->local->nome,
                 'titulo' => $evento->titulo,
                 'descricao' => $evento->descricao,
                 'imagem' => $evento->getImageAPI(),
                 'data_inicio' => date('d/m/Y H:i', strtotime($evento->data_inicio)),
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
-                'ativo' => (bool)$evento->ativo,
             ];
         }, $evento);
         return ['data' => $data];

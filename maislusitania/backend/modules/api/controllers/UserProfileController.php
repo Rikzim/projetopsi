@@ -49,10 +49,10 @@ class UserProfileController extends ActiveController
     public function actionMe()
     {
         // Obtém o ID do usuário autenticado
-        $userId = Yii::$app->user->id;
+        $user = Yii::$app->user->identity;
         
         // Se não houver usuário autenticado, retorna erro 401
-        if (!$userId) {
+        if (!$user) {
             Yii::$app->response->statusCode = 401;
             return [
                 'success' => false,
@@ -61,7 +61,7 @@ class UserProfileController extends ActiveController
         }
         
         // Busca o perfil do usuário autenticado
-        $userProfile = UserProfile::findOne(['user_id' => $userId]);
+        $userProfile = UserProfile::findOne(['user_id' => $user->id]);
         
         // Se o perfil não existir, retorna erro 404
         if (!$userProfile) {
@@ -83,6 +83,7 @@ class UserProfileController extends ActiveController
                 'user_id' => $userProfile->user_id,
                 'username' => $userProfile->user->username, // Dados do user relacionado
                 'email' => $userProfile->user->email,
+                'data_adesao' => $userProfile->user->created_at,
             ],
         ];
     }
@@ -114,6 +115,9 @@ class UserProfileController extends ActiveController
             //only=> ['index'],  //Apenas para o GET
             
         ];
+
+        // retornar em json
+        $behaviors['contentNegotiator']['formats']['application/json'] = \yii\web\Response::FORMAT_JSON;
 
         return $behaviors;
     } 
