@@ -115,6 +115,9 @@ class UserProfileController extends ActiveController
             
         ];
 
+        // retornar em json
+        $behaviors['contentNegotiator']['formats']['application/json'] = \yii\web\Response::FORMAT_JSON;
+
         return $behaviors;
     } 
 }
