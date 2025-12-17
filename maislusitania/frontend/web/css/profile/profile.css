@@ -194,6 +194,10 @@
     transition: all 0.3s ease;
 }
 
+.action-card.delete-account {
+    border-color: #ff4d4f;
+}
+
 .action-card:hover {
     border-color: #2E5AAC;
     transform: translateY(-2px);

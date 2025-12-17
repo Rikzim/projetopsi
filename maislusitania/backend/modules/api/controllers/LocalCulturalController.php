@@ -10,6 +10,7 @@ use common\models\Distrito;
 use common\models\LocalCultural;
 use common\models\TipoLocal;
 use yii\filters\ContentNegotiator;
+use yii\filters\auth\QueryParamAuth;
 use Yii;
 
 class LocalCulturalController extends ActiveController
@@ -39,8 +40,10 @@ class LocalCulturalController extends ActiveController
             ->with(['distrito', 'tipoLocal'])
             ->all();
 
-        $data = array_map(function($local) {
-            return [
+        $userId = Yii::$app->user->id;
+
+        $data = array_map(function($local) use ($userId) {
+            $result = [
                 'id' => $local->id,
                 'nome' => $local->nome,
                 'morada' => $local->morada,
@@ -48,8 +51,13 @@ class LocalCulturalController extends ActiveController
                 'descricao' => $local->descricao,
                 'imagem' => $local->getImageAPI(),
                 'avaliacao_media' => $local->getAverageRating(),
-                
             ];
+
+            if ($userId) {
+                $result['favorito'] = $local->isFavoritedByUser($userId);
+            }
+
+            return $result;
         }, $locais);
 
         return ['data' => $data];
@@ -130,10 +138,19 @@ class LocalCulturalController extends ActiveController
 
     public function actionSearch($nome)
     {
-        $locais = LocalCultural::find()
-            ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
-            ->andWhere(['ativo' => true])
-            ->all();
+        $query = LocalCultural::find()
+            ->where(['ativo' => true]);
+
+        // Divide em palavras e procura por cada uma
+        $palavras = explode(' ', trim($nome));
+        
+        foreach ($palavras as $palavra) {
+            if (!empty($palavra)) {
+                $query->andWhere(['LIKE', 'LOWER(nome)', strtolower($palavra)]);
+            }
+        }
+
+        $locais = $query->all();
 
         if (empty($locais)) {
             throw new NotFoundHttpException("Nenhum local cultural encontrado com o nome '$nome'.");
@@ -148,7 +165,9 @@ class LocalCulturalController extends ActiveController
     // Método auxiliar para formatar os dados do local
     private function formatLocalData($local)
     {
-        return [
+        $userId = Yii::$app->user->id;
+
+        $data = [
             'id' => $local->id,
             'nome' => $local->nome,
             'tipo' => $local->tipoLocal->nome ?? null,
@@ -200,19 +219,23 @@ class LocalCulturalController extends ActiveController
                     'imagem' => $evento->getImageAPI(),
                 ];
             }, $local->eventos) : "Nenhum evento relacionado disponível no momento.",
-            'tipos-bilhete' => $local->tipoBilhetes ? array_map(function($tipo) {  // ALTERADO: array_map para iterar todos
+            'tipos-bilhete' => $local->tipoBilhetes ? array_map(function($tipo) {
                 return [
                     'id' => $tipo->id,
                     'nome' => $tipo->nome,
-                    'descricao' => $tipo->descricao,  // ADICIONADO: descrição
-                    'preco' => number_format($tipo->preco, 2) . '€',  // MELHORADO: formatação do preço
+                    'descricao' => $tipo->descricao,
+                    'preco' => number_format($tipo->preco, 2) . '€',
                     'ativo' => (bool)$tipo->ativo,
                 ];
-            }, $local->tipoBilhetes) : "Nenhum bilhete disponível no momento.",  // ALTERADO: tipoBilhetes (plural)
-            
+            }, $local->tipoBilhetes) : "Nenhum bilhete disponível no momento.",
         ];
-    }
 
+        if ($userId) {
+            $data['favorito'] = $local->isFavoritedByUser($userId);
+        }
+
+        return $data;
+    }
     // ========================================
     // Define campos a retornar
     // ========================================
@@ -251,6 +274,12 @@ class LocalCulturalController extends ActiveController
                 'Access-Control-Allow-Credentials' => true,
             ],
         ];
+
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'optional' => ['index', 'view', 'distrito', 'tipo-local', 'search'],
+        ];
+
         $behaviors['contentNegotiator'] = [ // Resposta em JSON
             'class' => ContentNegotiator::class,
             'formats' => [
