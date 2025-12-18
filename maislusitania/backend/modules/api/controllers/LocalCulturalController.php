@@ -60,7 +60,7 @@ class LocalCulturalController extends ActiveController
             return $result;
         }, $locais);
 
-        return ['data' => $data];
+        return [$data];
     }
     // Visualiza um local específico por ID
     public function actionView($id)

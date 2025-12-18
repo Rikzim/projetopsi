@@ -88,7 +88,7 @@ class EventoController extends ActiveController
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
             ];
         }, $eventos);
-        return ['data' => $data];
+        return [$data];
     }
 
     public function actionView($id)
