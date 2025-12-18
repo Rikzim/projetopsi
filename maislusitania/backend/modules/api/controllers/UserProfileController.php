@@ -72,10 +72,10 @@ class UserProfileController extends ActiveController
             ];
         }
         
-        // Retorna o perfil com dados do usuário
-        return [
-            'success' => true,
-            'data' => [
+        //Retorna o perfil com dados do user
+
+        $data = array_map(function($evento) {
+            return [
                 'id' => $userProfile->id,
                 'primeiro_nome' => $userProfile->primeiro_nome,
                 'ultimo_nome' => $userProfile->ultimo_nome,
@@ -84,8 +84,9 @@ class UserProfileController extends ActiveController
                 'username' => $userProfile->user->username, // Dados do user relacionado
                 'email' => $userProfile->user->email,
                 'data_adesao' => $userProfile->user->created_at,
-            ],
-        ];
+            ];
+        }, $userProfile);
+        return [$data];
     }
 
     // ========================================
