@@ -74,7 +74,7 @@ class UserProfileController extends ActiveController
         
         //Retorna o perfil com dados do user
 
-        $data = array_map(function($evento) {
+        $data = array_map(function($userProfile) {
             return [
                 'id' => $userProfile->id,
                 'primeiro_nome' => $userProfile->primeiro_nome,
@@ -83,10 +83,10 @@ class UserProfileController extends ActiveController
                 'user_id' => $userProfile->user_id,
                 'username' => $userProfile->user->username, // Dados do user relacionado
                 'email' => $userProfile->user->email,
-                'data_adesao' => $userProfile->user->created_at,
+                'data_adesao' => Yii::$app->formatter->asDate($userProfile->user->created_at),  
             ];
-        }, $userProfile);
-        return [$data];
+        }, [$userProfile]);
+        return $data;
     }
 
     // ========================================
