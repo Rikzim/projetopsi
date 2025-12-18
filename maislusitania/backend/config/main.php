@@ -125,6 +125,7 @@ return [
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
+                        '{localid}' => '<localid:\\d+>',
                     ],
                 ],
                 [
