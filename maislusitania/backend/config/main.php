@@ -108,14 +108,14 @@ return [
                     'controller' => 'api/mapa', 
                     'pluralize' => true,
                     'extraPatterns' => [
-                        'POST search/{nome}' => 'search',
+                        'GET search/{nome}' => 'search',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
                         '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
                     ],
                 ],
-                
+
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => [
@@ -129,7 +129,6 @@ return [
                     'api/tipo-local',
                     'api/user',
                     'api/user-profile',
-                    'api/mapa',
                     ],
                     'pluralize' => true,
                     'tokens' => [
