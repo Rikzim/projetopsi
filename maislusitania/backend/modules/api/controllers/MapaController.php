@@ -63,7 +63,8 @@ class MapaController extends ActiveController
         $modelClass = $this->modelClass;
         $locais = $modelClass::find()
             ->where(['ativo' => true])
-            ->andWhere(['like', 'nome', $nome])
+            ->andWhere(['like', 'LOWER(nome)', strtolower($nome)])
+            ->andWhere(['like', 'LOWER(tipo)', strtolower($nome)])
             ->all();
 
         $data = array_map(function($local) {
