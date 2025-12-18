@@ -39,6 +39,11 @@ class MapaController extends ActiveController
             ->where(['ativo' => true])
             ->all();
 
+        if (!$locais) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Nenhum local cultural encontrado."];
+        }
+
         $data = array_map(function($local) {
             return [
                 'id' => $local->id,
@@ -66,6 +71,11 @@ class MapaController extends ActiveController
             ->andWhere(['like', 'LOWER(nome)', strtolower($nome)])
             ->andWhere(['like', 'LOWER(tipo)', strtolower($nome)])
             ->all();
+
+        if(!$locais) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Nenhum local cultural encontrado com o nome '$nome'."];
+        }
 
         $data = array_map(function($local) {
             return [

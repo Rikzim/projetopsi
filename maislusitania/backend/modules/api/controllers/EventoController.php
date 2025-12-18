@@ -72,11 +72,24 @@ class EventoController extends ActiveController
 
     public function actionIndex()
     {
+        $user = Yii::$app->user->identity;
+        
+        if (!$user) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
             ->orderBy(['id' => SORT_DESC])
             ->where(['ativo' => true])
             ->all();
+
+        if (empty($eventos)) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhum evento encontrado.'];
+        }
+        
         $data = array_map(function($evento) {
             return [
                 'id' => $evento->id,
@@ -96,13 +109,19 @@ class EventoController extends ActiveController
 
     public function actionView($id)
     {
+        $user = Yii::$app->user->identity;
+        
+        if (!$user) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
         $modelClass = $this->modelClass;
-        $evento = $modelClass::find()
-            ->orderBy(['id' => SORT_DESC])
-            ->where(['ativo' => true])
-            ->all();
+        $evento = $modelClass::findOne(['id' => $id, 'ativo' => true]);
+
         if (!$evento) {
-            throw new NotFoundHttpException('Evento não encontrado.');
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "O evento com o ID $id não foi encontrado."];
         }
         $data = array_map(function($evento) {
             return [
@@ -121,6 +140,13 @@ class EventoController extends ActiveController
     // Extra Patterns
     public function actionTipoLocal($nome)
     {
+        $user = Yii::$app->user->identity;
+        
+        if (!$user) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
             ->joinWith('local.tipoLocal') // ALTERADO: tipoLocal para tipo
@@ -129,7 +155,8 @@ class EventoController extends ActiveController
             ->all();
             
         if (empty($eventos)) {
-            return ['message' => 'Nenhum evento encontrado com esse tipo de local.'];
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhum evento encontrado com esse tipo de local.'];
         }
 
         $data = array_map(function($evento) {
@@ -147,13 +174,21 @@ class EventoController extends ActiveController
 
     public function actionSearch($nome)
     {
+        $user = Yii::$app->user->identity;
+        
+        if (!$user) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
             ->where(['LIKE', 'LOWER(titulo)', strtolower($nome)])
             ->andWhere(['ativo' => true])
             ->all();
         if (empty($eventos)) {
-            return ['data' => ['message' => 'Nenhum evento encontrado com esse tipo de local.']]; // Retorna array vazio se nenhum evento encontrado
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhum evento encontrado com esse nome.'];
         }
 
         $data = array_map(function($evento) {

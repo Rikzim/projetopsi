@@ -42,6 +42,11 @@ class LocalCulturalController extends ActiveController
 
         $userId = Yii::$app->user->id;
 
+        if (empty($locais)) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhum local cultural encontrado.'];
+        }
+
         $data = array_map(function($local) use ($userId) {
             $result = [
                 'id' => $local->id,
@@ -60,6 +65,8 @@ class LocalCulturalController extends ActiveController
             return $result;
         }, $locais);
 
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
         return $data;
     }
     // Visualiza um local específico por ID
@@ -74,7 +81,7 @@ class LocalCulturalController extends ActiveController
                 },
                 'noticias',
                 'eventos',
-                'tipoBilhetes' => function($query) {  // ALTERADO: tipoBilhetes (plural)
+                'tipoBilhetes' => function($query) {
                     $query->andWhere(['ativo' => true]);
                 },
                 'horario',
@@ -84,7 +91,8 @@ class LocalCulturalController extends ActiveController
             ->one();
 
         if (!$local) {
-            throw new NotFoundHttpException('Local cultural não encontrado.');
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Local cultural não encontrado.'];
         }
         return $this->formatLocalData($local);
     }
@@ -101,15 +109,13 @@ class LocalCulturalController extends ActiveController
 
         // Retorna os locais culturais desse distrito
         $locais = LocalCultural::find()
-            ->where(['distrito_id' => $distrito->id])
+            ->where(['distrito_id' => $distrito->id, 'ativo' => true])
             ->with(['distrito', 'tipoLocal']) // Adicionado para otimizar
             ->all();
 
-        if (!$locais) {
-            // Lançar exceção ou retornar array vazio?
-            // Por consistência, vamos retornar um array vazio e o total 0
-            Yii::$app->response->headers->set('X-Total-Count', '0');
-            return [];
+        if (empty($locais)) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Nenhum local cultural encontrado para o distrito '$nome'."];
         }
 
         $userId = Yii::$app->user->id;
@@ -142,18 +148,19 @@ class LocalCulturalController extends ActiveController
             ->one();
 
         if (!$tipolocal) {
-            throw new NotFoundHttpException("Tipo Local '$nome' não encontrado.");
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Tipo de local '$nome' não encontrado."];
         }
 
         // Retorna os locais culturais desse tipo
         $locais = LocalCultural::find()
-            ->where(['tipo_id' => $tipolocal->id])
+            ->where(['tipo_id' => $tipolocal->id, 'ativo' => true])
             ->with(['distrito', 'tipoLocal']) // Adicionado para otimizar
             ->all();
 
-        if (!$locais) {
-            Yii::$app->response->headers->set('X-Total-Count', '0');
-            return [];
+        if (empty($locais)) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Nenhum local cultural encontrado para o tipo '$nome'."];
         }
 
         $userId = Yii::$app->user->id;
@@ -196,7 +203,8 @@ class LocalCulturalController extends ActiveController
         $locais = $query->with('distrito')->all();
 
         if (empty($locais)) {
-            throw new NotFoundHttpException("Nenhum local cultural encontrado com o nome '$nome'.");
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Nenhum local cultural encontrado com o nome '$nome'."];
         }
 
         $userId = Yii::$app->user->id;
