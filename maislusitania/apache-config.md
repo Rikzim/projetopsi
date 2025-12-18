@@ -55,3 +55,8 @@ Alias /uploads "C:/wamp64/www/projetopsi/maislusitania/frontend/web/uploads"
 sudo a2enconf uploads
 sudo systemctl reload apache2
 ```
+
+## WARNING 
+
+- Se rebentar o servidor por causa do composer usar este comando
+- composer update --ignore-platform-req=php
