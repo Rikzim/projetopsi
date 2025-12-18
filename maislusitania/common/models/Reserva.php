@@ -311,4 +311,62 @@ class Reserva extends \yii\db\ActiveRecord
 
         return true;
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        //Obter dados do registo em causa
+        $myObj = new \stdClass();
+        // ID da reserva
+        $myObj->id = $this->id;
+        // ID e nome do utilizador
+        $myObj->utilizador_id = $this->utilizador_id;
+        $myObj->nome = $this->utilizador->username;
+        // ID e nome do local
+        $myObj->local_id = $this->local_id;
+        $myObj->local_nome = $this->local->nome;
+        // Data da visita
+        $myObj->data_visita = $this->data_visita;
+        // Preço total
+        $myObj->preco_total = $this->preco_total;
+        // Estado
+        $myObj->estado = $this->estado;
+        // Data de criação
+        $myObj->data_criacao = $this->data_criacao;
+        // Converter para JSON
+        $myJSON = json_encode($myObj);
+        if($insert)
+            $this->FazPublishNoMosquitto("INSERT",$myJSON);
+        else
+            $this->FazPublishNoMosquitto("UPDATE",$myJSON);
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $myObj = new \stdClass();
+        // ID da reserva
+        $myObj->id = $this->id;
+        // Converter para JSON
+        $myJSON = json_encode($myObj);
+        $this->FazPublishNoMosquitto("DELETE",$myJSON);
+    }
+
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1"; 
+        $port = 1883;
+        $username = ""; // set your username
+        $password = ""; // set your password
+        $client_id = "phpMQTT-publisher"; // unique!
+        $mqtt = new \Bluerhinos\phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, $username, $password)){
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }else { 
+            file_put_contents("debug.output","Time out!");
+        }
+    }
 }
