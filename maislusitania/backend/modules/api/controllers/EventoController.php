@@ -112,7 +112,7 @@ class EventoController extends ActiveController
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
             ];
         }, $evento);
-        return ['data' => $data];
+        return $data;
     }
 
     // Extra Patterns
@@ -126,7 +126,7 @@ class EventoController extends ActiveController
             ->all();
             
         if (empty($eventos)) {
-            return ['data' => ['message' => 'Nenhum evento encontrado com esse tipo de local.']];
+            return ['message' => 'Nenhum evento encontrado com esse tipo de local.'];
         }
 
         $data = array_map(function($evento) {
@@ -139,7 +139,7 @@ class EventoController extends ActiveController
             ];
         }, $eventos);
 
-        return ['data' => $data];
+        return $data;
     }
 
     public function actionSearch($nome)
@@ -163,6 +163,6 @@ class EventoController extends ActiveController
             ];
         }, $eventos);
 
-        return ['data' => $data];
+        return $data;
     }
 }
