@@ -51,6 +51,8 @@ class MapaController extends ActiveController
             ];
         }, $locais);
 
-        return ['data' => $data];
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 }

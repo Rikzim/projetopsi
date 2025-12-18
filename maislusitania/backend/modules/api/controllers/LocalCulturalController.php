@@ -60,7 +60,7 @@ class LocalCulturalController extends ActiveController
             return $result;
         }, $locais);
 
-        return ['data' => $data];
+        return $data;
     }
     // Visualiza um local específico por ID
     public function actionView($id)
@@ -86,7 +86,7 @@ class LocalCulturalController extends ActiveController
         if (!$local) {
             throw new NotFoundHttpException('Local cultural não encontrado.');
         }
-        return ['data' => $this->formatLocalData($local)];
+        return $this->formatLocalData($local);
     }
     // Extra Patterns
     public function actionDistrito($nome)
@@ -102,17 +102,38 @@ class LocalCulturalController extends ActiveController
         // Retorna os locais culturais desse distrito
         $locais = LocalCultural::find()
             ->where(['distrito_id' => $distrito->id])
+            ->with(['distrito', 'tipoLocal']) // Adicionado para otimizar
             ->all();
 
         if (!$locais) {
-            throw new NotFoundHttpException("Distrito '$nome' não encontrado.");
+            // Lançar exceção ou retornar array vazio?
+            // Por consistência, vamos retornar um array vazio e o total 0
+            Yii::$app->response->headers->set('X-Total-Count', '0');
+            return [];
         }
 
-        return [
-            'distrito' => $distrito->nome,
-            'total' => count($locais),
-            'locais' => $locais,
-        ];
+        $userId = Yii::$app->user->id;
+        $data = array_map(function($local) use ($userId) {
+            $result = [
+                'id' => $local->id,
+                'nome' => $local->nome,
+                'morada' => $local->morada,
+                'distrito' => $local->distrito->nome ?? null,
+                'descricao' => $local->descricao,
+                'imagem' => $local->getImageAPI(),
+                'avaliacao_media' => $local->getAverageRating(),
+            ];
+
+            if ($userId) {
+                $result['favorito'] = $local->isFavoritedByUser($userId);
+            }
+            return $result;
+        }, $locais);
+
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+        Yii::$app->response->headers->set('X-Nome-Distrito', $distrito->nome ?? '');
+
+        return $data;
     }
     public function actionTipoLocal($nome)
     {
@@ -120,20 +141,42 @@ class LocalCulturalController extends ActiveController
             ->where(['LIKE', 'LOWER(nome)', strtolower($nome)])
             ->one();
 
-        // Retorna os locais culturais desse distrito
-        $locais = LocalCultural::find()
-            ->where(['tipo_id' => $tipolocal->id])
-            ->all();
-
-        if (!$locais) {
+        if (!$tipolocal) {
             throw new NotFoundHttpException("Tipo Local '$nome' não encontrado.");
         }
 
-        return [
-            'tipo_local' => $tipolocal->nome,
-            'total' => count($locais),
-            'locais' => $locais,
-        ];
+        // Retorna os locais culturais desse tipo
+        $locais = LocalCultural::find()
+            ->where(['tipo_id' => $tipolocal->id])
+            ->with(['distrito', 'tipoLocal']) // Adicionado para otimizar
+            ->all();
+
+        if (!$locais) {
+            Yii::$app->response->headers->set('X-Total-Count', '0');
+            return [];
+        }
+
+        $userId = Yii::$app->user->id;
+        $data = array_map(function($local) use ($userId) {
+            $result = [
+                'id' => $local->id,
+                'nome' => $local->nome,
+                'morada' => $local->morada,
+                'distrito' => $local->distrito->nome ?? null,
+                'descricao' => $local->descricao,
+                'imagem' => $local->getImageAPI(),
+                'avaliacao_media' => $local->getAverageRating(),
+            ];
+
+            if ($userId) {
+                $result['favorito'] = $local->isFavoritedByUser($userId);
+            }
+            return $result;
+        }, $locais);
+
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 
     public function actionSearch($nome)
@@ -150,16 +193,35 @@ class LocalCulturalController extends ActiveController
             }
         }
 
-        $locais = $query->all();
+        $locais = $query->with('distrito')->all();
 
         if (empty($locais)) {
             throw new NotFoundHttpException("Nenhum local cultural encontrado com o nome '$nome'.");
         }
 
-        return [
-            'total' => count($locais),
-            'locais' => $locais,
-        ];
+        $userId = Yii::$app->user->id;
+
+        $data = array_map(function($local) use ($userId) {
+            $result = [
+                'id' => $local->id,
+                'nome' => $local->nome,
+                'morada' => $local->morada,
+                'distrito' => $local->distrito->nome ?? null,
+                'descricao' => $local->descricao,
+                'imagem' => $local->getImageAPI(),
+                'avaliacao_media' => $local->getAverageRating(),
+            ];
+
+            if ($userId) {
+                $result['favorito'] = $local->isFavoritedByUser($userId);
+            }
+
+            return $result;
+        }, $locais);
+        
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 
     // Método auxiliar para formatar os dados do local
