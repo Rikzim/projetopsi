@@ -72,7 +72,6 @@ class FavoritoController extends Controller
         if ($favorito !== null) {
             // Existe, então remover
             $favorito->delete();
-            Yii::$app->session->setFlash('success', 'Removido dos favoritos!');
         } else {
             // Se não existe, adicionar
             $favorito = new Favorito();
@@ -82,8 +81,6 @@ class FavoritoController extends Controller
             
             if (!$favorito->save()) {
                 Yii::$app->session->setFlash('error', 'Erro ao adicionar aos favoritos.');
-            } else {
-                Yii::$app->session->setFlash('success', 'Adicionado aos favoritos!');
             }
         }
 

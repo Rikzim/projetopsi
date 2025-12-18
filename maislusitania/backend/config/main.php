@@ -62,7 +62,7 @@ return [
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
-                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-\s]+>',
                     ],
                 ],
                 [
@@ -93,10 +93,23 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/favorito', 
+                    'pluralize' => true,
+                    'extraPatterns' => [
+                        'POST toggle/{localid}' => 'toggle', // Permite filtrar por distrito
+                        'POST add/{localid}' => 'add', // Permite filtrar por distrito
+                        'DELETE remove/{localid}' => 'remove', // Permite filtrar por distrito
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{localid}' => '<localid:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
                     'controller' => [
                     'api/avaliacao',
                     'api/distrito',
-                    'api/favorito',
                     'api/linha-reserva',
                     'api/login-form', //Funciona
                     'api/signup-form', //Funciona

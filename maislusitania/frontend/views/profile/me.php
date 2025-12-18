@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = 'Meu Perfil';
-$this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiAsset::class]]);
+$this->registerCssFile('@web/css/profile/profile.css', ['depends' => [\yii\web\YiiAsset::class]]);
 ?>
 
 <div class="profile-page">
@@ -102,7 +102,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                 <h3 class="info-section-title">Ações Rápidas</h3>
                 
                 <div class="quick-actions">
-                    <a href="<?= Url::to(['/site/favorites']) ?>" class="action-card">
+                    <a href="<?= Url::to(['/favorito/index']) ?>" class="action-card">
                         <div class="action-icon">
                             <img src="<?= Url::to('@web/images/icons/blue/icon-favorite.svg') ?>" alt="">
                         </div>
@@ -112,7 +112,7 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                         </div>
                     </a>
 
-                    <a href="<?= Url::to(['/site/bilhetes']) ?>" class="action-card">
+                    <a href="<?= Url::to(['/reserva/index']) ?>" class="action-card">
                         <div class="action-icon">
                             <img src="<?= Url::to('@web/images/icons/blue/icon-ticket.svg') ?>" alt="">
                         </div>
@@ -131,6 +131,22 @@ $this->registerCssFile('@web/css/site/profile.css', ['depends' => [\yii\web\YiiA
                             <p class="action-description">Atualize a sua palavra-passe</p>
                         </div>
                     </a>
+
+                    <?= Html::beginForm(['/profile/delete'], 'post') ?>
+                    <?= Html::button('
+                        <div class="action-icon">
+                            <img src="' . Url::to('@web/images/icons/icon-delete.svg') . '" alt="">
+                        </div>
+                        <div class="action-content">
+                            <h4 class="action-title">Apagar Conta</h4>
+                            <p class="action-description">Exclua sua conta permanentemente</p>
+                        </div>
+                    ', [
+                        'class' => 'action-card delete-account',
+                        'type' => 'submit',
+                        'onclick' => "return confirm('Tem certeza de que deseja apagar a sua conta? Esta ação não pode ser desfeita.');",
+                    ]) ?>
+                    <?= Html::endForm() ?>
                 </div>
             </div>
         </div>

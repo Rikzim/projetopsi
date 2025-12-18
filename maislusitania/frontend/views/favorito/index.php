@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 $this->title = 'Meus Favoritos';
-$this->registerCssFile('@web/css/site/favorites.css', ['depends' => [\yii\web\YiiAsset::class]]);
+$this->registerCssFile('@web/css/favorito/index.css ', ['depends' => [\yii\web\YiiAsset::class]]);
 ?>
 
 <div class="favorites-page">
