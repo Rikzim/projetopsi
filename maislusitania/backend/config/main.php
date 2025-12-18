@@ -13,7 +13,6 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [
-        // ADICIONA ISTO ↓
         'api' => [
             'class' => 'backend\modules\api\ModuleAPI',
         ],
@@ -21,7 +20,6 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
-            // ADICIONA ISTO ↓ (para aceitar JSON)
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ]
@@ -105,6 +103,19 @@ return [
                         '{localid}' => '<localid:\\d+>',
                     ],
                 ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/mapa', 
+                    'pluralize' => true,
+                    'extraPatterns' => [
+                        'POST search/{nome}' => 'search',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                    ],
+                ],
+                
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => [

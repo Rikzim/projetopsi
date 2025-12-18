@@ -55,4 +55,31 @@ class MapaController extends ActiveController
 
         return $data;
     }
+
+    public function actionSearch($nome)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $modelClass = $this->modelClass;
+        $locais = $modelClass::find()
+            ->where(['ativo' => true])
+            ->andWhere(['like', 'nome', $nome])
+            ->all();
+
+        $data = array_map(function($local) {
+            return [
+                'id' => $local->id,
+                'nome' => $local->nome,
+                'imagem' => $local->getImageAPI(),
+                'tipo' => $local->tipoLocal->nome,
+                'latitude' => $local->latitude,
+                'longitude' => $local->longitude,
+                'markerImagem' => $local->tipoLocal->getImageAPI(),
+            ];
+        }, $locais);
+
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
+    }
 }
