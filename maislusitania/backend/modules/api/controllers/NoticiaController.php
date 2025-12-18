@@ -88,7 +88,9 @@ class NoticiaController extends ActiveController
             ];
         }, $noticias);
 
-        return ['data' => $data];
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 
     public function actionView($id)
@@ -112,7 +114,7 @@ class NoticiaController extends ActiveController
             ];
         }, [$noticia]);
 
-        return ['data' => $data];
+        return $data;
     }
 
     // Extra Patterns
@@ -139,7 +141,9 @@ class NoticiaController extends ActiveController
             ];
         }, $noticias);
 
-        return ['data' => $data];
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 
     public function actionSearch($nome)
@@ -163,6 +167,8 @@ class NoticiaController extends ActiveController
             ];
         }, $noticias);
 
-        return ['data' => $data];
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 }

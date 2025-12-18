@@ -88,7 +88,10 @@ class EventoController extends ActiveController
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
             ];
         }, $eventos);
-        return [$data];
+
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 
     public function actionView($id)
@@ -162,6 +165,8 @@ class EventoController extends ActiveController
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
             ];
         }, $eventos);
+
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
 
         return $data;
     }
