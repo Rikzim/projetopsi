@@ -115,7 +115,18 @@ return [
                         '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
                     ],
                 ],
-
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/avaliacao',
+                    'pluralize' => true,
+                    'extraPatterns' => [
+                        'POST add/{localid}' => 'add',
+                        'DELETE remove/{id}' => 'remove',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                    ],
+                ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => [

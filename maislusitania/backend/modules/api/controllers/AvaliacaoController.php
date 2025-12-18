@@ -65,4 +65,57 @@ class AvaliacaoController extends ActiveController
 
         return $behaviors;
     } 
+
+    public function actionAdd($localid)
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
+        $model = new $this->modelClass;
+
+        $model->local_id = $localid;
+        $model->utilizador_id = $user->id;
+        $model->classificacao = Yii::$app->request->post('classificacao');
+        $model->comentario = Yii::$app->request->post('comentario', null);
+        $model->data_avaliacao = date('Y-m-d H:i:s');
+        $model->ativo = 1;
+
+        if ($model->save()) {
+            Yii::$app->response->statusCode = 201;
+            return $model;
+        } else {
+            Yii::$app->response->statusCode = 400;
+            return ['errors' => $model->errors];
+        }
+    }
+
+    public function actionRemove($id){
+        $user = Yii::$app->user->identity;
+        
+        if (!$user) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
+        $modelClass = $this->modelClass;
+
+        $avaliacao = $modelClass::findOne(['id' => $id, 'utilizador_id' => $user->id]);
+
+        if (!$avaliacao) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'Avaliação não encontrada'];
+        }
+
+        if ($avaliacao->delete()) {
+            Yii::$app->response->statusCode = 200;
+            return ['status' => 'success', 'message' => 'Avaliação removida com sucesso'];
+        } else {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Erro ao remover avaliação'];
+        }
+    }
 }

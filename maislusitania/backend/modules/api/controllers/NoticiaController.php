@@ -78,10 +78,16 @@ class NoticiaController extends ActiveController
             ->where(['ativo' => true])
             ->all();
 
+        if (empty($noticias)) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Nenhuma notícia encontrada."];
+        }
+
         $data = array_map(function($noticia) {
             return [
                 'id' => $noticia->id,
                 'nome' => $noticia->titulo,
+                'local_nome' => $noticia->local->nome ?? null,
                 'resumo' => $noticia->resumo,
                 'imagem' => $noticia->getImageAPI(),
                 'data_publicacao' => $noticia->data_publicacao,
@@ -101,7 +107,8 @@ class NoticiaController extends ActiveController
             ->one();
 
         if (!$noticia) {
-            throw new NotFoundHttpException('Notícia não encontrada.');
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Notícia não encontrada."];
         }
 
         $data = array_map(function($noticia) {
@@ -128,7 +135,8 @@ class NoticiaController extends ActiveController
             ->all();
             
         if (empty($noticias)) {
-            return ['data' => ['message' => 'Nenhuma noticia encontrada com esse tipo de local.']];
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhuma noticia encontrada com esse tipo de local.'];
         }
 
         $data = array_map(function($noticia) {
@@ -153,8 +161,10 @@ class NoticiaController extends ActiveController
             ->where(['LIKE', 'LOWER(titulo)', strtolower($nome)])
             ->andWhere(['ativo' => true])
             ->all();
+        
         if (empty($noticias)) {
-            return ['data' => ['message' => 'Nenhuma noticia encontrada com esse nome.']];
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhuma noticia encontrada com esse nome.'];
         }
 
         $data = array_map(function($noticia) {
