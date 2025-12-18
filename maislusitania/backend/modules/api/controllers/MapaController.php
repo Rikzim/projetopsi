@@ -51,6 +51,6 @@ class MapaController extends ActiveController
             ];
         }, $locais);
 
-        return ['data' => $data];
+        return $data;
     }
 }
