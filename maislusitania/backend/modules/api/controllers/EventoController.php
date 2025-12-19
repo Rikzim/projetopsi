@@ -133,7 +133,7 @@ class EventoController extends ActiveController
                 'data_inicio' => date('d/m/Y H:i', strtotime($evento->data_inicio)),
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
             ];
-        }, $evento);
+        }, [$evento]);
         return $data;
     }
 
