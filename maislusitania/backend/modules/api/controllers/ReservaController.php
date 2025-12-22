@@ -5,6 +5,8 @@ use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
+use yii\filters\AccessControl;
+use Yii;
 
 class ReservaController extends ActiveController
 {
@@ -44,22 +46,13 @@ class ReservaController extends ActiveController
     // ========================================
     public function actionCreate()
     {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        // Verificar autenticação
-        if (\Yii::$app->user->isGuest) {
-            \Yii::$app->response->statusCode = 401;
-            return [
-                'success' => false,
-                'message' => 'Utilizador não autenticado.'
-            ];
-        }
-
-        $postData = \Yii::$app->request->post();
+        $postData = Yii::$app->request->post();
 
         // Validações básicas
         if (empty($postData['local_id'])) {
-            \Yii::$app->response->statusCode = 400;
+            Yii::$app->response->statusCode = 400;
             return [
                 'success' => false,
                 'message' => 'Local não especificado.'
@@ -67,7 +60,7 @@ class ReservaController extends ActiveController
         }
 
         if (empty($postData['bilhetes'])) {
-            \Yii::$app->response->statusCode = 400;
+            Yii::$app->response->statusCode = 400;
             return [
                 'success' => false,
                 'message' => 'Nenhum bilhete selecionado.'
@@ -75,7 +68,7 @@ class ReservaController extends ActiveController
         }
 
         if (empty($postData['data_visita'])) {
-            \Yii::$app->response->statusCode = 400;
+            Yii::$app->response->statusCode = 400;
             return [
                 'success' => false,
                 'message' => 'Data de visita não especificada.'
@@ -96,7 +89,7 @@ class ReservaController extends ActiveController
                 ])
                 ->one();
 
-            \Yii::$app->response->statusCode = 201;
+            Yii::$app->response->statusCode = 201;
             return [
                 'success' => true,
                 'message' => 'Reserva criada com sucesso!',
@@ -120,7 +113,7 @@ class ReservaController extends ActiveController
             ];
 
         } catch (\Exception $e) {
-            \Yii::$app->response->statusCode = 400;
+            Yii::$app->response->statusCode = 400;
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -154,6 +147,32 @@ class ReservaController extends ActiveController
             'class' => QueryParamAuth::class,
             //only=> ['index'],  //Apenas para o GET
             
+        ];
+
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'actions' => ['create'],
+                    'allow' => true,
+                    'roles' => ['buyTickets'],
+                ],
+                [
+                    'actions' => ['index', 'view'],
+                    'allow' => true,
+                    'roles' => ['viewBilling'],
+                ],
+                [
+                    'actions' => ['update'],
+                    'allow' => true,
+                    'roles' => ['editBilling'],
+                ],
+                [
+                    'actions' => ['delete'],
+                    'allow' => true,
+                    'roles' => ['deleteBilling'],
+                ],
+            ],
         ];
 
         return $behaviors;

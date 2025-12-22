@@ -8,6 +8,7 @@ use yii\filters\Cors;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use Yii;
+use yii\filters\AccessControl;
 
 class EventoController extends ActiveController
 {
@@ -67,18 +68,23 @@ class EventoController extends ActiveController
         $behaviors['authenticator'] = [ // Adiciona autenticação
             'class' => QueryParamAuth::class,
         ];
+        
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'actions' => ['index', 'view', 'tipo-local', 'search'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+            ],
+        ];
+
         return $behaviors;
     } 
 
     public function actionIndex()
     {
-        $user = Yii::$app->user->identity;
-        
-        if (!$user) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
             ->orderBy(['id' => SORT_DESC])
@@ -109,13 +115,6 @@ class EventoController extends ActiveController
 
     public function actionView($id)
     {
-        $user = Yii::$app->user->identity;
-        
-        if (!$user) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $modelClass = $this->modelClass;
         $evento = $modelClass::findOne(['id' => $id, 'ativo' => true]);
 
@@ -140,13 +139,6 @@ class EventoController extends ActiveController
     // Extra Patterns
     public function actionTipoLocal($nome)
     {
-        $user = Yii::$app->user->identity;
-        
-        if (!$user) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
             ->joinWith('local.tipoLocal') // ALTERADO: tipoLocal para tipo
@@ -175,13 +167,6 @@ class EventoController extends ActiveController
 
     public function actionSearch($nome)
     {
-        $user = Yii::$app->user->identity;
-        
-        if (!$user) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
             ->where(['LIKE', 'LOWER(titulo)', strtolower($nome)])

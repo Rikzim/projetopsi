@@ -12,6 +12,7 @@ use common\models\TipoLocal;
 use yii\filters\ContentNegotiator;
 use yii\filters\auth\QueryParamAuth;
 use Yii;
+use yii\filters\AccessControl;
 
 class LocalCulturalController extends ActiveController
 {
@@ -357,6 +358,17 @@ class LocalCulturalController extends ActiveController
             ],
         ];
         
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'actions' => ['index', 'view', 'distrito', 'tipo-local', 'search'],
+                    'allow' => true,
+                    'roles' => ['?', '@'],
+                ],
+            ],
+        ];
+
         return $behaviors;
     } 
 }

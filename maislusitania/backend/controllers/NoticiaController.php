@@ -87,7 +87,7 @@ class NoticiaController extends Controller
 
                 $model->data_publicacao = date('Y-m-d H:i:s');
                 
-                if ($model->save(false)) {
+                if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             } else {
@@ -134,7 +134,7 @@ class NoticiaController extends Controller
                 if ($model->destaque == 1) {
                     Noticia::updateAll(['destaque' => 0], ['not', ['id' => $model->id]]);
                 }
-                if ($model->save(false)) {
+                if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }

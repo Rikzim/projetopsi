@@ -145,10 +145,7 @@ class LocalCulturalController extends Controller
                 }
 
                 if ($model->save()) {
-                    // Save the horario (this will UPDATE an existing record or INSERT a new one)
                     if ($horario->save()) {
-                        // If the horario was new, we need to link it to the LocalCultural model
-                        // and save the model again to persist the foreign key.
                         if (!$model->horario_id) {
                             $model->horario_id = $horario->id;
                             $model->save();
