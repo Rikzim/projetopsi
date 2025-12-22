@@ -4,6 +4,7 @@ namespace backend\modules\api\controllers;
 use yii\rest\ActiveController;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
+use yii\filters\AccessControl;
 
 class UserController extends ActiveController
 {
@@ -18,13 +19,9 @@ class UserController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        
-        return new ActiveDataProvider([
-            'query' => $modelClass::find()->orderBy(['id' => SORT_DESC]), 
-            'pagination' => [
-                'pageSize' => 20, 
-            ],
-        ]);
+        // Ações padrão do ActiveController são mantidas, 
+        // mas serão controladas pelo AccessControl
+        return $actions;
     }
 
     // ========================================
@@ -56,14 +53,34 @@ class UserController extends ActiveController
             'class' => Cors::class,
             'cors' => [
                 'Origin' => ['*'],
-                'Access-Control-Request-Method' => ['GET'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
                 'Access-Control-Allow-Credentials' => true,
             ],
         ];
         
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::class,
-            'only' => ['view'],  // Apenas para o GET com ID específico
+        ];
+
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'actions' => ['index', 'view'],
+                    'allow' => true,
+                    'roles' => ['viewUser'],
+                ],
+                [
+                    'actions' => ['create', 'update'],
+                    'allow' => true,
+                    'roles' => ['editUser'],
+                ],
+                [
+                    'actions' => ['delete'],
+                    'allow' => true,
+                    'roles' => ['deleteUser'],
+                ],
+            ],
         ];
 
         return $behaviors;

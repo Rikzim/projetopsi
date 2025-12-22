@@ -90,7 +90,7 @@ class EventoController extends Controller
                         $model->imagem = $fileName;
                     }
                 }
-                if ($model->save(false)) {
+                if ($model->save()) {
                    
 
                     Yii::$app->session->setFlash('success', 'Evento criado com sucesso!');
@@ -141,7 +141,7 @@ class EventoController extends Controller
                         $model->imagem = $fileName;
                     }
                 }
-                if ($model->save(false)) {
+                if ($model->save()) {
 
                     Yii::$app->session->setFlash('success', 'Evento atualizado com sucesso!');
                     return $this->redirect(['view', 'id' => $model->id]);

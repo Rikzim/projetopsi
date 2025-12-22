@@ -10,6 +10,7 @@ use common\models\LocalCultural;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use Yii;
+use yii\filters\AccessControl;
 
 class FavoritoController extends ActiveController
 {
@@ -72,6 +73,32 @@ class FavoritoController extends ActiveController
             'class' => QueryParamAuth::class,
         ];
 
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'actions' => ['index'],
+                    'allow' => true,
+                    'roles' => ['viewFavorites'],
+                ],
+                [
+                    'actions' => ['add'],
+                    'allow' => true,
+                    'roles' => ['addFavorite'],
+                ],
+                [
+                    'actions' => ['remove'],
+                    'allow' => true,
+                    'roles' => ['removeFavorite'],
+                ],
+                [
+                    'actions' => ['toggle'],
+                    'allow' => true,
+                    'roles' => ['addFavorite', 'removeFavorite'],
+                ],
+            ],
+        ];
+
         return $behaviors;
     }
 
@@ -79,11 +106,6 @@ class FavoritoController extends ActiveController
     {
         $user = Yii::$app->user->identity;
         
-        if (!$user) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $modelClass = $this->modelClass;
         $favoritos = $modelClass::find()
             ->orderBy(['id' => SORT_DESC])
@@ -118,10 +140,6 @@ class FavoritoController extends ActiveController
     {
         $user = Yii::$app->user->identity;
 
-        if (!$user) {
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $favoritoExistente = Favorito::getFavoriteByUserAndLocal($user->id, $localid);
 
         if ($favoritoExistente) {
@@ -142,10 +160,6 @@ class FavoritoController extends ActiveController
     {
         $user = Yii::$app->user->identity;
 
-        if (!$user) {
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $favorito = Favorito::getFavoriteByUserAndLocal($user->id, $localid);
 
         if (!$favorito) {
@@ -161,13 +175,9 @@ class FavoritoController extends ActiveController
 
     public function actionToggle($localid)
     {
-        $userId = Yii::$app->user->id;
+        $user = Yii::$app->user->identity;
 
-        if (!$userId) {
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
-        $favorito = Favorito::getFavoriteByUserAndLocal($userId, $localid);
+        $favorito = Favorito::getFavoriteByUserAndLocal($user->id, $localid);
 
         if ($favorito) {
             // Se já existe, remove o favorito
@@ -176,7 +186,7 @@ class FavoritoController extends ActiveController
         } else {
             // Se não existe, cria um novo favorito
             $novoFavorito = new Favorito();
-            $novoFavorito->utilizador_id = $userId;
+            $novoFavorito->utilizador_id = $user->id;
             $novoFavorito->local_id = $localid;
             if ($novoFavorito->save()) {
                 return ['status' => 'added'];

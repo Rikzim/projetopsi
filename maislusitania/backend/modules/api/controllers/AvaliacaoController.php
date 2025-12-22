@@ -1,10 +1,12 @@
 <?php
 namespace backend\modules\api\controllers;
 
+use Yii;
 use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
+use yii\filters\AccessControl;
 
 class AvaliacaoController extends ActiveController
 {
@@ -63,17 +65,33 @@ class AvaliacaoController extends ActiveController
             
         ];
 
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'actions' => ['index', 'view'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+                [
+                    'actions' => ['add'],
+                    'allow' => true,
+                    'roles' => ['addReview'],
+                ],
+                [
+                    'actions' => ['remove'],
+                    'allow' => true,
+                    'roles' => ['deleteOwnReview', 'deleteAnyReview'],
+                ],
+            ],
+        ];
+
         return $behaviors;
     } 
 
     public function actionAdd($localid)
     {
         $user = Yii::$app->user->identity;
-
-        if (!$user) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
 
         $model = new $this->modelClass;
 
@@ -94,16 +112,16 @@ class AvaliacaoController extends ActiveController
     }
 
     public function actionRemove($id){
-        $user = Yii::$app->user->identity;
+        $user = Yii::$app->user;
         
-        if (!$user) {
-            Yii::$app->response->statusCode = 401;
-            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
-        }
-
         $modelClass = $this->modelClass;
 
-        $avaliacao = $modelClass::findOne(['id' => $id, 'utilizador_id' => $user->id]);
+        $avaliacao = null;
+        if ($user->can('deleteAnyReview')) {
+            $avaliacao = $modelClass::findOne($id);
+        } else {
+            $avaliacao = $modelClass::findOne(['id' => $id, 'utilizador_id' => $user->id]);
+        }
 
         if (!$avaliacao) {
             Yii::$app->response->statusCode = 404;

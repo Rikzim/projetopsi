@@ -8,6 +8,7 @@ use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use yii\filters\auth\QueryParamAuth;
 use Yii;
+use yii\filters\AccessControl;
 
 class NoticiaController extends ActiveController
 {
@@ -67,6 +68,16 @@ class NoticiaController extends ActiveController
             'class' => QueryParamAuth::class,
         ];
 
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'actions' => ['index', 'view', 'tipo-local', 'search'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+            ],
+        ];
         
         return $behaviors;
     } 
