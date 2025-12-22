@@ -87,6 +87,7 @@ class FavoritoController extends ActiveController
         $modelClass = $this->modelClass;
         $favoritos = $modelClass::find()
             ->orderBy(['id' => SORT_DESC])
+            ->where(['utilizador_id' => $user->id])
             ->all();
 
         if (empty($favoritos)) {
