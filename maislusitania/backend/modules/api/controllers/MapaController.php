@@ -67,9 +67,12 @@ class MapaController extends ActiveController
 
         $modelClass = $this->modelClass;
         $locais = $modelClass::find()
-            ->where(['ativo' => true])
-            ->andWhere(['like', 'LOWER(nome)', strtolower($nome)])
-            ->andWhere(['like', 'LOWER(tipo)', strtolower($nome)])
+            ->joinWith('tipoLocal')
+            ->where(['local_cultural.ativo' => true])
+            ->andWhere(['or',
+                ['like', 'LOWER(local_cultural.nome)', strtolower($nome)],
+                ['like', 'LOWER(tipo_local.nome)', strtolower($nome)]
+            ])
             ->all();
 
         if(!$locais) {

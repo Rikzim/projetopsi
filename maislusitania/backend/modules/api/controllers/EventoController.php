@@ -133,7 +133,7 @@ class EventoController extends ActiveController
                 'data_inicio' => date('d/m/Y H:i', strtotime($evento->data_inicio)),
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
             ];
-        }, $evento);
+        }, [$evento]);
         return $data;
     }
 
@@ -163,6 +163,7 @@ class EventoController extends ActiveController
             return [
                 'id' => $evento->id,
                 'titulo' => $evento->titulo,
+                'descricao' => $evento->descricao,
                 'imagem' => $evento->getImageAPI(),
                 'data_inicio' => date('d/m/Y H:i', strtotime($evento->data_inicio)),
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
@@ -195,6 +196,7 @@ class EventoController extends ActiveController
             return [
                 'id' => $evento->id,
                 'titulo' => $evento->titulo,
+                'descricao' => $evento->descricao,
                 'imagem' => $evento->getImageAPI(),
                 'data_inicio' => date('d/m/Y H:i', strtotime($evento->data_inicio)),
                 'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
