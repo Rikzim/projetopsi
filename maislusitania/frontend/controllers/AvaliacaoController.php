@@ -17,39 +17,22 @@ class AvaliacaoController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['create', 'update', 'delete'],
                 'rules' => [
                     [
-                        'allow' => true,
                         'actions' => ['create'],
+                        'allow' => true,
                         'roles' => ['addReview'],
                     ],
                     [
-                        'allow' => true,
                         'actions' => ['update'],
+                        'allow' => true,
                         'roles' => ['editOwnReview'],
-                        'matchCallback' => function ($rule, $action) {
-                            $id = Yii::$app->request->get('id');
-                            $avaliacao = Avaliacao::findOne($id);
-                            return $avaliacao && $avaliacao->utilizador_id === Yii::$app->user->id;
-                        },
                     ],
                     [
-                        'allow' => true,
                         'actions' => ['delete'],
+                        'allow' => true,
                         'roles' => ['deleteOwnReview'],
-                        'matchCallback' => function ($rule, $action) {
-                            $id = Yii::$app->request->get('id');
-                            $avaliacao = Avaliacao::findOne($id);
-                            return $avaliacao && $avaliacao->utilizador_id === Yii::$app->user->id;
-                        },
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
                 ],
             ],
         ];

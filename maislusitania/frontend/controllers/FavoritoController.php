@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use Yii;
 
 /**
@@ -27,6 +28,26 @@ class FavoritoController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index'],
+                            'allow' => true,
+                            'roles' => ['viewFavorites'],
+                        ],
+                        [
+                            'actions' => ['add', 'toggle'],
+                            'allow' => true,
+                            'roles' => ['addFavorite'],
+                        ],
+                        [
+                            'actions' => ['remove'],
+                            'allow' => true,
+                            'roles' => ['removeFavorite'],
+                        ],
                     ],
                 ],
             ]

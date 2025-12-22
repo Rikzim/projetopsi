@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use common\models\UploadForm;
 use Symfony\Contracts\EventDispatcher\Event;
+use yii\filters\AccessControl;
 
 /**
  * EventoController implements the CRUD actions for Evento model.
@@ -26,8 +27,33 @@ class EventoController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['viewEvent'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['addEvent'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['editEvent'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['deleteEvent'],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

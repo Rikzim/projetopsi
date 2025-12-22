@@ -12,6 +12,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
+use yii\filters\AccessControl;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -23,37 +24,41 @@ class UserController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        [
-                            'allow' => true,
-                            'actions' => ['index', 'view'],
-                            'roles' => ['viewUser'],
-                        ],
-                        [
-                            'allow' => true,
-                            'actions' => ['create'],
-                            'roles' => ['addUser'],
-                        ],
-                        [
-                            'allow' => true,
-                            'actions' => ['update'],
-                            'roles' => ['editUser'],
-                        ],
-                        [
-                            'allow' => true,
-                            'actions' => ['delete'],
-                            'roles' => ['deleteUser'],
-                        ],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['viewUser'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['addUser'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['editUser'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['deleteUser'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
+
     public function beforeAction($action)
     {
         if (!parent::beforeAction($action)) {

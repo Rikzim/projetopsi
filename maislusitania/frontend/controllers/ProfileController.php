@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use common\models\UploadForm;
 use frontend\models\UpdateForm;
 use Yii;
+use yii\filters\AccessControl;
 
 /**
  * UserProfileController implements the CRUD actions for UserProfile model.
@@ -21,17 +22,23 @@ class ProfileController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['editProfile'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -41,9 +48,6 @@ class ProfileController extends Controller
      */
     public function actionMe()
     {
-        if (Yii::$app->user->isGuest) {
-            return $this->redirect(['site/login']);
-        }
         $user = Yii::$app->user->identity;
 
         return $this->render('me', [
@@ -94,9 +98,6 @@ class ProfileController extends Controller
     public function actionDelete()
     {
         $user = Yii::$app->user->identity;
-        if (!$user) {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
         $user->SoftDelete();
         Yii::$app->user->logout();
         return $this->redirect(['site/index']);
