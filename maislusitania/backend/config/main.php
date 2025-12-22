@@ -105,6 +105,18 @@ return [
                         '{localid}' => '<localid:\\d+>',
                     ],
                 ],
+                                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/reserva', 
+                    'pluralize' => true,
+                    'extraPatterns' => [
+                        'GET bilhetes' => 'bilhetes', // Permite filtrar por bilhetes individuais de um utilizador
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                    ],
+                ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => [
@@ -112,8 +124,7 @@ return [
                     'api/distrito',
                     'api/linha-reserva',
                     'api/login-form', //Funciona
-                    'api/signup-form', //Funciona
-                    'api/reserva', 
+                    'api/signup-form', //Funciona 
                     'api/tipo-bilhete',
                     'api/tipo-local',
                     'api/user',
