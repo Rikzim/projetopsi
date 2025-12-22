@@ -60,3 +60,16 @@ sudo systemctl reload apache2
 
 - Se rebentar o servidor por causa do composer usar este comando
 - composer update --ignore-platform-req=php
+
+## Testes Unitarios e funcionais
+
+# Testes Unitarios
+
+- php vendor/bin/codecept generate:test unit ExampleModelsTest -c common
+- php vendor/bin/codecept run unit Reservatest -c common
+
+# Testes Funcionais 
+
+-
+- 
+

@@ -7,6 +7,8 @@ use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
 use common\models\Favorito;
 use common\models\LocalCultural;
+use yii\web\Response;
+use yii\filters\ContentNegotiator;
 use Yii;
 
 class FavoritoController extends ActiveController
@@ -23,6 +25,7 @@ class FavoritoController extends ActiveController
     {
         $actions = parent::actions();
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+        unset($actions['index']);
         return $actions;
     }
 
@@ -58,12 +61,56 @@ class FavoritoController extends ActiveController
                 'Access-Control-Allow-Credentials' => true,
             ],
         ];
+        $behaviors['contentNegotiator'] = [ // Resposta em JSON
+            'class' => ContentNegotiator::class,
+            'formats' => [
+                'application/json' => Response::FORMAT_JSON,
+            ],
+        ];
         
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::class,
         ];
 
         return $behaviors;
+    }
+
+    public function actionIndex()
+    {
+        $user = Yii::$app->user->identity;
+        
+        if (!$user) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Autenticação obrigatória'];
+        }
+
+        $modelClass = $this->modelClass;
+        $favoritos = $modelClass::find()
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
+
+        if (empty($favoritos)) {
+            Yii::$app->response->statusCode = 200;
+            return [];
+        }
+        
+        $data = array_map(function($favorito) {
+            return [
+                'id' => $favorito->id,
+                'utilizador_id' => $favorito->utilizador_id,
+                'local_id' => $favorito->local_id,
+                'local_imagem' => $favorito->local->getImageAPI(),
+                'local_nome' => $favorito->local->nome,
+                'local_distrito' => $favorito->local->distrito->nome,
+                'local_rating' => $favorito->local->getAverageRating(),
+                'data_adicao' => $favorito->data_adicao,
+                'isFavorite' => true,
+            ];
+        }, $favoritos);
+
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
     }
 
     public function actionAdd($localid)
