@@ -122,6 +122,76 @@ class ReservaController extends ActiveController
     }
 
     // ========================================
+    // Action para buscar bilhetes individuais de um utilizador
+    // ========================================
+    public function actionBilhetes()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        // Verificar se está autenticado
+        if (\Yii::$app->user->isGuest) {
+            \Yii::$app->response->statusCode = 401;
+            return [
+                'success' => false,
+                'message' => 'Utilizador não autenticado.'
+            ];
+        }
+
+        // Busca o ID do utilizador autenticado através do token
+        $userId = \Yii::$app->user->id;
+
+        // Buscar todas as reservas do utilizador com suas relações
+        $reservas = \common\models\Reserva::find()
+            ->where(['utilizador_id' => $userId])
+            ->with([
+                'local',
+                'linhaReservas.tipoBilhete'
+            ])
+            ->orderBy(['data_criacao' => SORT_DESC])
+            ->all();
+
+        // Verificar se foram encontradas reservas
+        if (empty($reservas)) {
+            return [
+                'success' => true,
+                'message' => 'Nenhum bilhete encontrado para este utilizador.',
+                'data' => []
+            ];
+        }
+
+        // Expandir os bilhetes individuais
+        $bilhetesIndividuais = [];
+        
+        foreach ($reservas as $reserva) {
+            foreach ($reserva->linhaReservas as $linha) {
+                // Para cada quantidade, criar um bilhete individual
+                for ($i = 1; $i <= $linha->quantidade; $i++) {
+                    $bilhetesIndividuais[] = [
+                        'codigo' => str_pad($reserva->id, 6, '0', STR_PAD_LEFT) . '-' . $i,
+                        'reserva_id' => $reserva->id,
+                        'local' => [
+                            'id' => $reserva->local->id,
+                            'nome' => $reserva->local->nome,
+                        ],
+                        'data_visita' => $reserva->data_visita,
+                        'tipo_bilhete' => $linha->tipoBilhete->nome,
+                        'preco' => $linha->tipoBilhete->preco,
+                        'estado' => $reserva->estado,
+                        'data_criacao' => $reserva->data_criacao,
+                    ];
+                }
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Bilhetes encontrados com sucesso.',
+            'data' => $bilhetesIndividuais,
+            'total' => count($bilhetesIndividuais)
+        ];
+    }
+
+    // ========================================
     // Controle de permissões
     // ========================================
     public function behaviors()

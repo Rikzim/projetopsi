@@ -76,7 +76,8 @@ class UserProfileController extends ActiveController
                 'user_id' => $userProfile->user_id,
                 'username' => $userProfile->user->username, // Dados do user relacionado
                 'email' => $userProfile->user->email,
-                'data_adesao' => Yii::$app->formatter->asDate($userProfile->user->created_at),  
+                'data_adesao' => Yii::$app->formatter->asDate($userProfile->user->created_at),
+                 
             ];
         }, [$userProfile]);
         return $data;
