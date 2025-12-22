@@ -13,6 +13,7 @@ use backend\models\ReservaSearch;
 use common\models\LinhaReserva;
 use common\models\TipoBilhete;
 use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.
@@ -24,17 +25,39 @@ class ReservaController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['viewBilling'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'], 
+                        'roles' => ['addBilling'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['editBilling'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['deleteBilling'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**

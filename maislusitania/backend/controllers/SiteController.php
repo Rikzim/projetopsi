@@ -31,15 +31,12 @@ class SiteController extends Controller
                     [
                         'actions' => ['login', 'error'],
                         'allow' => true,
+                        'roles' => ['?'],
                     ],
                     [
                         'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            // Verifica se o utilizador tem permissão para aceder ao backoffice
-                            return Yii::$app->user->can('accessBackoffice');
-                        },
+                        'roles' => ['accessBackoffice'],
                         'denyCallback' => function ($rule, $action) {
                             // Redireciona para o frontend se não tiver permissão
                             Yii::$app->session->setFlash('error', 'Não tem permissão para aceder ao back-office.');

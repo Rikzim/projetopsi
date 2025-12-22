@@ -3,6 +3,11 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 
 use common\models\Favorito;
 use common\models\LocalCultural;
@@ -10,11 +15,6 @@ use common\models\TipoLocal;
 use common\models\Distrito;
 
 use frontend\models\LocalCulturalSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 
 /**
  * LocalCulturalController implements the CRUD actions for LocalCultural model.
@@ -33,6 +33,16 @@ class LocalCulturalController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'view'],
+                            'allow' => true,
+                            'roles' => ['?', '@'], // For guests and authenticated users
+                        ],
                     ],
                 ],
             ]
