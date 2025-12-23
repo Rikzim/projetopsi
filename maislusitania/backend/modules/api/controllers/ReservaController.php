@@ -228,6 +228,11 @@ class ReservaController extends ActiveController
                     'roles' => ['buyTickets'],
                 ],
                 [
+                    'actions' => ['bilhetes'],
+                    'allow' => true,
+                    'roles' => ['@'], // @ significa utilizadores autenticados
+                ],
+                [
                     'actions' => ['index', 'view'],
                     'allow' => true,
                     'roles' => ['viewBilling'],
