@@ -113,6 +113,14 @@ class RbacController extends Controller
         $editProfile = $auth->createPermission('editProfile');
         $editProfile->description = 'Editar próprio perfil';
         $auth->add($editProfile);
+
+        $viewOwnProfile = $auth->createPermission('viewOwnProfile');
+        $viewOwnProfile->description = 'Visualizar próprio perfil';
+        $auth->add($viewOwnProfile);
+
+        $editOwnProfile = $auth->createPermission('editOwnProfile');
+        $editOwnProfile->description = 'Editar próprio perfil via API';
+        $auth->add($editOwnProfile);
         
         // Permissões de Avaliações/Comentários
         $addReview = $auth->createPermission('addReview');
@@ -218,6 +226,8 @@ class RbacController extends Controller
         $auth->addChild($user, $editOwnReview);
         $auth->addChild($user, $deleteOwnReview);
         $auth->addChild($user, $editProfile);
+        $auth->addChild($user, $viewOwnProfile);
+        $auth->addChild($user, $editOwnProfile);
         $auth->addChild($user, $addFavorite);
         $auth->addChild($user, $removeFavorite);
         $auth->addChild($user, $viewFavorites);
@@ -266,12 +276,12 @@ class RbacController extends Controller
         // Adicionar role ao admin por defeito (ID=1)
         $auth->assign($admin, 8); //
         
-        echo "✅ Roles e permissões criadas com sucesso!\n\n";
-        echo "📋 Resumo:\n";
-        echo "   • User: Visualizar conteúdos, comprar bilhetes, avaliar, favoritos, gerir perfil\n";
-        echo "   • Gestor: Gerir locais, eventos, notícias, bilheteira, tipos de local, horários\n";
-        echo "   • Admin: Controlo total + gestão de utilizadores e distritos\n\n";
-        echo "📊 Total de permissões: " . count($auth->getPermissions()) . "\n";
-        echo "👥 Total de roles: " . count($auth->getRoles()) . "\n";
+        echo "Roles e permissões criadas com sucesso!\n\n";
+        echo "Resumo:\n";
+        echo "• User: Visualizar conteúdos, comprar bilhetes, avaliar, favoritos, gerir perfil\n";
+        echo "• Gestor: Gerir locais, eventos, notícias, bilheteira, tipos de local, horários\n";
+        echo "• Admin: Controlo total + gestão de utilizadores e distritos\n\n";
+        echo "Total de permissões: " . count($auth->getPermissions()) . "\n";
+        echo "Total de roles: " . count($auth->getRoles()) . "\n";
     }
 }

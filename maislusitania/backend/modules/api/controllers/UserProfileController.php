@@ -145,22 +145,6 @@ class UserProfileController extends ActiveController
                     'allow' => true,
                     'roles' => ['editOwnProfile'],
                 ],
-                // Permissões de Admin para gerir todos os perfis
-                [
-                    'actions' => ['index', 'view'],
-                    'allow' => true,
-                    'roles' => ['viewUser'],
-                ],
-                [
-                    'actions' => ['create'],
-                    'allow' => true,
-                    'roles' => ['editUser'],
-                ],
-                [
-                    'actions' => ['delete'],
-                    'allow' => true,
-                    'roles' => ['deleteUser'],
-                ],
             ],
         ];
 
