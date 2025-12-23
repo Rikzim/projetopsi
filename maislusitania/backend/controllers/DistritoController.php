@@ -26,22 +26,22 @@ class DistritoController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['viewDistrict'],
+                        'roles' => ['accessBackoffice', 'viewDistrict'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['addDistrict'],
+                        'roles' => ['accessBackoffice', 'addDistrict'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['editDistrict'],
+                        'roles' => ['accessBackoffice', 'editDistrict'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['deleteDistrict'],
+                        'roles' => ['accessBackoffice', 'deleteDistrict'],
                     ],
                 ],
             ],

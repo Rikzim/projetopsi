@@ -108,7 +108,7 @@ use backend\models\UpdateForm;
                             <?= $form->field($model, 'status', ['options' => ['class' => 'mb-0']])->dropDownList([
                                 10 => 'Ativo',
                                 9 => 'Inativo',
-                                0 => 'Deletado'
+                                0 => 'Apagado/Inativo'
                             ]) ?>
                         </div>
                         <div class="col-md-8">

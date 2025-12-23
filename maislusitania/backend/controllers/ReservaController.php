@@ -32,22 +32,17 @@ class ReservaController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['viewBilling'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['create'], 
-                        'roles' => ['addBilling'],
+                        'roles' => ['accessBackoffice','viewReservations'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['editBilling'],
+                        'roles' => ['accessBackoffice','editReservations'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['deleteBilling'],
+                        'roles' => ['accessBackoffice','deleteReservations'],
                     ],
                 ],
             ],

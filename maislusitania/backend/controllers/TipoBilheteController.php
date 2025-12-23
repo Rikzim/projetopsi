@@ -28,22 +28,22 @@ class TipoBilheteController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['viewBilling'],
+                        'roles' => ['accessBackoffice','viewBilling'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['addBilling'],
+                        'roles' => ['accessBackoffice','addBilling'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['editBilling'],
+                        'roles' => ['accessBackoffice','editBilling'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['deleteBilling'],
+                        'roles' => ['accessBackoffice','deleteBilling'],
                     ],
                 ],
             ],

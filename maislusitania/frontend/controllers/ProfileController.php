@@ -26,9 +26,20 @@ class ProfileController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                                        [
+                        'allow' => true,
+                        'actions' => ['me'],
+                        'roles' => ['viewOwnProfile'],
+                    ],
                     [
                         'allow' => true,
-                        'roles' => ['editProfile'],
+                        'actions' => ['update'],
+                        'roles' => ['editOwnProfile'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['deleteOwnProfile'],
                     ],
                 ],
             ],
