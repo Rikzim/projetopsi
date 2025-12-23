@@ -13,6 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -132,7 +133,7 @@ class UserController extends Controller
                     if ($uploadForm->upload($fileName)) {
 
                         // Remover imagem antiga se existir
-                        $currentImage = $model->imagem;
+                        $currentImage = $model->imagem_perfil;
                         if (!empty($currentImage)) {
                             $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
                             if (file_exists($oldImagePath)) {

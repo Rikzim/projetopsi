@@ -27,7 +27,7 @@ class ReservaController extends Controller
                     [
                         'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['viewBilling'],
+                        'roles' => ['viewReservations'],
                     ],
                     [
                         'actions' => ['create'],

@@ -27,16 +27,19 @@ class AvaliacaoController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        // General permission to manage reviews
                         'allow' => true,
-                        'actions' => ['index', 'view', 'create', 'update'],
-                        'roles' => ['accessBackoffice'],
+                        'actions' => ['index', 'view'],
+                        'roles' => ['accessBackoffice', 'viewReviews'],
                     ],
                     [
-                        // Specific permission to delete any review
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['accessBackoffice', 'editAnyReview', 'editOwnReview'],
+                    ],
+                    [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['deleteAnyReview'],
+                        'roles' => ['accessBackoffice', 'deleteAnyReview'],
                     ],
                 ],
             ],
@@ -84,41 +87,6 @@ class AvaliacaoController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-
-    /**
-     * Creates a new Avaliacao model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Avaliacao();
-        $locaisAtivos = ArrayHelper::map(
-            LocalCultural::find()->where(['ativo' => 1])->orderBy('nome')->all(),
-            'id',
-            'nome'
-        );
-        $utilizadoresAtivos = ArrayHelper::map(
-            User::find()->where(['status' => 10])->orderBy('username')->all(),
-            'id',
-            'username'
-        );
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-            'locaisAtivos' => $locaisAtivos,
-            'utilizadoresAtivos' => $utilizadoresAtivos,
-        ]);
-    }
-
     /**
      * Updates an existing Avaliacao model.
      * If update is successful, the browser will be redirected to the 'view' page.
