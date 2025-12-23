@@ -232,6 +232,15 @@ class LocalCultural extends \yii\db\ActiveRecord
             ->exists();
     }
 
+    public function getFavoritoIdByUser($userId)
+    {
+        $favorito = Favorito::find()
+            ->where(['utilizador_id' => $userId, 'local_id' => $this->id]) // Filtra pelo utilizador e local cultural
+            ->one();
+        
+        return $favorito ? $favorito->id : null; // Retorna o ID do favorito ou null se não existir
+    }
+
     public function getImage()
     {
         if (empty($this->imagem_principal)) {
