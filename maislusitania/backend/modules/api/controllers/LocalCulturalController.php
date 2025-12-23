@@ -61,8 +61,9 @@ class LocalCulturalController extends ActiveController
 
             if ($userId) {
                 $result['favorito'] = $local->isFavoritedByUser($userId);
+                $result['favorito_id'] = $local->getFavoritoIdByUser($userId);
             }
-
+            
             return $result;
         }, $locais);
 
@@ -133,6 +134,7 @@ class LocalCulturalController extends ActiveController
 
             if ($userId) {
                 $result['favorito'] = $local->isFavoritedByUser($userId);
+                $result['favorito_id'] = $local->getFavoritoIdByUser($userId);
             }
             return $result;
         }, $locais);
@@ -178,6 +180,7 @@ class LocalCulturalController extends ActiveController
 
             if ($userId) {
                 $result['favorito'] = $local->isFavoritedByUser($userId);
+                $result['favorito_id'] = $local->getFavoritoIdByUser($userId);
             }
             return $result;
         }, $locais);
@@ -223,6 +226,7 @@ class LocalCulturalController extends ActiveController
 
             if ($userId) {
                 $result['favorito'] = $local->isFavoritedByUser($userId);
+                $result['favorito_id'] = $local->getFavoritoIdByUser($userId);
             }
 
             return $result;
@@ -303,6 +307,7 @@ class LocalCulturalController extends ActiveController
 
         if ($userId) {
             $data['favorito'] = $local->isFavoritedByUser($userId);
+            $data['favorito_id'] = $local->getFavoritoIdByUser($userId);
         }
 
         return $data;
