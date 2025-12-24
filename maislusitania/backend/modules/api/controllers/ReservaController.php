@@ -152,21 +152,17 @@ class ReservaController extends ActiveController
 
         // Verificar se foram encontradas reservas
         if (empty($reservas)) {
-            return [
-                'success' => true,
-                'message' => 'Nenhum bilhete encontrado para este utilizador.',
-                'data' => []
-            ];
+            return [];
         }
 
         // Expandir os bilhetes individuais
-        $bilhetesIndividuais = [];
+        $data = [];
         
         foreach ($reservas as $reserva) {
             foreach ($reserva->linhaReservas as $linha) {
                 // Para cada quantidade, criar um bilhete individual
                 for ($i = 1; $i <= $linha->quantidade; $i++) {
-                    $bilhetesIndividuais[] = [
+                    $data[] = [
                         'codigo' => str_pad($reserva->id, 6, '0', STR_PAD_LEFT) . '-' . $i,
                         'reserva_id' => $reserva->id,
                         'local' => [
@@ -175,20 +171,14 @@ class ReservaController extends ActiveController
                         ],
                         'data_visita' => $reserva->data_visita,
                         'tipo_bilhete' => $linha->tipoBilhete->nome,
-                        'preco' => $linha->tipoBilhete->preco,
+                        'preco' => number_format($linha->tipoBilhete->preco, 2),
                         'estado' => $reserva->estado,
                         'data_criacao' => $reserva->data_criacao,
                     ];
                 }
             }
         }
-
-        return [
-            'success' => true,
-            'message' => 'Bilhetes encontrados com sucesso.',
-            'data' => $bilhetesIndividuais,
-            'total' => count($bilhetesIndividuais)
-        ];
+        return $data;
     }
 
     // ========================================
