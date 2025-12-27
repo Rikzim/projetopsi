@@ -207,15 +207,14 @@ class LocalCultural extends \yii\db\ActiveRecord
 
     public function getAverageRating()
     {
-        $count = $this->getAvaliacoes()
-            ->where(['ativo' => 1])
-            ->count();
+        $query = $this->getAvaliacoes()->where(['ativo' => 1]);
+        $count = $query->count();
 
-        if ($count === 0) {
+        if ($count == 0) {
             return 0;
         }
 
-        $sum = $this->getAvaliacoes()->sum('classificacao');
+        $sum = $query->sum('classificacao');
         return round($sum / $count, 1);
     }
 
@@ -227,8 +226,8 @@ class LocalCultural extends \yii\db\ActiveRecord
     }
     public function isFavoritedByUser($userId)
     {
-        return Favorito::find()
-            ->where(['utilizador_id' => $userId, 'local_id' => $this->id])
+        return $this->getFavoritos()
+            ->where(['utilizador_id' => $userId])
             ->exists();
     }
 

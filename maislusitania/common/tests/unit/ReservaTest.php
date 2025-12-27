@@ -7,12 +7,27 @@ use common\models\LocalCultural;
 use common\models\User;
 use common\models\TipoBilhete;
 use common\models\LinhaReserva;
+use common\fixtures\UserFixture;
 use common\tests\UnitTester;
+use yii\db\ActiveQuery;
 use Yii;
 
 class ReservaTest extends \Codeception\Test\Unit
 {
     protected UnitTester $tester;
+
+    /**
+     * @return array
+     */
+    public function _fixtures()
+    {
+        return [
+            'user' => [
+                'class' => UserFixture::class,
+                'dataFile' => codecept_data_dir() . 'user.php'
+            ]
+        ];
+    }
 
     protected function _before()
     {
@@ -47,8 +62,6 @@ class ReservaTest extends \Codeception\Test\Unit
         $reserva->preco_total = 50.00;
         $reserva->estado = Reserva::ESTADO_CONFIRMADA;
         
-        // Nota: A validação pode falhar se os IDs não existirem no BD
-        // Este teste verifica apenas a estrutura básica
         $this->assertInstanceOf(Reserva::class, $reserva);
     }
 
@@ -144,7 +157,12 @@ class ReservaTest extends \Codeception\Test\Unit
     // Testes de validação de data
     public function testValidateDataComDataValida()
     {
-        $dataFutura = date('Y-m-d', strtotime('+1 day'));
+        $timestamp = strtotime('+1 day');
+        // If tomorrow is Sunday, use Monday instead to make the test deterministic
+        if (date('w', $timestamp) == 0) {
+            $timestamp = strtotime('+2 days');
+        }
+        $dataFutura = date('Y-m-d', $timestamp);
         $this->assertTrue(Reserva::validateData($dataFutura));
     }
 
@@ -182,34 +200,26 @@ class ReservaTest extends \Codeception\Test\Unit
     public function testGetLinhaReservas()
     {
         $reserva = new Reserva();
-        $query = $reserva->getLinhaReservas();
-        
-        $this->assertInstanceOf(\yii\db\ActiveQuery::class, $query);
+        $this->assertInstanceOf(ActiveQuery::class, $reserva->getLinhaReservas());
     }
 
     public function testGetLocal()
     {
         $reserva = new Reserva();
-        $query = $reserva->getLocal();
-        
-        $this->assertInstanceOf(\yii\db\ActiveQuery::class, $query);
+        $this->assertInstanceOf(ActiveQuery::class, $reserva->getLocal());
     }
 
     public function testGetUtilizador()
     {
         $reserva = new Reserva();
-        $query = $reserva->getUtilizador();
-        
-        $this->assertInstanceOf(\yii\db\ActiveQuery::class, $query);
+        $this->assertInstanceOf(ActiveQuery::class, $reserva->getUtilizador());
     }
 
-    // Testes de método GuardarReserva
+    // Testes de método GuardarReserva - validações de entrada
     public function testGuardarReservaSemLocalId()
     {
         $reserva = new Reserva();
-        $postData = [
-            'bilhetes' => []
-        ];
+        $postData = ['bilhetes' => []];
         
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Local não especificado.');
@@ -219,9 +229,7 @@ class ReservaTest extends \Codeception\Test\Unit
     public function testGuardarReservaSemBilhetes()
     {
         $reserva = new Reserva();
-        $postData = [
-            'local_id' => 1
-        ];
+        $postData = ['local_id' => 1];
         
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Nenhum bilhete selecionado.');
@@ -231,10 +239,7 @@ class ReservaTest extends \Codeception\Test\Unit
     public function testGuardarReservaComBilhetesVazios()
     {
         $reserva = new Reserva();
-        $postData = [
-            'local_id' => 1,
-            'bilhetes' => []
-        ];
+        $postData = ['local_id' => 1, 'bilhetes' => []];
         
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Nenhum bilhete selecionado.');
@@ -251,10 +256,7 @@ class ReservaTest extends \Codeception\Test\Unit
 
     public function testObterDadosConfirmacaoComBilhetesVazios()
     {
-        $postData = [
-            'local_id' => 1,
-            'bilhetes' => []
-        ];
+        $postData = ['local_id' => 1, 'bilhetes' => []];
         
         $this->expectException(\Exception::class);
         Reserva::obterDadosConfirmacao($postData);
@@ -309,5 +311,241 @@ class ReservaTest extends \Codeception\Test\Unit
         $reserva->preco_total = 99.99;
         
         $this->assertTrue($reserva->validate(['preco_total']));
+    }
+
+    // =====================================================
+    // TESTES DE INTEGRAÇÃO COM A BASE DE DADOS (CRUD)
+    // =====================================================
+
+    /**
+     * Helper para criar um LocalCultural para os testes
+     */
+    private function criarLocalCultural()
+    {
+        $local = new LocalCultural([
+            'nome' => 'Local Teste Reserva',
+            'tipo_id' => 1,
+            'morada' => 'Rua Teste',
+            'distrito_id' => 1,
+            'descricao' => 'Descrição teste',
+            'latitude' => 40.0,
+            'longitude' => -8.0,
+        ]);
+        $local->save();
+        return $local;
+    }
+
+    /**
+     * Helper para obter uma data válida (não domingo, não passado)
+     */
+    private function obterDataValida()
+    {
+        $timestamp = strtotime('+1 day');
+        if (date('w', $timestamp) == 0) {
+            $timestamp = strtotime('+2 days');
+        }
+        return date('Y-m-d', $timestamp);
+    }
+
+    public function testSaveAndFindReserva()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        $reserva = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 50.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertTrue($reserva->save(), 'Reserva deveria ser guardada.');
+
+        $foundReserva = Reserva::findOne($reserva->id);
+        $this->assertInstanceOf(Reserva::class, $foundReserva);
+        $this->assertEquals(50.00, $foundReserva->preco_total);
+        $this->assertEquals($user['id'], $foundReserva->utilizador_id);
+    }
+
+    public function testUpdateReserva()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        $reserva = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 50.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva->save());
+
+        $reserva->preco_total = 75.00;
+        $reserva->setEstadoToCancelada();
+        $this->assertTrue($reserva->save());
+
+        $foundReserva = Reserva::findOne($reserva->id);
+        $this->assertEquals(75.00, $foundReserva->preco_total);
+        $this->assertEquals(Reserva::ESTADO_CANCELADA, $foundReserva->estado);
+    }
+
+    public function testDeleteReserva()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        $reserva = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 50.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva->save());
+        $id = $reserva->id;
+
+        $this->assertEquals(1, $reserva->delete());
+        $this->assertNull(Reserva::findOne($id));
+    }
+
+    public function testReservaRelacionamentoComUtilizador()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        $reserva = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 50.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva->save());
+
+        $reserva = Reserva::findOne($reserva->id);
+        $this->assertInstanceOf(User::class, $reserva->utilizador);
+        $this->assertEquals($user['username'], $reserva->utilizador->username);
+    }
+
+    public function testReservaRelacionamentoComLocal()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        $reserva = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 50.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva->save());
+
+        $reserva = Reserva::findOne($reserva->id);
+        $this->assertInstanceOf(LocalCultural::class, $reserva->local);
+        $this->assertEquals('Local Teste Reserva', $reserva->local->nome);
+    }
+
+    public function testReservaComLinhaReservas()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        // Criar tipo de bilhete
+        $tipoBilhete = new TipoBilhete([
+            'local_id' => $local->id,
+            'nome' => 'Bilhete Adulto',
+            'preco' => 10.00,
+            'descricao' => 'Bilhete para adultos',
+            'ativo' => 1,
+        ]);
+        $this->assertTrue($tipoBilhete->save(), 'TipoBilhete deveria ser guardado. Erros: ' . json_encode($tipoBilhete->errors));
+
+        // Criar reserva
+        $reserva = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 30.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva->save(), 'Reserva deveria ser guardada. Erros: ' . json_encode($reserva->errors));
+
+        // Criar linha de reserva
+        $linhaReserva = new LinhaReserva([
+            'reserva_id' => $reserva->id,
+            'tipo_bilhete_id' => $tipoBilhete->id,
+            'quantidade' => 3,
+        ]);
+        $this->assertTrue($linhaReserva->save(), 'LinhaReserva deveria ser guardada. Erros: ' . json_encode($linhaReserva->errors));
+
+        // Verificar relacionamento
+        $reserva = Reserva::findOne($reserva->id);
+        $this->assertCount(1, $reserva->linhaReservas);
+        $this->assertEquals(3, $reserva->linhaReservas[0]->quantidade);
+    }
+
+    public function testMultiplasReservasMesmoUtilizador()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        // Criar primeira reserva
+        $reserva1 = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 50.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva1->save());
+
+        // Criar segunda reserva
+        $reserva2 = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 75.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva2->save());
+
+        // Verificar que ambas existem
+        $reservas = Reserva::find()->where(['utilizador_id' => $user['id']])->all();
+        $this->assertCount(2, $reservas);
+    }
+
+    public function testReservaComDiferentesEstados()
+    {
+        $user = $this->tester->grabFixture('user', 0);
+        $local = $this->criarLocalCultural();
+
+        $reserva = new Reserva([
+            'utilizador_id' => $user['id'],
+            'local_id' => $local->id,
+            'data_visita' => $this->obterDataValida(),
+            'preco_total' => 50.00,
+            'estado' => Reserva::ESTADO_CONFIRMADA,
+            'data_criacao' => date('Y-m-d H:i:s'),
+        ]);
+        $this->assertTrue($reserva->save());
+        $this->assertTrue($reserva->isEstadoConfirmada());
+
+        $reserva->setEstadoToCancelada();
+        $this->assertTrue($reserva->save());
+        
+        $reserva = Reserva::findOne($reserva->id);
+        $this->assertTrue($reserva->isEstadoCancelada());
+        $this->assertEquals('Cancelada', $reserva->displayEstado());
     }
 }
