@@ -1,0 +1,36 @@
+<?php
+
+return [
+    [
+        'id' => 1,
+        'nome' => 'Museu Nacional de Arte Antiga',
+        'tipo_id' => 1,
+        'morada' => 'Rua das Janelas Verdes, 1249-017 Lisboa',
+        'distrito_id' => 1,
+        'descricao' => 'O Museu Nacional de Arte Antiga é um dos mais importantes museus de Portugal, com uma vasta coleção de arte portuguesa e europeia.',
+        'contacto_telefone' => '213912800',
+        'contacto_email' => 'mnaa@museudearteantiga.pt',
+        'website' => 'https://www.museudearteantiga.pt',
+        'imagem_principal' => 'museu_arte_antiga.jpg',
+        'ativo' => 1,
+        'latitude' => 38.7050,
+        'longitude' => -9.1622,
+        'horario_id' => null,
+    ],
+    [
+        'id' => 2,
+        'nome' => 'Teatro Nacional D. Maria II',
+        'tipo_id' => 2,
+        'morada' => 'Praça Dom Pedro IV, 1100-201 Lisboa',
+        'distrito_id' => 1,
+        'descricao' => 'Teatro nacional português localizado no Rossio, dedicado às artes cénicas e produções teatrais.',
+        'contacto_telefone' => '213250800',
+        'contacto_email' => 'geral@tndm.pt',
+        'website' => 'https://www.tndm.pt',
+        'imagem_principal' => 'teatro_nacional.jpg',
+        'ativo' => 1,
+        'latitude' => 38.7139,
+        'longitude' => -9.1395,
+        'horario_id' => null,
+    ],
+];
