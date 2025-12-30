@@ -107,4 +107,51 @@ class Evento extends \yii\db\ActiveRecord
         */
         return Yii::$app->request->hostInfo . '/projetopsi/maislusitania/frontend/web/uploads/' . $this->imagem; 
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        //Obter dados do registo em causa
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->local_id = $this->local_id;
+        $myObj->local_nome = $this->local->nome;
+        $myObj->titulo = $this->titulo;
+        $myObj->data_inicio = $this->data_inicio;
+        // Converter para JSON
+        $myJSON = json_encode($myObj);
+        if($insert)
+            $this->FazPublishNoMosquitto("EVENTOS {$myObj->local_nome}",$myJSON);
+        else
+            $this->FazPublishNoMosquitto("EVENTOS",$myJSON);
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $myObj = new \stdClass();
+        // ID do evento eliminado
+        $myObj->id = $this->id;
+        // Converter para JSON
+        $myJSON = json_encode($myObj);
+        $this->FazPublishNoMosquitto("DELETE",$myJSON);
+    }
+
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1"; 
+        $port = 1883;
+        $username = ""; // set your username
+        $password = ""; // set your password
+        $client_id = "phpMQTT-publisher"; // unique!
+        $mqtt = new \Bluerhinos\phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, $username, $password)){
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }else { 
+            file_put_contents("debug.output","Time out!");
+        }
+    }
 }
