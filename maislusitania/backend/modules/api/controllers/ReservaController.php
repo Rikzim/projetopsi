@@ -97,6 +97,41 @@ class ReservaController extends ActiveController
         return $data;
     }
 
+    public function actionSearch($nome){
+        $modelClass = $this->modelClass;
+        $userId = Yii::$app->user->id;
+
+        $reservas = $modelClass::find()
+            ->joinWith('local')
+            ->where(['utilizador_id' => $userId])
+            ->andWhere(['like', 'local_cultural.nome', $nome])
+            ->with(['local'])
+            ->orderBy(['data_criacao' => SORT_DESC])
+            ->all();
+
+        if (empty($reservas)) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhuma reserva encontrada.'];
+        }
+
+        $data = array_map(function($reserva) {
+            return [
+                'id' => $reserva->id,
+                'local_id' => $reserva->local->id,
+                'local_nome' => $reserva->local->nome,
+                'data_visita' => $reserva->data_visita,
+                'preco_total' => number_format($reserva->preco_total, 2),
+                'estado' => $reserva->estado,
+                'data_criacao' => $reserva->data_criacao,
+                'imagem_local' => $reserva->local->getImageAPI(),
+            ];
+        }, $reservas);
+
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
+    }
+
     public function actionCreate()
     {
         $postData = Yii::$app->request->post();
@@ -157,8 +192,9 @@ class ReservaController extends ActiveController
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
+
                 [
-                    'actions' => ['index', 'view', 'bilhetes'],
+                    'actions' => ['index', 'view', 'search'],
                     'allow' => true,
                     'roles' => ['@'],
                 ],

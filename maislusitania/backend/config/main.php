@@ -107,6 +107,9 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/reserva', 
                     'pluralize' => true,
+                    'extraPatterns' => [
+                        'GET search/{nome}' => 'search',
+                    ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
                         '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
