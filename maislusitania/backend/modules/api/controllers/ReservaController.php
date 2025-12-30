@@ -137,48 +137,6 @@ class ReservaController extends ActiveController
         }
     }
 
-    public function actionBilhetes()
-    {
-        $modelClass = $this->modelClass;
-        $userId = Yii::$app->user->id;
-
-        $reservas = $modelClass::find()
-            ->where(['utilizador_id' => $userId])
-            ->with(['local', 'linhaReservas.tipoBilhete'])
-            ->orderBy(['data_criacao' => SORT_DESC])
-            ->all();
-
-        if (empty($reservas)) {
-            Yii::$app->response->statusCode = 404;
-            return ['error' => 'Nenhum bilhete encontrado.'];
-        }
-
-        $data = [];
-        foreach ($reservas as $reserva) {
-            $bilheteNumero = 1;
-            foreach ($reserva->linhaReservas as $linha) {
-                for ($i = 1; $i <= $linha->quantidade; $i++) {
-                    $data[] = [
-                        'codigo' => str_pad($reserva->id, 6, '0', STR_PAD_LEFT) . '-' . str_pad($bilheteNumero, 3, '0', STR_PAD_LEFT),
-                        'reserva_id' => $reserva->id,
-                        'local_id' => $reserva->local->id,
-                        'local_nome' => $reserva->local->nome,
-                        'data_visita' => $reserva->data_visita,
-                        'tipo_bilhete_id' => $linha->tipoBilhete->id,
-                        'tipo_bilhete_nome' => $linha->tipoBilhete->nome,
-                        'preco' => number_format($linha->tipoBilhete->preco, 2),
-                        'estado' => $reserva->estado,
-                    ];
-                    $bilheteNumero++;
-                }
-            }
-        }
-
-        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
-
-        return $data;
-    }
-
     public function behaviors()
     {
         $behaviors = parent::behaviors();
