@@ -108,7 +108,7 @@ return [
                     'controller' => 'api/reserva', 
                     'pluralize' => true,
                     'extraPatterns' => [
-                        'GET bilhetes' => 'bilhetes', // Permite filtrar por bilhetes individuais de um utilizador
+                        'GET search/{nome}' => 'search',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
