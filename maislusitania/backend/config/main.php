@@ -112,7 +112,7 @@ return [
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
-                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-\s]+>',
                     ],
                 ],
                 [

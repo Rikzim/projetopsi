@@ -5,6 +5,8 @@ use yii\rest\ActiveController;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
 use yii\filters\AccessControl;
+use yii\web\Response;
+use yii\filters\ContentNegotiator;
 use Yii;
 
 class ReservaController extends ActiveController
@@ -187,6 +189,13 @@ class ReservaController extends ActiveController
         
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::class,
+        ];
+
+        $behaviors['contentNegotiator'] = [ // Resposta em JSON
+            'class' => ContentNegotiator::class,
+            'formats' => [
+                'application/json' => Response::FORMAT_JSON,
+            ],
         ];
 
         $behaviors['access'] = [
