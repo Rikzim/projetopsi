@@ -168,26 +168,40 @@ class NoticiaController extends ActiveController
     public function actionSearch($nome)
     {
         $modelClass = $this->modelClass;
-        $noticias = $modelClass::find()
+        $query = $modelClass::find()
             ->where(['LIKE', 'LOWER(titulo)', strtolower($nome)])
-            ->andWhere(['ativo' => true])
-            ->all();
+            ->andWhere(['ativo' => true]);
+
+        // Divide em palavras e procura por cada uma
+        $palavras = explode(' ', trim($nome));
         
+        foreach ($palavras as $palavra) {
+            if (!empty($palavra)) {
+                $query->andWhere(['LIKE', 'LOWER(titulo)', strtolower($palavra)]);
+            }
+        }
+
+        // Executa a consulta
+        $noticias = $query->all();
+
         if (empty($noticias)) {
             Yii::$app->response->statusCode = 404;
-            return ['error' => 'Nenhuma noticia encontrada com esse nome.'];
+            return ['error' => "Nenhuma notícia encontrada com o nome '$nome'."];
         }
+
+        $userId = Yii::$app->user->id;
 
         $data = array_map(function($noticia) {
             return [
                 'id' => $noticia->id,
-                'titulo' => $noticia->titulo,
+                'nome' => $noticia->titulo,
+                'local_nome' => $noticia->local->nome ?? null,
                 'resumo' => $noticia->resumo,
                 'imagem' => $noticia->getImageAPI(),
                 'data_publicacao' => $noticia->data_publicacao,
             ];
         }, $noticias);
-
+        
         Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
 
         return $data;

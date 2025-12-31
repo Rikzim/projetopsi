@@ -165,7 +165,7 @@ class EventoController extends ActiveController
         return $data;
     }
 
-    public function actionSearch($nome)
+    public function actionSearch1($nome)
     {
         $modelClass = $this->modelClass;
         $eventos = $modelClass::find()
@@ -192,4 +192,46 @@ class EventoController extends ActiveController
 
         return $data;
     }
+    public function actionSearch($nome)
+    {
+        $modelClass = $this->modelClass;
+        $query = $modelClass::find()
+            ->where(['LIKE', 'LOWER(titulo)', strtolower($nome)])
+            ->andWhere(['ativo' => true]);
+
+        // Divide em palavras e procura por cada uma
+        $palavras = explode(' ', trim($nome));
+        
+        foreach ($palavras as $palavra) {
+            if (!empty($palavra)) {
+                $query->andWhere(['LIKE', 'LOWER(titulo)', strtolower($palavra)]);
+            }
+        }
+
+        // Executa a consulta
+        $eventos = $query->all();
+
+        if (empty($eventos)) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => "Nenhum evento encontrado com o nome '$nome'."];
+        }
+
+        $userId = Yii::$app->user->id;
+
+        $data = array_map(function($evento) {
+            return [
+                'id' => $evento->id,
+                'titulo' => $evento->titulo,
+                'descricao' => $evento->descricao,
+                'imagem' => $evento->getImageAPI(),
+                'data_inicio' => date('d/m/Y H:i', strtotime($evento->data_inicio)),
+                'data_fim' => date('d/m/Y H:i', strtotime($evento->data_fim)),
+            ];
+        }, $eventos);
+        
+        Yii::$app->response->headers->set('X-Total-Count', (string)count($data));
+
+        return $data;
+    }
+
 }
