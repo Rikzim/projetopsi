@@ -8,7 +8,7 @@ body {
 
 .ticket-pdf {
     width: 100%;
-    max-width: 100mm;
+    max-width: 90mm;
     margin: 0 auto;
     padding: 5mm;
     box-sizing: border-box;
@@ -63,11 +63,11 @@ body {
 
 /* Details */
 .ticket-details {
-    text-align: left;
+    text-align: center;
     background: #f8f9fa;
     padding: 3mm;
     border-radius: 2mm;
-    margin: 3mm 0;
+    margin: 3mm auto;
 }
 
 .detail-row {
@@ -81,16 +81,15 @@ body {
 }
 
 .detail-label {
-    display: block;
+    display: inline;
     font-size: 7pt;
     color: #666;
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    margin-bottom: 0.5mm;
 }
 
 .detail-value {
-    display: block;
+    display: inline;
     font-size: 10pt;
     color: #333;
     font-weight: bold;

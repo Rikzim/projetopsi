@@ -239,12 +239,16 @@ class ReservaController extends Controller
         // Setup PDF
         $pdf = new Pdf([
             'mode' => Pdf::MODE_UTF8,
-            'format' => [100, 200], // Custom size in mm (width x height)
+            'format' => [100, 180], // Custom size in mm (width x height) - reduced to fit content
             'orientation' => Pdf::ORIENT_PORTRAIT,
             'destination' => Pdf::DEST_BROWSER,
             'filename' => "bilhete-{$ticketCode}.pdf",
             'content' => $content,
             'cssFile' => '@frontend/web/css/reservas/ticket-pdf.css',
+            'marginTop' => 5,
+            'marginBottom' => 5,
+            'marginLeft' => 5,
+            'marginRight' => 5,
             'options' => [
                 'title' => "Bilhete {$ticketCode}",
             ],
