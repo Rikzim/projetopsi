@@ -35,6 +35,7 @@ $this->registerCssFile('@web/css/profile/update-profile.css', ['depends' => [\yi
             <div class="profile-avatar-section">
                 <div class="profile-avatar-container">
                     <div class="profile-avatar">
+                        <img id="preview-image" style="display:none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="Preview">
                         <?php if ($model->imagem_perfil): ?>
                             <?= Html::img($model->getImage(), ['class' => 'avatar-image']) ?>
                         <?php else: ?>
@@ -55,7 +56,7 @@ $this->registerCssFile('@web/css/profile/update-profile.css', ['depends' => [\yi
                 </div>
 
                 <div style="display:none">
-                    <?= $form->field($uploadForm, 'imageFile')->fileInput(['id' => 'upload-input']) ?>
+                    <?= $form->field($uploadForm, 'imageFile')->fileInput(['id' => 'upload-input', 'data-image-preview' => 'preview-image']) ?>
                 </div>
 
                 <div class="profile-name-section">
@@ -132,3 +133,35 @@ $this->registerCssFile('@web/css/profile/update-profile.css', ['depends' => [\yi
         </div>
     </div>
 </div>
+
+<?php
+$this->registerJs("
+document.addEventListener('DOMContentLoaded', function () {
+  var inputs = document.querySelectorAll(
+    'input[type=file][data-image-preview]'
+  );
+  inputs.forEach(function (input) {
+    var previewId = input.getAttribute('data-image-preview');
+    var preview = document.getElementById(previewId);
+    if (preview) {
+      input.addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (ev) {
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+            var profileAvatar = preview.closest('.profile-avatar');
+            if (profileAvatar) {
+              var existingImages = profileAvatar.querySelectorAll('img:not(#' + previewId + ')');
+              existingImages.forEach(function (img) {
+                img.style.display = 'none';
+              });
+            }
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+  });
+});
+", \yii\web\View::POS_END); ?>

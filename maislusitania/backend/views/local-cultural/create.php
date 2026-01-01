@@ -7,27 +7,20 @@ use yii\helpers\Html;
 /* @var $uploadForm backend\models\UploadForm */
 /* @var $horario common\models\Horario */
 
-$this->title = 'Create Local Cultural';
+$this->title = 'Criar Local Cultural';
 $this->params['breadcrumbs'][] = ['label' => 'Local Culturals', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $this->render('_form', [
-                        'model' => $model,
-                        'uploadForm' => $uploadForm,
-                        'horario' => $horario,
-                        'tipoLocais' => $tipoLocais,
-                        'distritos' => $distritos,
-                    ]) ?>
-                </div>
-            </div>
-        </div>
-        <!--.card-body-->
-    </div>
-    <!--.card-->
+<div class="local-cultural-create">
+    <h2><?= Html::encode($this->title) ?></h2>
+    
+    <?= $this->render('_form', [
+                'model' => $model,
+                'uploadForm' => $uploadForm,
+                'horario' => $horario,
+                'tipoLocais' => $tipoLocais,
+                'distritos' => $distritos,
+    ]) ?>
+
 </div>

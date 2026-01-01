@@ -1,0 +1,54 @@
+/* Specific to Reserva Form */
+.readonly-field {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* Ticket Rows */
+.ticket-row {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s;
+}
+
+.ticket-row:hover {
+    background: #fff;
+    border-color: #0d6efd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.ticket-header {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+}
+
+/* Total Box */
+.total-box {
+    background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.total-box h5 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.total-box h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}

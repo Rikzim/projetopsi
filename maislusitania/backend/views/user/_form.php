@@ -10,125 +10,146 @@ use backend\models\UpdateForm;
 /** @var yii\bootstrap4\ActiveForm $form */
 ?>
 
+<?php
+$this->registerCssFile('@web/css/form-layout.css');
+$this->registerCssFile('@web/css/user/form.css');
+?>
+
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <h5 class="text-primary mb-3"><i class="fas fa-user-circle"></i> Informações Pessoais</h5>
-    
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header p-2">Imagem de Perfil</div>
-                <div class="card-body text-center p-2">
-                    <?php if ($model->imagem_perfil): ?>
-                        <?= Html::img($model->getImage(), [
-                            'style' => 'max-height: 150px; width: auto;', 
-                            'class' => 'img-fluid rounded mb-2'
-                        ]) ?>
-                    <?php else: ?>
-                        <div class="text-muted py-4"><i class="fas fa-image fa-3x"></i><br>Sem imagem</div>
-                    <?php endif; ?>
-                    
-                    <?= $form->field($uploadForm, 'imageFile', ['options' => ['class' => 'mb-0']])->fileInput(['class' => 'form-control-file mt-2', 'accept' => 'image/*'])->label(false) ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-6">
-                    <?= $form->field($model, 'primeiro_nome')->textInput(['maxlength' => true, 'placeholder' => 'Primeiro Nome']) ?>
-                </div>
-                <div class="col-md-6">
-                    <?= $form->field($model, 'ultimo_nome')->textInput(['maxlength' => true, 'placeholder' => 'Último Nome']) ?>
-                </div>
-                <div class="col-md-12">
-                    <?= $form->field($model, 'username', [
-                        'inputTemplate' => '
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                </div>
-                                {input}
-                            </div>'
-                    ])->textInput(['maxlength' => true, 'placeholder' => 'Nome de utilizador']) ?>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <hr>
-
-    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-id-card"></i> Dados de Acesso</h5>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <?= $form->field($model, 'email', [
-                'inputTemplate' => '
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        </div>
-                        {input}
-                    </div>'
-            ])->textInput(['maxlength' => true, 'type' => 'email', 'placeholder' => 'email@exemplo.com']) ?>
-        </div>
-        <div class="col-md-6">
-            <?= $form->field($model, 'role')->dropDownList(
-                $model instanceof SignupForm ? SignupForm::getRoles() : UpdateForm::getRoles(), 
-                ['prompt' => 'Selecione o tipo de utilizador']
-            ) ?>
-        </div>
-    </div>
-
-    <hr>
-
-    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-lock"></i> Segurança</h5>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'placeholder' =>'Deixe em branco para não alterar']) ?>
-        </div>
-        <div class="col-md-6">
-            <?= $form->field($model, 'password_confirm')->passwordInput(['maxlength' => true, 'placeholder' => 'Confirmar Password']) ?>
-        </div>
-    </div>
-
-    <hr>
-
-    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-toggle-on"></i> Estado da Conta</h5>
-    
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-4">
-                            <?= $form->field($model, 'status', ['options' => ['class' => 'mb-0']])->dropDownList([
-                                10 => 'Ativo',
-                                9 => 'Inativo',
-                                0 => 'Apagado/Inativo'
-                            ]) ?>
-                        </div>
-                        <div class="col-md-8">
-                            <small class="text-muted">
-                                <i class="fas fa-info-circle"></i> "Inativo" impede o login. "Deletado" remove o acesso permanentemente (soft delete).
-                            </small>
-                        </div>
+    <div class="split-screen-container">
+        
+        <!-- Left Column -->
+        <div class="form-main-content">
+            
+            <!-- Card: Personal Info -->
+            <div class="form-card">
+                <div class="form-card-title">Dados Pessoais</div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'primeiro_nome')->textInput(['maxlength' => true, 'placeholder' => 'Primeiro Nome']) ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'ultimo_nome')->textInput(['maxlength' => true, 'placeholder' => 'Último Nome']) ?>
                     </div>
                 </div>
+                
+                <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'placeholder' => 'Username']) ?>
+                
+                <?= $form->field($model, 'email')->input('email', ['placeholder' => 'email@exemplo.com']) ?>
+            </div>
+
+            <!-- Card: Security -->
+            <div class="form-card">
+                <div class="form-card-title">Segurança e Permissões</div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Nova password...']) ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'password_confirm')->passwordInput(['placeholder' => 'Confirmar password']) ?>
+                    </div>
+                </div>
+                
+                <?php if (\Yii::$app->user->can('editUser')): ?>
+                <?= $form->field($model, 'role')->dropDownList(
+                    $model instanceof SignupForm ? SignupForm::getRoles() : UpdateForm::getRoles(), 
+                    ['prompt' => 'Selecione o tipo de utilizador...']
+                ) ?>
+                <?php endif; ?>
+            </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="form-sidebar">
+            <div class="sticky-sidebar">
+                
+                <!-- Card: Profile Picture -->
+                <div class="form-card">
+                    <div class="form-card-title">Foto de Perfil</div>
+                    
+                    <div class="image-preview-container" id="image-preview-zone">
+                        <img id="preview-image" style="display:none;" alt="Preview">
+                        <?php if ($model->imagem_perfil): ?>
+                            <?= Html::img($model->getImage(), [
+                                'id' => 'current-image',
+                            ]) ?>
+                        <?php else: ?>
+                            <div id="placeholder-text" class="text-muted text-center" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                                <div>
+                                    <i class="fas fa-user-circle fa-4x mb-3"></i><br>
+                                    <span>Sem foto</span>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <?= $form->field($uploadForm, 'imageFile')->fileInput([
+                        'class' => 'form-control-file', 
+                        'id' => 'upload-input',
+                        'accept' => 'image/*'
+                    ])->label('Carregar Foto') ?>
+                </div>
+
+                <!-- Card: Status -->
+                <div class="form-card">
+                    
+                    <?php if (\Yii::$app->user->can('editUser')): ?>
+                    
+                    <div class="form-card-title">Estado</div>
+                    
+                    <?= $form->field($model, 'status')->dropDownList([
+                        10 => 'Ativo',
+                        9 => 'Inativo',
+                        0 => 'Eliminado'
+                    ]) ?>
+
+                    <hr>
+                    <?php endif; ?>
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <?= Html::submitButton('Guardar Utilizador', ['class' => 'btn btn-primary btn-block btn-lg-custom']) ?>
+                        <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-outline-secondary btn-block']) ?>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
 
-    <div class="form-group mt-4 text-right">
-        <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-secondary mr-2']) ?>
-        <?= Html::submitButton('<i class="fas fa-save"></i> Criar/Atualizar Utilizador',
-                ['class' => 'btn btn-success px-4']
-            ) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$this->registerJs("
+(function() {
+    var uploadInput = document.getElementById('upload-input');
+    var previewImage = document.getElementById('preview-image');
+    var currentImage = document.getElementById('current-image');
+    var placeholder = document.getElementById('placeholder-text');
+
+    if (uploadInput) {
+        uploadInput.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    if (currentImage) currentImage.style.display = 'none';
+                    if (placeholder) placeholder.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+})();
+", \yii\web\View::POS_READY);
+?>
