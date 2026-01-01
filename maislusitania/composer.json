@@ -21,7 +21,8 @@
         "yiisoft/yii2-swiftmailer": "^2.0",
         "hail812/yii2-adminlte3": "~1.1",
         "kartik-v/yii2-widget-select2": "dev-master",
-        "bluerhinos/phpmqtt": "^1.0"
+        "bluerhinos/phpmqtt": "^1.0",
+        "endroid/qr-code": "^6.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
