@@ -21,6 +21,7 @@ use backend\models\UpdateForm;
             <div class="card mb-3">
                 <div class="card-header p-2">Imagem de Perfil</div>
                 <div class="card-body text-center p-2">
+                    <img id="preview-image" style="display:none; max-height: 150px; width: auto;" class="img-fluid rounded mb-2" alt="Preview">
                     <?php if ($model->imagem_perfil): ?>
                         <?= Html::img($model->getImage(), [
                             'style' => 'max-height: 150px; width: auto;', 
@@ -30,7 +31,7 @@ use backend\models\UpdateForm;
                         <div class="text-muted py-4"><i class="fas fa-image fa-3x"></i><br>Sem imagem</div>
                     <?php endif; ?>
                     
-                    <?= $form->field($uploadForm, 'imageFile', ['options' => ['class' => 'mb-0']])->fileInput(['class' => 'form-control-file mt-2', 'accept' => 'image/*'])->label(false) ?>
+                    <?= $form->field($uploadForm, 'imageFile', ['options' => ['class' => 'mb-0']])->fileInput(['class' => 'form-control-file mt-2', 'accept' => 'image/*', 'data-image-preview' => 'preview-image'])->label(false) ?>
                 </div>
             </div>
         </div>
@@ -132,3 +133,35 @@ use backend\models\UpdateForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$this->registerJs("
+document.addEventListener('DOMContentLoaded', function () {
+  var inputs = document.querySelectorAll(
+    'input[type=file][data-image-preview]'
+  );
+  inputs.forEach(function (input) {
+    var previewId = input.getAttribute('data-image-preview');
+    var preview = document.getElementById(previewId);
+    if (preview) {
+      input.addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (ev) {
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+            var cardBody = preview.closest('.card-body');
+            if (cardBody) {
+              var existingImages = cardBody.querySelectorAll('img:not(#' + previewId + ')');
+              existingImages.forEach(function (img) {
+                img.style.display = 'none';
+              });
+            }
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+  });
+});
+", \yii\web\View::POS_END); ?>

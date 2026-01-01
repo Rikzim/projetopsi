@@ -43,18 +43,19 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
     <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Mídia e Publicação</h5>
     <div class="row align-items-center">
         <div class="col-md-6">
-            <?php if ($model->imagem) : ?>
-                <div class="card mb-3">
-                    <div class="card-header p-2">Imagem Atual</div>
-                    <div class="card-body text-center p-2">
+            <div class="card mb-3">
+                <div class="card-header p-2">Imagem Atual</div>
+                <div class="card-body text-center p-2">
+                    <img id="preview-image" style="display:none; max-height: 150px; width: auto;" class="img-fluid rounded" alt="Preview">
+                    <?php if ($model->imagem) : ?>
                         <?= Html::img($model->getImage(), [
                             'style' => 'max-height: 150px; width: auto;',
                             'class' => 'img-fluid rounded'
                         ]) ?>
-                    </div>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
-            <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file']) ?>
+            </div>
+            <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file', 'data-image-preview' => 'preview-image']) ?>
             <small class="text-muted">Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.</small>
         </div>
         <div class="col-md-6">
@@ -97,3 +98,35 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$this->registerJs("
+document.addEventListener('DOMContentLoaded', function () {
+  var inputs = document.querySelectorAll(
+    'input[type=file][data-image-preview]'
+  );
+  inputs.forEach(function (input) {
+    var previewId = input.getAttribute('data-image-preview');
+    var preview = document.getElementById(previewId);
+    if (preview) {
+      input.addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (ev) {
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+            var cardBody = preview.closest('.card-body');
+            if (cardBody) {
+              var existingImages = cardBody.querySelectorAll('img:not(#' + previewId + ')');
+              existingImages.forEach(function (img) {
+                img.style.display = 'none';
+              });
+            }
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+  });
+});
+", \yii\web\View::POS_END); ?>

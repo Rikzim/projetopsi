@@ -43,7 +43,7 @@ use Yii;
                         <div class="row">
                             <div class="col-md-6">
                                 <?= $form->field($uploadForm, 'imageFile')->fileInput([
-                                    (['class' => 'form-control-file'])
+                                    (['class' => 'form-control-file', 'data-image-preview' => 'preview-image'])
                                 ])->label('Ícone / Imagem') ?>
                                 <small class="text-muted">
                                     <i class="fas fa-info-circle mr-1"></i> Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.
@@ -54,6 +54,7 @@ use Yii;
                                     <div class="card bg-light mb-0">
                                         <div class="card-body text-center p-2">
                                             <label class="d-block text-muted small mb-2">Imagem Atual</label>
+                                            <img id="preview-image" style="display:none; max-height: 100px; max-width: 100%;" class="img-thumbnail shadow-sm" alt="Preview">
                                             <?= Html::img($model->getImage(), [
                                                 'style' => 'max-height: 100px; max-width: 100%; object-fit: contain;', 
                                                 'class' => 'img-thumbnail shadow-sm'
@@ -81,3 +82,35 @@ use Yii;
         </div>
     </div>
 </div>
+
+<?php
+$this->registerJs("
+document.addEventListener('DOMContentLoaded', function () {
+  var inputs = document.querySelectorAll(
+    'input[type=file][data-image-preview]'
+  );
+  inputs.forEach(function (input) {
+    var previewId = input.getAttribute('data-image-preview');
+    var preview = document.getElementById(previewId);
+    if (preview) {
+      input.addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (ev) {
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+            var cardBody = preview.closest('.card-body');
+            if (cardBody) {
+              var existingImages = cardBody.querySelectorAll('img:not(#' + previewId + ')');
+              existingImages.forEach(function (img) {
+                img.style.display = 'none';
+              });
+            }
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+  });
+});
+", \yii\web\View::POS_END); ?>
