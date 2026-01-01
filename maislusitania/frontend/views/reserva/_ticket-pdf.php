@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 
 /** @var $reserva */
 /** @var $linha */
@@ -15,7 +15,7 @@ $qrCode = new QrCode(
     size: 200,
     margin: 0
 );
-$writer = new PngWriter();
+$writer = new SvgWriter();
 $qrResult = $writer->write($qrCode);
 $qrDataUri = $qrResult->getDataUri();
 ?>
