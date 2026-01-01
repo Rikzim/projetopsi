@@ -8,91 +8,102 @@ use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model backend\models\NoticiaForm */
 /* @var $form yii\bootstrap4\ActiveForm */
+?>
 
-$locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column();
+<?php
+$this->registerCssFile('@web/css/form-layout.css');
+$this->registerCssFile('@web/css/noticia/form.css');
 ?>
 
 <div class="noticia-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <h5 class="text-primary mb-3"><i class="fas fa-newspaper"></i> Informações da Notícia</h5>
-    <div class="row">
-        <div class="col-md-8">
-            <?= $form->field($model, 'titulo')->textInput(['maxlength' => true, 'placeholder' => 'Título da notícia']) ?>
-        </div>
-        <div class="col-md-4">
-            <?= $form->field($model, 'local_id')->widget(Select2::class, [
-            'data' => $locais,
-            'options' => ['placeholder' => 'Selecione o local cultural...'],
-            'pluginOptions' => [
-                'allowClear' => true,
-            ],
-        ]) ?>
-        </div>
-        <div class="col-md-12">
-            <?= $form->field($model, 'resumo')->textInput(['maxlength' => true, 'placeholder' => 'Resumo da notícia']) ?>
-        </div>
-        <div class="col-md-12">
-            <?= $form->field($model, 'conteudo')->textarea(['rows' => 6, 'placeholder' => 'Conteúdo completo da notícia...']) ?>
-        </div>
-    </div>
+    <div class="split-screen-container">
+        
+        <!-- Left Column: Inputs -->
+        <div class="form-main-content">
+            
+            <!-- Card: Basic Info -->
+            <div class="form-card">
+                <div class="form-card-title">Informações Básicas</div>
+                
+                <?= $form->field($model, 'titulo')->textInput(['maxlength' => true, 'placeholder' => 'Título da notícia']) ?>
+                
+                <?= $form->field($model, 'resumo')->textarea(['rows' => 3, 'placeholder' => 'Resumo breve...']) ?>
+                
+                <?= $form->field($model, 'conteudo')->textarea(['rows' => 10, 'placeholder' => 'Conteúdo completo...']) ?>
+            </div>
 
-    <hr>
-
-    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Mídia e Publicação</h5>
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <div class="card mb-3">
-                <div class="card-header p-2">Imagem Atual</div>
-                <div class="card-body text-center p-2">
-                    <img id="preview-image" style="display:none; max-height: 150px; width: auto;" class="img-fluid rounded" alt="Preview">
-                    <?php if ($model->imagem) : ?>
-                        <?= Html::img($model->getImage(), [
-                            'style' => 'max-height: 150px; width: auto;',
-                            'class' => 'img-fluid rounded'
+            <!-- Card: Details -->
+            <div class="form-card">
+                <div class="form-card-title">Detalhes</div>
+                <div class="row">
+                    <div class="col-md-6">
+                         <?= $form->field($model, 'local_id')->widget(Select2::class, [
+                            'data' => $locais,
+                            'options' => ['placeholder' => 'Selecione o local...'],
+                            'pluginOptions' => ['allowClear' => true],
                         ]) ?>
-                    <?php endif; ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'data_publicacao')->input('datetime-local') ?>
+                    </div>
                 </div>
             </div>
-            <?= $form->field($uploadForm, 'imageFile')->fileInput(['class' => 'form-control-file', 'data-image-preview' => 'preview-image']) ?>
-            <small class="text-muted">Formatos aceites: JPG, PNG, JPEG, WEBP, SVG. Máx: 2MB.</small>
-        </div>
-        <div class="col-md-6">
-            <?= $form->field($model, 'data_publicacao')->input('datetime-local', [
-                'readonly' => true,
-            ]) ?>
-            <small class="text-muted
-        <div class="col-md-3">
-            <?= $form->field($model, 'destaque')->dropDownList(
-                [0 => 'Não', 1 => 'Sim'],
-                ['prompt' => 'É destaque?']
-            ) ?>
-        </div>
-    </div>
 
-    <hr>
-    <h5 class="text-primary mb-3 mt-4"><i class="fas fa-toggle-on"></i> Status</h5>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card bg-light">
-                <div class="card-body">
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="form-sidebar">
+            <div class="sticky-sidebar">
+                
+                <!-- Card: Media -->
+                <div class="form-card">
+                    <div class="form-card-title">Mídia</div>
+                    
+                    <div class="image-preview-container" id="image-preview-zone">
+                        <img id="preview-image" style="display:none;" alt="Preview">
+                        <?php if ($model->imagem): ?>
+                            <?= Html::img($model->getImage(), ['id' => 'current-image']) ?>
+                        <?php else: ?>
+                            <div id="placeholder-text" class="text-muted text-center">
+                                <i class="fas fa-image fa-3x mb-3"></i><br>
+                                <span>Nenhuma imagem selecionada</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <?= $form->field($uploadForm, 'imageFile')->fileInput([
+                        'class' => 'form-control-file', 
+                        'id' => 'upload-input',
+                        'accept' => 'image/*'
+                    ])->label('Carregar Imagem') ?>
+                </div>
+
+                <!-- Card: Publish -->
+                <div class="form-card">
+                    <div class="form-card-title">Publicação</div>
+                    
+                    <?= $form->field($model, 'destaque')->checkbox() ?>
+                    
                     <?= $form->field($model, 'ativo')->checkbox([
-                        'template' => "<div class=\"custom-control custom-switch\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+                        'template' => "<div class=\"custom-control custom-switch\">{input} {label}</div>{error}",
                         'class' => 'custom-control-input',
                         'labelOptions' => ['class' => 'custom-control-label']
                     ]) ?>
-                    <small class="text-muted d-block mt-2">
-                        <i class="fas fa-info-circle"></i> Se desativado, a notícia não aparecerá no frontend.
-                    </small>
+
+                    <hr>
+
+                    <div class="form-actions">
+                        <?= Html::submitButton('Guardar Alterações', ['class' => 'btn btn-primary btn-block btn-lg-custom']) ?>
+                        <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-outline-secondary btn-block']) ?>
+                    </div>
                 </div>
+
             </div>
         </div>
-    </div>
 
-    <div class="form-group mt-4 text-right">
-        <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-secondary mr-2']) ?>
-        <?= Html::submitButton('<i class="fas fa-save"></i> Guardar', ['class' => 'btn btn-success px-4']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -101,32 +112,27 @@ $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column()
 
 <?php
 $this->registerJs("
-document.addEventListener('DOMContentLoaded', function () {
-  var inputs = document.querySelectorAll(
-    'input[type=file][data-image-preview]'
-  );
-  inputs.forEach(function (input) {
-    var previewId = input.getAttribute('data-image-preview');
-    var preview = document.getElementById(previewId);
-    if (preview) {
-      input.addEventListener('change', function (e) {
-        if (e.target.files && e.target.files[0]) {
-          var reader = new FileReader();
-          reader.onload = function (ev) {
-            preview.src = ev.target.result;
-            preview.style.display = 'block';
-            var cardBody = preview.closest('.card-body');
-            if (cardBody) {
-              var existingImages = cardBody.querySelectorAll('img:not(#' + previewId + ')');
-              existingImages.forEach(function (img) {
-                img.style.display = 'none';
-              });
+(function() {
+    var uploadInput = document.getElementById('upload-input');
+    var previewImage = document.getElementById('preview-image');
+    var currentImage = document.getElementById('current-image');
+    var placeholder = document.getElementById('placeholder-text');
+
+    if (uploadInput) {
+        uploadInput.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    if (currentImage) currentImage.style.display = 'none';
+                    if (placeholder) placeholder.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
             }
-          };
-          reader.readAsDataURL(e.target.files[0]);
-        }
-      });
+        });
     }
-  });
-});
-", \yii\web\View::POS_END); ?>
+})();
+", \yii\web\View::POS_READY);
+?>

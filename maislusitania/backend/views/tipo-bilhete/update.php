@@ -8,6 +8,8 @@ use yii\helpers\Html;
 $this->params['breadcrumbs'][] = ['label' => 'Tipo Bilhetes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+
+$this->title = 'Editar Tipo de Bilhete: ' . $model->nome;
 ?>
 <div class="tipo-bilhete-update">
 

@@ -8,28 +8,18 @@ use yii\helpers\Html;
 /* @var $horario common\models\Horario */
 
 
-$this->title = 'Update Local Cultural: ' . $model->nome;
+$this->title = 'Editar Local Cultural: ' . $model->nome;
 ?>
 
-<div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <?=$this->render('_form', [
+<div class="local-cultural-update">
+    <h2><?= Html::encode($this->title) ?></h2>
+         
+        <?=$this->render('_form', [
                         'model' => $model,
                         'uploadForm' => $uploadForm,
                         'horario' => $horario,
                         'tipoLocais' => $tipoLocais,
                         'distritos' => $distritos,
-                    ]) ?>
+            ]) ?>
 
-                </div>
-                <!--.card-body-->
-            </div>
-            <!--.card-->
-        </div>
-        <!--.col-md-12-->
-    </div>
-    <!--.row-->
 </div>

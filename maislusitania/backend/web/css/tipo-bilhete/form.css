@@ -1,0 +1,9 @@
+/* Specific to Tipo Bilhete Form */
+.price-input .input-group-text {
+    background: #0d6efd;
+    color: white;
+    border: none;
+    font-weight: 600;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}

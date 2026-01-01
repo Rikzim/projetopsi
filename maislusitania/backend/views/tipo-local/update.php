@@ -10,6 +10,8 @@ $this->title = 'Update Tipo Local: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Tipo Locals', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+
+$this->title = 'Editar Tipo de Local: ' . $model->nome;
 ?>
 <div class="tipo-local-update">
     <?= $this->render('_form', [

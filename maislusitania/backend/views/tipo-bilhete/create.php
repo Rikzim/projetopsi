@@ -8,6 +8,8 @@ use yii\helpers\Html;
 $this->title = 'Create Tipo Bilhete';
 $this->params['breadcrumbs'][] = ['label' => 'Tipo Bilhetes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->title = 'Criar Tipo de Bilhete';
 ?>
 <div class="tipo-bilhete-create">
 
