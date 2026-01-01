@@ -76,7 +76,10 @@ $this->registerCssFile('@web/css/reserva/form.css');
                             </div>
                             <div class="col-md-2">
                                 <?= Html::textInput("LinhaReserva[{$tipoId}][quantidade]", $quantidade, [
-                                    'type' => 'number', 'min' => 0, 'class' => 'form-control form-control-sm text-center'
+                                    'type' => 'number', 
+                                    'min' => 0, 
+                                    'class' => 'form-control form-control-sm text-center ticket-quantity',
+                                    'data-price' => $tipo->preco
                                 ]) ?>
                                 <?= Html::hiddenInput("LinhaReserva[{$tipoId}][tipo_bilhete_id]", $tipoId) ?>
                             </div>
@@ -84,7 +87,7 @@ $this->registerCssFile('@web/css/reserva/form.css');
                                 <?= Yii::$app->formatter->asCurrency($tipo->preco, 'EUR') ?>
                             </div>
                             <div class="col-md-3 text-right">
-                                <strong><?= Yii::$app->formatter->asCurrency($subtotal, 'EUR') ?></strong>
+                                <strong class="ticket-subtotal"><?= Yii::$app->formatter->asCurrency($subtotal, 'EUR') ?></strong>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -108,7 +111,7 @@ $this->registerCssFile('@web/css/reserva/form.css');
                     
                     <div class="total-box">
                         <h5>Preço Total</h5>
-                        <h3><?= Yii::$app->formatter->asCurrency($model->preco_total, 'EUR') ?></h3>
+                        <h3 id="grand-total"><?= Yii::$app->formatter->asCurrency($model->preco_total, 'EUR') ?></h3>
                     </div>
                 </div>
 
@@ -137,3 +140,45 @@ $this->registerCssFile('@web/css/reserva/form.css');
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$script = <<< JS
+    const quantityInputs = document.querySelectorAll('.ticket-quantity');
+    const grandTotalElement = document.getElementById('grand-total');
+    
+    const formatter = new Intl.NumberFormat('pt-PT', {
+        style: 'currency',
+        currency: 'EUR'
+    });
+
+    function updateCalculations() {
+        let total = 0;
+        
+        quantityInputs.forEach(input => {
+            const price = parseFloat(input.dataset.price);
+            const quantity = parseInt(input.value) || 0;
+            const subtotal = price * quantity;
+            
+            // Find the subtotal element in the same row
+            const row = input.closest('.ticket-row');
+            const subtotalElement = row.querySelector('.ticket-subtotal');
+            
+            if(subtotalElement) {
+                subtotalElement.textContent = formatter.format(subtotal);
+            }
+            
+            total += subtotal;
+        });
+        
+        if(grandTotalElement) {
+            grandTotalElement.textContent = formatter.format(total);
+        }
+    }
+
+    quantityInputs.forEach(input => {
+        input.addEventListener('input', updateCalculations);
+        input.addEventListener('change', updateCalculations);
+    });
+JS;
+$this->registerJs($script);
+?>

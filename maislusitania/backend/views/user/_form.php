@@ -55,10 +55,12 @@ $this->registerCssFile('@web/css/user/form.css');
                     </div>
                 </div>
                 
+                <?php if (\Yii::$app->user->can('editUser')): ?>
                 <?= $form->field($model, 'role')->dropDownList(
                     $model instanceof SignupForm ? SignupForm::getRoles() : UpdateForm::getRoles(), 
                     ['prompt' => 'Selecione o tipo de utilizador...']
                 ) ?>
+                <?php endif; ?>
             </div>
 
         </div>
@@ -96,6 +98,9 @@ $this->registerCssFile('@web/css/user/form.css');
 
                 <!-- Card: Status -->
                 <div class="form-card">
+                    
+                    <?php if (\Yii::$app->user->can('editUser')): ?>
+                    
                     <div class="form-card-title">Estado</div>
                     
                     <?= $form->field($model, 'status')->dropDownList([
@@ -105,7 +110,8 @@ $this->registerCssFile('@web/css/user/form.css');
                     ]) ?>
 
                     <hr>
-
+                    <?php endif; ?>
+                    <!-- Form Actions -->
                     <div class="form-actions">
                         <?= Html::submitButton('Guardar Utilizador', ['class' => 'btn btn-primary btn-block btn-lg-custom']) ?>
                         <?= Html::a('Cancelar', ['index'], ['class' => 'btn btn-outline-secondary btn-block']) ?>
