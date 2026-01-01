@@ -94,6 +94,13 @@ use Endroid\QrCode\Writer\PngWriter;
             ?>
             <img src="<?= $qrResult->getDataUri() ?>" alt="QR Code" style="display: block; margin: 0 auto;">
         </div>
+        <div class="ticket-actions">
+            <?= Html::a(
+                'Download PDF',
+                ['reserva/download-ticket', 'id' => $reserva->id, 'linha_id' => $linha->id, 'ticket' => $ticketNumber],
+                ['class' => 'btn-ticket-action primary', 'target' => '_blank']
+            ) ?>
+        </div>
         <?php endif; ?>
     </div>
 </div>
