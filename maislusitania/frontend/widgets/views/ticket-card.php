@@ -1,6 +1,8 @@
 <?php
 
 use yii\helpers\Html;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\SvgWriter;
 
 /** @var $reserva */
 /** @var $linha */
@@ -25,8 +27,8 @@ use yii\helpers\Html;
     <!-- Ticket Body -->
     <div class="ticket-body">
         <div class="ticket-main-info">
-            <h3 class="ticket-local-name"><?= Html::encode($reserva->local->nome) ?></h3>
-            <p class="ticket-type"><?= Html::encode($linha->tipoBilhete->nome) ?></p>
+            <h3 class="ticket-local-name" title="<?= Html::encode($reserva->local->nome) ?>"><?= Html::encode($reserva->local->nome) ?></h3>
+            <p class="ticket-type" title="<?= Html::encode($linha->tipoBilhete->nome) ?>"><?= Html::encode($linha->tipoBilhete->nome) ?></p>
         </div>
 
         <div class="ticket-info-grid">
@@ -35,7 +37,7 @@ use yii\helpers\Html;
                     <img src="<?= Yii::getAlias('@web/images/icons/blue/icon-calendar36.svg') ?>" alt="Calendar">
                 </div>
                 <div class="info-content">
-                    <span class="info-label">Data de Visita</span>
+                    <span class="info-label">Data</span>
                     <span class="info-value"><?= Yii::$app->formatter->asDate($reserva->data_visita, 'dd/MM/yyyy') ?></span>
                 </div>
             </div>
@@ -55,8 +57,8 @@ use yii\helpers\Html;
                     <img src="<?= Yii::getAlias('@web/images/icons/blue/icon-profile.svg') ?>" alt="User">
                 </div>
                 <div class="info-content">
-                    <span class="info-label">Tipo de Bilhete</span>
-                    <span class="info-value"><?= Html::encode($linha->tipoBilhete->nome) ?></span>
+                    <span class="info-label">Tipo</span>
+                    <span class="info-value" title="<?= Html::encode($linha->tipoBilhete->nome) ?>"><?= Html::encode($linha->tipoBilhete->nome) ?></span>
                 </div>
             </div>
             
@@ -76,41 +78,28 @@ use yii\helpers\Html;
     <div class="ticket-footer">
         <?php if (!$isExpirado && $reserva->estado === 'Confirmada'): ?>
         <div class="ticket-barcode">
-            <svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                <rect x="0" y="0" width="2" height="40" fill="#000"/>
-                <rect x="3" y="0" width="1" height="40" fill="#000"/>
-                <rect x="5" y="0" width="3" height="40" fill="#000"/>
-                <rect x="9" y="0" width="1" height="40" fill="#000"/>
-                <rect x="11" y="0" width="2" height="40" fill="#000"/>
-                <rect x="14" y="0" width="4" height="40" fill="#000"/>
-                <rect x="19" y="0" width="1" height="40" fill="#000"/>
-                <rect x="21" y="0" width="2" height="40" fill="#000"/>
-                <rect x="24" y="0" width="1" height="40" fill="#000"/>
-                <rect x="26" y="0" width="3" height="40" fill="#000"/>
-                <rect x="30" y="0" width="2" height="40" fill="#000"/>
-                <rect x="33" y="0" width="1" height="40" fill="#000"/>
-                <rect x="35" y="0" width="4" height="40" fill="#000"/>
-                <rect x="40" y="0" width="1" height="40" fill="#000"/>
-                <rect x="42" y="0" width="2" height="40" fill="#000"/>
-                <rect x="45" y="0" width="3" height="40" fill="#000"/>
-                <rect x="49" y="0" width="1" height="40" fill="#000"/>
-                <rect x="51" y="0" width="2" height="40" fill="#000"/>
-                <rect x="54" y="0" width="1" height="40" fill="#000"/>
-                <rect x="56" y="0" width="4" height="40" fill="#000"/>
-                <rect x="61" y="0" width="2" height="40" fill="#000"/>
-                <rect x="64" y="0" width="1" height="40" fill="#000"/>
-                <rect x="66" y="0" width="3" height="40" fill="#000"/>
-                <rect x="70" y="0" width="1" height="40" fill="#000"/>
-                <rect x="72" y="0" width="2" height="40" fill="#000"/>
-                <rect x="75" y="0" width="4" height="40" fill="#000"/>
-                <rect x="80" y="0" width="1" height="40" fill="#000"/>
-                <rect x="82" y="0" width="3" height="40" fill="#000"/>
-                <rect x="86" y="0" width="2" height="40" fill="#000"/>
-                <rect x="89" y="0" width="1" height="40" fill="#000"/>
-                <rect x="91" y="0" width="2" height="40" fill="#000"/>
-                <rect x="94" y="0" width="4" height="40" fill="#000"/>
-                <rect x="99" y="0" width="1" height="40" fill="#000"/>
-            </svg>
+            <?php
+                // Construct the code string to match the visual display format
+                $ticketCode = '#' . str_pad($reserva->id, 6, '0', STR_PAD_LEFT) . '-' . $ticketNumber;
+
+                // Use named arguments to set properties directly in the constructor
+                $qrCode = new QrCode(
+                    data: $ticketCode,
+                    size: 150,
+                    margin: 0
+                );
+
+                $writer = new SvgWriter();
+                $qrResult = $writer->write($qrCode);
+            ?>
+            <img src="<?= $qrResult->getDataUri() ?>" alt="QR Code" style="display: block; margin: 0 auto;">
+        </div>
+        <div class="ticket-actions">
+            <?= Html::a(
+                'Download PDF',
+                ['reserva/download-ticket', 'id' => $reserva->id, 'linha_id' => $linha->id, 'ticket' => $ticketNumber],
+                ['class' => 'btn-ticket-action primary', 'target' => '_blank']
+            ) ?>
         </div>
         <?php endif; ?>
     </div>

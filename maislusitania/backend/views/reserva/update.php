@@ -11,6 +11,7 @@ use yii\helpers\Html;
 $this->params['breadcrumbs'][] = ['label' => 'Reservas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Editar Reserva';
 ?>
 <div class="reserva-update">
 

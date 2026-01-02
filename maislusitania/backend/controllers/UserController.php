@@ -32,7 +32,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['viewUser'],
+                        'roles' => ['viewUser', 'gestor'], // Added 'gestor'
                     ],
                     [
                         'allow' => true,
@@ -42,7 +42,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['editUser'],
+                        'roles' => ['editUser', 'gestor'], // Added 'gestor'
                     ],
                     [
                         'allow' => true,
@@ -71,9 +71,9 @@ class UserController extends Controller
             return true;
         }
 
-        // Permitir gestor editar só o próprio perfil
+        // Permitir gestor editar/ver só o próprio perfil
         if (
-            $action->id === 'update' &&
+            in_array($action->id, ['update', 'view']) && 
             Yii::$app->user->can('gestor') &&
             Yii::$app->request->get('id') == Yii::$app->user->id
         ) {

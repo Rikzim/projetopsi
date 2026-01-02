@@ -9,6 +9,8 @@ use yii\helpers\Html;
 $this->title = 'Create Tipo Local';
 $this->params['breadcrumbs'][] = ['label' => 'Tipo Locals', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->title = 'Criar Tipo de Local';
 ?>
 <div class="tipo-local-create">
 

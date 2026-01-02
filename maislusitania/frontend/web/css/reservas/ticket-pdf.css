@@ -1,0 +1,130 @@
+/* PDF Ticket Styles */
+body {
+    font-family: 'DejaVu Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.ticket-pdf {
+    width: 100%;
+    max-width: 90mm;
+    margin: 0 auto;
+    padding: 5mm;
+    box-sizing: border-box;
+}
+
+/* Header */
+.ticket-header {
+    text-align: center;
+    padding-bottom: 4mm;
+    border-bottom: 1px dashed #2E5AAC;
+    margin-bottom: 4mm;
+}
+
+.logo {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #2E5AAC;
+    letter-spacing: 1px;
+    margin-bottom: 2mm;
+}
+
+.ticket-type-badge {
+    display: inline-block;
+    background: #2E5AAC;
+    color: white;
+    padding: 1mm 4mm;
+    border-radius: 3mm;
+    font-size: 8pt;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* Content */
+.ticket-content {
+    text-align: center;
+    padding: 3mm 0;
+}
+
+.local-name {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #2E5AAC;
+    margin: 0 0 2mm 0;
+    line-height: 1.2;
+}
+
+.ticket-type {
+    font-size: 9pt;
+    color: #666;
+    margin: 0 0 4mm 0;
+}
+
+/* Details */
+.ticket-details {
+    text-align: center;
+    background: #f8f9fa;
+    padding: 3mm;
+    border-radius: 2mm;
+    margin: 3mm auto;
+}
+
+.detail-row {
+    display: block;
+    padding: 1.5mm 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    display: inline;
+    font-size: 7pt;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.detail-value {
+    display: inline;
+    font-size: 10pt;
+    color: #333;
+    font-weight: bold;
+}
+
+/* QR Code Section */
+.qr-section {
+    text-align: center;
+    padding: 4mm 0;
+    border-top: 1px dashed #dee2e6;
+    border-bottom: 1px dashed #dee2e6;
+    margin: 3mm 0;
+}
+
+.qr-code {
+    width: 35mm;
+    height: 35mm;
+    display: block;
+    margin: 0 auto 2mm auto;
+}
+
+.qr-instruction {
+    font-size: 8pt;
+    color: #666;
+    margin: 0;
+}
+
+/* Footer */
+.ticket-footer {
+    text-align: center;
+    padding-top: 2mm;
+}
+
+.footer-text {
+    font-size: 7pt;
+    color: #999;
+    margin: 1mm 0;
+}

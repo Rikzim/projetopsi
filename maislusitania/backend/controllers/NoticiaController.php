@@ -12,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\filters\AccessControl;
+use common\models\LocalCultural;
 
 /**
  * NoticiaController implements the CRUD actions for Noticia model.
@@ -96,6 +97,7 @@ class NoticiaController extends Controller
     public function actionCreate()
     {
         $model = new Noticia();
+        $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column();
         $uploadForm = new UploadForm();
 
         if (Yii::$app->request->isPost) {
@@ -123,6 +125,7 @@ class NoticiaController extends Controller
 
     return $this->render('create', [
         'model' => $model,
+        'locais' => $locais,
         'uploadForm' => $uploadForm,
     ]);
     }
@@ -137,6 +140,7 @@ class NoticiaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $locais = LocalCultural::find()->select(['nome', 'id'])->indexBy('id')->column();
         $uploadForm = new UploadForm();
 
         if (Yii::$app->request->isPost) {
@@ -168,6 +172,7 @@ class NoticiaController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'locais' => $locais,
             'uploadForm' => $uploadForm,
         ]);
     }

@@ -3,11 +3,13 @@
 namespace frontend\controllers;
 
 use common\models\Reserva;
+use common\models\LinhaReserva;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use kartik\mpdf\Pdf;
 use Yii;
 
 /**
@@ -25,7 +27,7 @@ class ReservaController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'download-ticket'],
                         'allow' => true,
                         'roles' => ['viewReservations'],
                     ],
@@ -192,5 +194,71 @@ class ReservaController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Downloads a ticket as PDF
+     * @param int $id Reserva ID
+     * @param int $linha_id LinhaReserva ID
+     * @param int $ticket Ticket number
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionDownloadTicket($id, $linha_id, $ticket)
+    {
+        $reserva = $this->findModel($id);
+        
+        // Verify the reservation belongs to the current user
+        if ($reserva->utilizador_id !== Yii::$app->user->id) {
+            throw new NotFoundHttpException('Não tem permissão para aceder a este bilhete.');
+        }
+        
+        // Find the specific linha
+        $linha = LinhaReserva::findOne(['id' => $linha_id, 'reserva_id' => $id]);
+        if (!$linha) {
+            throw new NotFoundHttpException('Bilhete não encontrado.');
+        }
+        
+        // Validate ticket number
+        $ticketNumber = (int)$ticket;
+        if ($ticketNumber < 1 || $ticketNumber > $linha->quantidade) {
+            throw new NotFoundHttpException('Número de bilhete inválido.');
+        }
+        
+        // Generate ticket code
+        $ticketCode = '#' . str_pad($reserva->id, 6, '0', STR_PAD_LEFT) . '-' . $ticketNumber;
+        
+        // Render PDF content
+        $content = $this->renderPartial('_ticket-pdf', [
+            'reserva' => $reserva,
+            'linha' => $linha,
+            'ticketNumber' => $ticketNumber,
+            'ticketCode' => $ticketCode,
+        ]);
+        
+        // Setup PDF
+        $pdf = new Pdf([
+            'mode' => Pdf::MODE_UTF8,
+            'format' => [100, 180], // Custom size in mm (width x height) - reduced to fit content
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'destination' => Pdf::DEST_BROWSER,
+            'filename' => "bilhete-{$ticketCode}.pdf",
+            'content' => $content,
+            'cssFile' => '@frontend/web/css/reservas/ticket-pdf.css',
+            'marginTop' => 5,
+            'marginBottom' => 5,
+            'marginLeft' => 5,
+            'marginRight' => 5,
+            'options' => [
+                'title' => "Bilhete {$ticketCode}",
+            ],
+            'methods' => [
+                'SetAuthor' => 'Mais Lusitânia',
+                'SetCreator' => 'Mais Lusitânia',
+                'SetSubject' => 'Bilhete de Entrada',
+            ]
+        ]);
+        
+        return $pdf->render();
     }
 }

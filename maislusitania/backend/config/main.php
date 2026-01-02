@@ -73,7 +73,7 @@ return [
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
-                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-\s]+>',
                     ],
                 ],
                 [
@@ -86,7 +86,7 @@ return [
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
-                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-\s]+>',
                     ],
                 ],
                 [
@@ -108,11 +108,11 @@ return [
                     'controller' => 'api/reserva', 
                     'pluralize' => true,
                     'extraPatterns' => [
-                        'GET bilhetes' => 'bilhetes', // Permite filtrar por bilhetes individuais de um utilizador
+                        'GET search/{nome}' => 'search',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
-                        '{nome}' => '<nome:[a-zA-Z0-9\\-]+>',
+                        '{nome}' => '<nome:[a-zA-Z0-9\\-\s]+>',
                     ],
                 ],
                 [

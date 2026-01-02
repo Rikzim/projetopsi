@@ -8,10 +8,12 @@ use yii\helpers\Html;
 $this->params['breadcrumbs'][] = ['label' => 'Avaliacaos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+
+$this->title = 'Editar Avaliação: ' . $model->id;
 ?>
 <div class="avaliacao-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h2><?= Html::encode($this->title) ?></h2>
 
     <?= $this->render('_form', [
         'model' => $model,
