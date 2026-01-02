@@ -26,9 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         <i class="fas fa-star mr-2"></i>
                         Gestão de Avaliações
                     </h3>
-                    <div class="card-tools">
-                        <?= Html::a('<i class="fas fa-plus"></i> Criar Avaliação', ['create'], ['class' => 'btn btn-success btn-sm']) ?>
-                    </div>
                 </div>
                 
                 <!-- Filtros e Pesquisa -->

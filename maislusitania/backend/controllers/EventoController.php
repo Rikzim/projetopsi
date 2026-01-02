@@ -33,22 +33,22 @@ class EventoController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['viewEvent'],
+                        'roles' => ['accessBackoffice', 'viewEvent'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['addEvent'],
+                        'roles' => ['accessBackoffice', 'addEvent'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['editEvent'],
+                        'roles' => ['accessBackoffice', 'editEvent'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['deleteEvent'],
+                        'roles' => ['accessBackoffice', 'deleteEvent'],
                     ],
                 ],
             ],

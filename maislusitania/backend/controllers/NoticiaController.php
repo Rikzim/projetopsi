@@ -30,22 +30,22 @@ class NoticiaController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['viewNews'],
+                        'roles' => ['accessBackoffice', 'viewNews'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['addNews'],
+                        'roles' => ['accessBackoffice', 'addNews'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['editNews'],
+                        'roles' => ['accessBackoffice', 'editNews'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['deleteNews'],
+                        'roles' => ['accessBackoffice', 'deleteNews'],
                     ],
                 ],
             ],

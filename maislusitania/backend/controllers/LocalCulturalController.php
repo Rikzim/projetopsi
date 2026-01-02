@@ -31,22 +31,22 @@ class LocalCulturalController extends Controller
                     [
                         'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['viewPlace'],
+                        'roles' => ['accessBackoffice', 'viewPlace'],
                     ],
                     [
                         'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['addPlace'],
+                        'roles' => ['accessBackoffice', 'addPlace'],
                     ],
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['editPlace'],
+                        'roles' => ['accessBackoffice', 'editPlace'],
                     ],
                     [
                         'actions' => ['delete'],
                         'allow' => true,
-                        'roles' => ['deletePlace'],
+                        'roles' => ['accessBackoffice', 'deletePlace'],
                     ],
                 ],
             ],

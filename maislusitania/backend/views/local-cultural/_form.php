@@ -119,24 +119,26 @@ window.clearAll = function() {
     <div class="card">
         <div class="card-body">
             <!-- Quick Fill Section -->
-            <div class="alert alert-light border mb-4 p-3">
-                <div class="row">
+            <div class="alert alert-light border mb-4 p-3 shadow-sm">
+                <div class="row g-3 align-items-end">
                     <div class="col-md-4">
-                        <label for="quick-fill-input" class="form-label fw-bold">Preenchimento Rápido:</label>
+                        <label for="quick-fill-input" class="form-label fw-bold text-secondary">
+                            <i class="fas fa-magic me-1"></i> Preenchimento Rápido:
+                        </label>
                         <input type="text" id="quick-fill-input" class="form-control" placeholder="Ex: 09:00 - 18:00">
                     </div>
-                    <div class="col-md-8 mt-3 mt-md-0 d-flex align-items-end">
-                        <div>
+                    <div class="col-md-8">
+                        <div class="d-flex flex-wrap gap-2">
                             <?= Html::button('<i class="fas fa-copy"></i> Aplicar a Todos', [
-                                'class' => 'btn btn-success me-2 mb-2',
+                                'class' => 'btn btn-success',
                                 'onclick' => 'applyToAll()'
                             ]) ?>
                             <?= Html::button('<i class="fas fa-briefcase"></i> Dias Úteis', [
-                                'class' => 'btn btn-primary me-2 mb-2',
+                                'class' => 'btn btn-outline-primary',
                                 'onclick' => 'applyToWeekdays()'
                             ]) ?>
                             <?= Html::button('<i class="fas fa-calendar-day"></i> Fim de Semana', [
-                                'class' => 'btn btn-primary me-2 mb-2',
+                                'class' => 'btn btn-outline-primary',
                                 'onclick' => 'applyToWeekend()'
                             ]) ?>
                             <?= Html::button('<i class="fas fa-eraser"></i> Limpar', [

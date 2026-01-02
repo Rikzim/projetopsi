@@ -13,6 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -132,7 +133,7 @@ class UserController extends Controller
                     if ($uploadForm->upload($fileName)) {
 
                         // Remover imagem antiga se existir
-                        $currentImage = $model->imagem;
+                        $currentImage = $model->imagem_perfil;
                         if (!empty($currentImage)) {
                             $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $currentImage;
                             if (file_exists($oldImagePath)) {
@@ -224,34 +225,17 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        try {
-            // Buscar o perfil do utilizador
-            $userProfile = $model->userProfile;
+        // Para nao apagar a propria conta
+        if ($id == Yii::$app->user->id) {
+            Yii::$app->session->setFlash('error', 'Não se pode apagar a própria conta.');
+            return $this->redirect(['index']);
+        }
 
-            // Remover imagem antiga se existir
-            if ($userProfile && !empty($userProfile->imagem_perfil)) {
-                $oldImagePath = Yii::getAlias('@uploadPath') . '/' . $userProfile->imagem_perfil;
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
-            }
-
-            // Deletar perfil do utilizador
-            if ($userProfile) {
-                $userProfile->delete();
-            }
-
-            // Remover todas as roles do utilizador
-            $auth = Yii::$app->authManager;
-            $auth->revokeAll($model->id);
-
-            // Deletar utilizador
-            if (!$model->delete()) {
-                throw new \Exception('Erro ao deletar utilizador');
-            }
-            Yii::$app->session->setFlash('success', 'Utilizador deletado com sucesso!');
-        } catch (\Exception $e) {
-            Yii::$app->session->setFlash('error', 'Erro ao deletar utilizador: ' . $e->getMessage());
+        // Soft delete
+        if ($model->SoftDelete()) {
+            Yii::$app->session->setFlash('success', 'Utilizador desativado com sucesso!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao desativar o utilizador.');
         }
 
         return $this->redirect(['index']);

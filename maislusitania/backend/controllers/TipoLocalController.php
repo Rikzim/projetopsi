@@ -31,22 +31,22 @@ class TipoLocalController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['viewTypePlace'],
+                        'roles' => ['accessBackoffice','viewTypePlace'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['addTypePlace'],
+                        'roles' => ['accessBackoffice','addTypePlace'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['update'],
-                        'roles' => ['editTypePlace'],
+                        'roles' => ['accessBackoffice','editTypePlace'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['deleteTypePlace'],
+                        'roles' => ['accessBackoffice','deleteTypePlace'],
                     ],
                 ],
             ],

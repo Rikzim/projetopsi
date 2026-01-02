@@ -9,8 +9,15 @@ class RbacController extends Controller
     public function actionInit()
     {
         $auth = Yii::$app->authManager;
-        $auth->removeAll();
+
+        // --- This is the critical change ---
+        // We clear permissions and the hierarchy, but NEVER the roles themselves.
+        $auth->removeAllPermissions();
         
+        // This removes all parent-child links so we can rebuild them.
+        $db = Yii::$app->db;
+        $db->createCommand()->delete($auth->itemChildTable)->execute();
+
         // ============ CRIAR PERMISSÕES ============
         
         // Permissões de Locais Culturais
@@ -89,6 +96,14 @@ class RbacController extends Controller
         $viewReservations->description = 'Visualizar reservas';
         $auth->add($viewReservations);
 
+        $editReservations = $auth->createPermission('editReservations');
+        $editReservations->description = 'Editar reservas';
+        $auth->add($editReservations);
+
+        $deleteReservations = $auth->createPermission('deleteReservations');
+        $deleteReservations->description = 'Eliminar reservas';
+        $auth->add($deleteReservations);
+
         $cancelOwnReservation = $auth->createPermission('cancelOwnReservation');
         $cancelOwnReservation->description = 'Cancelar próprias reservas';
         $auth->add($cancelOwnReservation);
@@ -113,11 +128,31 @@ class RbacController extends Controller
         $editProfile = $auth->createPermission('editProfile');
         $editProfile->description = 'Editar próprio perfil';
         $auth->add($editProfile);
+
+        $viewOwnProfile = $auth->createPermission('viewOwnProfile');
+        $viewOwnProfile->description = 'Visualizar próprio perfil';
+        $auth->add($viewOwnProfile);
+
+        $editOwnProfile = $auth->createPermission('editOwnProfile');
+        $editOwnProfile->description = 'Editar próprio perfil via API';
+        $auth->add($editOwnProfile);
+
+        $deleteOwnProfile = $auth->createPermission('deleteOwnProfile');
+        $deleteOwnProfile->description = 'Eliminar próprio perfil';
+        $auth->add($deleteOwnProfile);
         
         // Permissões de Avaliações/Comentários
+        $viewReviews = $auth->createPermission('viewReviews');
+        $viewReviews->description = 'Visualizar avaliações e comentários';
+        $auth->add($viewReviews);
+
         $addReview = $auth->createPermission('addReview');
         $addReview->description = 'Adicionar avaliações e comentários';
         $auth->add($addReview);
+
+        $editReview = $auth->createPermission('editReview');
+        $editReview->description = 'Editar avaliações e comentários';
+        $auth->add($editReview);
         
         $editOwnReview = $auth->createPermission('editOwnReview');
         $editOwnReview->description = 'Editar próprias avaliações';
@@ -161,23 +196,6 @@ class RbacController extends Controller
         $viewFavorites->description = 'Visualizar lista de favoritos';
         $auth->add($viewFavorites);
 
-        // Permissões de Horários
-        $viewSchedule = $auth->createPermission('viewSchedule');
-        $viewSchedule->description = 'Visualizar horários';
-        $auth->add($viewSchedule);
-
-        $addSchedule = $auth->createPermission('addSchedule');
-        $addSchedule->description = 'Adicionar horários';
-        $auth->add($addSchedule);
-
-        $editSchedule = $auth->createPermission('editSchedule');
-        $editSchedule->description = 'Editar horários';
-        $auth->add($editSchedule);
-
-        $deleteSchedule = $auth->createPermission('deleteSchedule');
-        $deleteSchedule->description = 'Eliminar horários';
-        $auth->add($deleteSchedule);
-
         // Permissões de Distritos
         $viewDistrict = $auth->createPermission('viewDistrict');
         $viewDistrict->description = 'Visualizar distritos';
@@ -200,32 +218,47 @@ class RbacController extends Controller
         $accessBackoffice->description = 'Aceder ao back-office';
         $auth->add($accessBackoffice);
         
-        // ============ CRIAR ROLES ============
+        // ============ CRIAR ROLES (IF THEY DON'T EXIST) ============
         
         // Role: User (autenticado)
-        $user = $auth->createRole('user');
-        $user->description = 'Utilizador autenticado - Acesso completo ao front-office';
-        $auth->add($user);
+        if (!($user = $auth->getRole('user'))) {
+            $user = $auth->createRole('user');
+            $user->description = 'Utilizador autenticado - Acesso completo ao front-office';
+            $auth->add($user);
+        }
+        
+        // Role: Gestor
+        if (!($gestor = $auth->getRole('gestor'))) {
+            $gestor = $auth->createRole('gestor');
+            $gestor->description = 'Gestor - Acesso ao back-office para gestão de conteúdos';
+            $auth->add($gestor);
+        }
+        
+        // Role: Admin (Sys Admin)
+        if (!($admin = $auth->getRole('admin'))) {
+            $admin = $auth->createRole('admin');
+            $admin->description = 'Administrador - Acesso total ao sistema';
+            $auth->add($admin);
+        }
+        
+        // ============ REBUILD HIERARCHY ============
         $auth->addChild($user, $viewPlace);
         $auth->addChild($user, $viewEvent);
         $auth->addChild($user, $viewNews);
-        $auth->addChild($user, $viewSchedule);
-        $auth->addChild($user, $viewDistrict);
         $auth->addChild($user, $buyTickets);
         $auth->addChild($user, $viewReservations);
         $auth->addChild($user, $cancelOwnReservation);
         $auth->addChild($user, $addReview);
         $auth->addChild($user, $editOwnReview);
         $auth->addChild($user, $deleteOwnReview);
-        $auth->addChild($user, $editProfile);
+        $auth->addChild($user, $viewOwnProfile);
+        $auth->addChild($user, $editOwnProfile);
+        $auth->addChild($user, $deleteOwnProfile);
         $auth->addChild($user, $addFavorite);
         $auth->addChild($user, $removeFavorite);
         $auth->addChild($user, $viewFavorites);
         
         // Role: Gestor
-        $gestor = $auth->createRole('gestor');
-        $gestor->description = 'Gestor - Acesso ao back-office para gestão de conteúdos';
-        $auth->add($gestor);
         $auth->addChild($gestor, $user); // Herda permissões de user
         $auth->addChild($gestor, $accessBackoffice);
         $auth->addChild($gestor, $addPlace);
@@ -237,6 +270,8 @@ class RbacController extends Controller
         $auth->addChild($gestor, $addNews);
         $auth->addChild($gestor, $editNews);
         $auth->addChild($gestor, $deleteNews);
+        $auth->addChild($gestor, $editReservations);
+        $auth->addChild($gestor, $deleteReservations);
         $auth->addChild($gestor, $viewBilling);
         $auth->addChild($gestor, $addBilling);
         $auth->addChild($gestor, $editBilling);
@@ -245,33 +280,18 @@ class RbacController extends Controller
         $auth->addChild($gestor, $addTypePlace);
         $auth->addChild($gestor, $editTypePlace);
         $auth->addChild($gestor, $deleteTypePlace);
-        $auth->addChild($gestor, $addSchedule);
-        $auth->addChild($gestor, $editSchedule);
-        $auth->addChild($gestor, $deleteSchedule);
-        
         
         // Role: Admin (Sys Admin)
-        $admin = $auth->createRole('admin');
-        $admin->description = 'Administrador - Acesso total ao sistema';
-        $auth->add($admin);
         $auth->addChild($admin, $gestor); // Herda todas as permissões de gestor
         $auth->addChild($admin, $viewUsers);
         $auth->addChild($admin, $addUser);
         $auth->addChild($admin, $editUser);
         $auth->addChild($admin, $deleteUser);
+        $auth->addChild($admin, $viewDistrict);
         $auth->addChild($admin, $addDistrict);
         $auth->addChild($admin, $editDistrict);
         $auth->addChild($admin, $deleteDistrict);
-
-        // Adicionar role ao admin por defeito (ID=1)
-        $auth->assign($admin, 8); //
         
-        echo "✅ Roles e permissões criadas com sucesso!\n\n";
-        echo "📋 Resumo:\n";
-        echo "   • User: Visualizar conteúdos, comprar bilhetes, avaliar, favoritos, gerir perfil\n";
-        echo "   • Gestor: Gerir locais, eventos, notícias, bilheteira, tipos de local, horários\n";
-        echo "   • Admin: Controlo total + gestão de utilizadores e distritos\n\n";
-        echo "📊 Total de permissões: " . count($auth->getPermissions()) . "\n";
-        echo "👥 Total de roles: " . count($auth->getRoles()) . "\n";
+        echo "RBAC criado.\n";
     }
 }

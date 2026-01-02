@@ -41,7 +41,7 @@ class LocalCulturalController extends Controller
                         [
                             'actions' => ['index', 'view'],
                             'allow' => true,
-                            'roles' => ['?', '@'], // For guests and authenticated users
+                            'roles' => ['?', '@'],
                         ],
                     ],
                 ],
