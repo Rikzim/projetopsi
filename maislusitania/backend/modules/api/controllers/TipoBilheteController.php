@@ -19,6 +19,7 @@ class TipoBilheteController extends ActiveController
     {
         $actions = parent::actions();
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+        unset($actions['view']);
         return $actions;
     }
 
@@ -32,6 +33,23 @@ class TipoBilheteController extends ActiveController
                 'pageSize' => 20, 
             ],
         ]);
+    }
+
+    public function actionView($id)
+    {
+        $modelClass = $this->modelClass;
+        
+        $bilhetes = $modelClass::find()
+            ->where(['local_id' => $id, 'ativo' => 1])
+            ->orderBy(['preco' => SORT_ASC])
+            ->all();
+
+        if (empty($bilhetes)) {
+            \Yii::$app->response->statusCode = 404;
+            return ['error' => 'Nenhum tipo de bilhete encontrado para este local.'];
+        }
+
+        return $bilhetes;
     }
 
     // ========================================
